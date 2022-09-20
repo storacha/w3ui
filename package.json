@@ -18,6 +18,8 @@
     "examples/react/multi-file-upload",
     "examples/react/sign-up-in",
     "examples/react/template",
+    "examples/react-native/sign-up-in",
+    "packages/react-native-wallet",
     "packages/react-uploader",
     "packages/react-wallet",
     "packages/uploader-core",
