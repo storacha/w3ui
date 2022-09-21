@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react'
-import { registerIdentity, loadDefaultIdentity, loadIdentity, storeIdentity, removeIdentity, Identity, AuthStatus } from '@w3ui/wallet-core'
+import { registerIdentity, loadDefaultIdentity, loadIdentity, storeIdentity, removeIdentity, Identity, AuthStatus, createIdentity, sendVerificationEmail, waitIdentityVerification, UnverifiedIdentity } from '@w3ui/wallet-core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export { AuthStatus }
@@ -10,7 +10,8 @@ export interface AuthContextValue {
    */
   identity?: Identity
   /**
-   * Load the default identity from secure storage.
+   * Load the default identity from secure storage. If the identity is not
+   * verified, the registration flow will be automatically resumed.
    */
   loadDefaultIdentity: () => Promise<void>
   /**
@@ -52,13 +53,13 @@ export interface AuthProviderProps {
 
 const store = {
   async getItem (key: string) {
-    return await AsyncStorage.getItem(key)
+    return AsyncStorage.getItem(key)
   },
   async setItem (key: string, value: string) {
-    return await AsyncStorage.setItem(key, value)
+    return AsyncStorage.setItem(key, value)
   },
   async removeItem (key: string) {
-    return await AsyncStorage.removeItem(key)
+    return AsyncStorage.removeItem(key)
   }
 }
 
@@ -70,8 +71,12 @@ export function AuthProvider ({ children }: AuthProviderProps): ReactNode {
   const load = async (): Promise<void> => {
     const id = await loadDefaultIdentity(store)
     if (id != null) {
-      setAuthStatus(AuthStatus.SignedIn)
       setIdentity(id)
+      if (id.verified) {
+        setAuthStatus(AuthStatus.SignedIn)
+        return
+      }
+      await verifyAndRegisterAndStore(id as UnverifiedIdentity)
     }
   }
 
@@ -82,28 +87,45 @@ export function AuthProvider ({ children }: AuthProviderProps): ReactNode {
   }
 
   const register = async (email: string): Promise<void> => {
+    let id: Identity | undefined
     if (identity != null) {
-      if (identity.email === email) return
-      throw new Error('unload current identity before registering a new one')
+      if (identity.email !== email) {
+        throw new Error('unload current identity before registering a new one')
+      }
+      id = identity
     } else {
-      const id = await loadIdentity({ email }, store)
-      if (id != null && id.email === email) {
-        setAuthStatus(AuthStatus.SignedIn)
-        setIdentity(id)
-        return
+      id = await loadIdentity({ email }, store)
+      if (id == null) {
+        id = await createIdentity({ email })
+        await storeIdentity(id, store)
       }
     }
 
+    setIdentity(id)
+
+    if (id.verified) { // nothing to do
+      setAuthStatus(AuthStatus.SignedIn)
+      return
+    }
+
+    const unverifiedIdentity = id as UnverifiedIdentity
+    await sendVerificationEmail(unverifiedIdentity)
+    await verifyAndRegisterAndStore(unverifiedIdentity)
+  }
+
+  const verifyAndRegisterAndStore = async (unverifiedIdentity: UnverifiedIdentity): Promise<void> => {
     const controller = new AbortController()
     setRegisterAbortController(controller)
 
     try {
-      const id = await registerIdentity(email, {
-        onAuthStatusChange: setAuthStatus,
-        signal: controller.signal
-      })
-      await storeIdentity(id, store)
-      setIdentity(id)
+      setAuthStatus(AuthStatus.EmailVerification)
+
+      const { identity, proof } = await waitIdentityVerification(unverifiedIdentity, { signal: controller.signal })
+      await registerIdentity(identity, proof)
+      await storeIdentity(identity, store)
+
+      setIdentity(identity)
+      setAuthStatus(AuthStatus.SignedIn)
     } catch (err) {
       setAuthStatus(AuthStatus.SignedOut)
       if (!controller.signal.aborted) {
