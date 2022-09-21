@@ -18,6 +18,7 @@ interface Options {
   jsName: string
   outputFile: string
   globals: Record<string, string>
+  browser: boolean
 }
 
 const umdDevPlugin = (type: 'development' | 'production'): Plugin =>
@@ -41,7 +42,9 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       jsName: 'UploaderCore',
       outputFile: 'uploader-core',
       entryFile: 'src/index.ts',
-      globals: {}
+      globals: {},
+      targets: [esm, cjs, umdDev, umdProd],
+      browser: true
     }),
     ...buildConfigs({
       name: 'wallet-core',
@@ -49,7 +52,9 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       jsName: 'WalletCore',
       outputFile: 'wallet-core',
       entryFile: 'src/index.ts',
-      globals: {}
+      globals: {},
+      targets: [esm, cjs, umdDev, umdProd],
+      browser: true
     }),
     ...buildConfigs({
       name: 'react-wallet',
@@ -59,7 +64,9 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       entryFile: 'src/index.ts',
       globals: {
         react: 'React'
-      }
+      },
+      targets: [esm, cjs, umdDev, umdProd],
+      browser: true
     }),
     ...buildConfigs({
       name: 'react-uploader',
@@ -70,7 +77,21 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       globals: {
         react: 'React',
         '@w3ui/react-wallet': 'ReactWallet'
-      }
+      },
+      targets: [esm, cjs, umdDev, umdProd],
+      browser: true
+    }),
+    ...buildConfigs({
+      name: 'react-native-wallet',
+      packageDir: 'packages/react-native-wallet',
+      jsName: 'ReactNativeWallet',
+      outputFile: 'react-native-wallet',
+      entryFile: 'src/index.ts',
+      globals: {
+        react: 'React'
+      },
+      targets: [cjs],
+      browser: false
     })
   ]
 }
@@ -82,6 +103,8 @@ function buildConfigs (opts: {
   outputFile: string
   entryFile: string
   globals: Record<string, string>
+  targets: Array<(options: Options) => RollupOptions>
+  browser: boolean
 }): RollupOptions[] {
   const input = path.resolve(opts.packageDir, opts.entryFile)
   const externalDeps = Object.keys(opts.globals)
@@ -96,13 +119,14 @@ function buildConfigs (opts: {
     packageDir: opts.packageDir,
     external,
     banner,
-    globals: opts.globals
+    globals: opts.globals,
+    browser: opts.browser == null ? true : opts.browser
   }
 
-  return [esm(options), cjs(options), umdDev(options), umdProd(options)]
+  return opts.targets.map(t => t(options))
 }
 
-function esm ({ input, packageDir, external, banner }: Options): RollupOptions {
+function esm ({ input, packageDir, external, banner, browser }: Options): RollupOptions {
   return {
     // ESM
     external,
@@ -111,6 +135,7 @@ function esm ({ input, packageDir, external, banner }: Options): RollupOptions {
       format: 'esm',
       sourcemap: true,
       dir: `${packageDir}/build/esm`,
+      // preserveModules: true,
       banner
     },
     plugins: [
@@ -118,12 +143,12 @@ function esm ({ input, packageDir, external, banner }: Options): RollupOptions {
       commonjs(),
       json(),
       babelPlugin,
-      nodeResolve({ extensions: ['.ts', '.tsx'], browser: true })
+      nodeResolve({ extensions: ['.ts', '.tsx'], browser, preferBuiltins: false })
     ]
   }
 }
 
-function cjs ({ input, external, packageDir, banner }: Options): RollupOptions {
+function cjs ({ input, external, packageDir, banner, browser }: Options): RollupOptions {
   return {
     // CJS
     external,
@@ -141,7 +166,7 @@ function cjs ({ input, external, packageDir, banner }: Options): RollupOptions {
       commonjs(),
       json(),
       babelPlugin,
-      nodeResolve({ extensions: ['.ts', '.tsx'], browser: true })
+      nodeResolve({ extensions: ['.ts', '.tsx'], browser, preferBuiltins: false })
     ]
   }
 }
@@ -153,7 +178,8 @@ function umdDev ({
   outputFile,
   globals,
   banner,
-  jsName
+  jsName,
+  browser
 }: Options): RollupOptions {
   return {
     // UMD (Dev)
@@ -172,7 +198,7 @@ function umdDev ({
       commonjs(),
       json(),
       babelPlugin,
-      nodeResolve({ extensions: ['.ts', '.tsx'], browser: true }),
+      nodeResolve({ extensions: ['.ts', '.tsx'], browser, preferBuiltins: false }),
       umdDevPlugin('development')
     ]
   }
@@ -185,7 +211,8 @@ function umdProd ({
   outputFile,
   globals,
   banner,
-  jsName
+  jsName,
+  browser
 }: Options): RollupOptions {
   return {
     // UMD (Prod)
@@ -204,7 +231,7 @@ function umdProd ({
       commonjs(),
       json(),
       babelPlugin,
-      nodeResolve({ extensions: ['.ts', '.tsx'], browser: true }),
+      nodeResolve({ extensions: ['.ts', '.tsx'], browser }),
       umdDevPlugin('production'),
       terser({
         mangle: true,
