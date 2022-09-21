@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react'
 import { registerIdentity, loadDefaultIdentity, loadIdentity, storeIdentity, removeIdentity, Identity, AuthStatus } from '@w3ui/wallet-core'
-import { AsyncStorage } from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export { AuthStatus }
 
@@ -52,13 +52,13 @@ export interface AuthProviderProps {
 
 const store = {
   async getItem (key: string) {
-    return AsyncStorage.getItem(key)
+    return await AsyncStorage.getItem(key)
   },
   async setItem (key: string, value: string) {
-    return AsyncStorage.setItem(key, value)
+    return await AsyncStorage.setItem(key, value)
   },
   async removeItem (key: string) {
-    return AsyncStorage.removeItem(key)
+    return await AsyncStorage.removeItem(key)
   }
 }
 

@@ -88,7 +88,8 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       outputFile: 'react-native-wallet',
       entryFile: 'src/index.ts',
       globals: {
-        react: 'React'
+        react: 'React',
+        '@react-native-async-storage/async-storage': 'AsyncStorage'
       },
       targets: [cjs],
       browser: false
