@@ -28,7 +28,7 @@ function IdentityLoader ({ children }) {
   // eslint-disable-next-line
   useEffect(() => { 
     loadDefaultIdentity()
-  }, []) // try load default identity - once.
+  }, [loadDefaultIdentity]) // try load default identity - once.
   return children
 }
 
