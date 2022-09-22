@@ -87,7 +87,7 @@ export function ContentPage () {
     <div>
       <div>
         <button onClick={takePhoto}>Take photo</button>
-        <img src={image} alt='What you just captured' />
+        <img src={image} alt='Just captured' />
         <Camera ref={camera} />
       </div>
 
