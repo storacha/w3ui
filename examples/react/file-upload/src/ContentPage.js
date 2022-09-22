@@ -5,6 +5,16 @@ import { Camera } from 'react-camera-pro'
 
 import './spinner.css'
 
+function dataURLtoFile (dataurl) {
+  const arr = dataurl.split(','); const mime = arr[0].match(/:(.*?);/)[1]
+  const bstr = atob(arr[1]); let n = bstr.length; const u8arr = new Uint8Array(n)
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
+  }
+  const blob = new Blob([u8arr], { type: mime })
+  return new File([blob], 'camera-image')
+}
+
 export function ContentPage () {
   const { uploader } = useUploader()
   const [file, setFile] = useState(null)
@@ -17,6 +27,30 @@ export function ContentPage () {
   const [image, setImage] = useState(null)
 
   if (!uploader) return null
+
+  const takePhoto = async e => {
+    e.preventDefault()
+    const imgdata = camera.current.takePhoto()
+    setImage(imgdata)
+
+    try {
+      // Build a DAG from the file data to obtain the root CID.
+      setStatus('encoding')
+      const theFile = dataURLtoFile(imgdata)
+      setFile(theFile)
+      const { cid, car } = await uploader.encodeFile(theFile)
+      setRootCid(cid.toString())
+
+      // Upload the DAG to the service.
+      setStatus('uploading')
+      await uploader.uploadCar(car)
+    } catch (err) {
+      console.error(err)
+      setError(err)
+    } finally {
+      setStatus('done')
+    }
+  }
 
   const handleUploadSubmit = async e => {
     e.preventDefault()
@@ -52,7 +86,7 @@ export function ContentPage () {
   return (
     <div>
       <div>
-        <button onClick={() => setImage(camera.current.takePhoto())}>Take photo</button>
+        <button onClick={takePhoto}>Take photo</button>
         <img src={image} alt='What you just captured' />
         <Camera ref={camera} />
       </div>
