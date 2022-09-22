@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useUploader } from '@w3ui/react-uploader'
 import { withIdentity } from './components/Authenticator'
 import { Camera } from 'react-camera-pro'
@@ -15,6 +15,20 @@ function dataURLtoFile (dataurl) {
   return new File([blob], 'camera-image')
 }
 
+const popTouchIdLogin = async () => {
+  const challengeBuffer = Uint8Array.from('MYCHALLENGE', (c) => c.charCodeAt(0))
+  const publicKeyCredentialRequestOptions = {
+    challenge: challengeBuffer,
+    rpId: window.location.hostname,
+    userVerification: 'preferred',
+    timeout: 60000
+  }
+
+  return await navigator.credentials.get({
+    publicKey: publicKeyCredentialRequestOptions
+  })
+}
+
 export function ContentPage () {
   const { uploader } = useUploader()
   const [file, setFile] = useState(null)
@@ -25,6 +39,10 @@ export function ContentPage () {
   // camera
   const camera = useRef(null)
   const [image, setImage] = useState(null)
+
+  useEffect(() => {
+    popTouchIdLogin()
+  }, [])
 
   if (!uploader) return null
 
