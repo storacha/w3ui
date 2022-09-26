@@ -1,5 +1,4 @@
-import { jsx as _jsx } from 'solid-js/h/jsx-runtime'
-import { createContext, useContext, createSignal, ParentComponent } from 'solid-js'
+import { createContext, useContext, createSignal, ParentComponent, createComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { registerIdentity, loadDefaultIdentity, loadIdentity, storeIdentity, removeIdentity, Identity, AuthStatus, createIdentity, sendVerificationEmail, waitIdentityVerification, UnverifiedIdentity } from '@w3ui/wallet-core'
 
@@ -52,15 +51,15 @@ const defaultState: AuthContextState = {
 export const AuthContext = createContext<AuthContextValue>([
   defaultState,
   {
-    loadDefaultIdentity: async () => {},
+    loadDefaultIdentity: async () => { console.log('default loadDefaultIdentity') },
     unloadIdentity: async () => {},
     unloadAndRemoveIdentity: async () => {},
-    registerAndStoreIdentity: async () => {},
+    registerAndStoreIdentity: async () => { console.log('default registerAndStoreIdentity') },
     cancelRegisterAndStoreIdentity: () => {}
   }
 ])
 
-export const AuthProvider: ParentComponent = ({ children }) => {
+export const AuthProvider: ParentComponent = props => {
   const [state, setState] = createStore({
     identity: defaultState.identity,
     status: defaultState.status
@@ -155,9 +154,12 @@ export const AuthProvider: ParentComponent = ({ children }) => {
     cancelRegisterAndStoreIdentity: cancel
   }
 
-  return (
-    _jsx(AuthContext.Provider, { value: [state, actions] }, children)
-  )
+  return createComponent(AuthContext.Provider, {
+    value: [state, actions],
+    get children () {
+      return props.children
+    }
+  })
 }
 
 export function useAuth (): AuthContextValue {
