@@ -99,7 +99,8 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       entryFile: 'src/index.ts',
       globals: {
         'solid-js': 'Solid',
-        'solid-js/store': 'SolidStore'
+        'solid-js/store': 'SolidStore',
+        'solid-js/h/jsx-runtime': 'SolidJsxRuntime'
       }
     })
   ]

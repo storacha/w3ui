@@ -1,3 +1,4 @@
+import { jsx as _jsx } from 'solid-js/h/jsx-runtime'
 import { createContext, useContext, createSignal, ParentComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { registerIdentity, loadDefaultIdentity, loadIdentity, storeIdentity, removeIdentity, Identity, AuthStatus, createIdentity, sendVerificationEmail, waitIdentityVerification, UnverifiedIdentity } from '@w3ui/wallet-core'
@@ -155,9 +156,7 @@ export const AuthProvider: ParentComponent = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={[state, actions]}>
-      {children}
-    </AuthContext.Provider>
+    _jsx(AuthContext.Provider, { value: [state, actions] }, children)
   )
 }
 
