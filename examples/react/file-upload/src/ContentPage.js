@@ -19,8 +19,6 @@ function dataURLtoFile (dataurl) {
 
 export function ContentPage () {
   const { uploader } = useUploader()
-  const [file, setFile] = useState(null)
-  const [rootCid, setRootCid] = useState('')
   const [status, setStatus] = useState('')
   const [error, setError] = useState(null)
   const camera = useRef(null)
@@ -37,9 +35,7 @@ export function ContentPage () {
       // Build a DAG from the file data to obtain the root CID.
       setStatus('encoding')
       const theFile = dataURLtoFile(imgdata)
-      setFile(theFile)
       const { cid, car } = await uploader.encodeFile(theFile)
-      setRootCid(cid.toString())
 
       setImages([{ cid: cid, data: imgdata }, ...images])
 
@@ -54,22 +50,11 @@ export function ContentPage () {
     }
   }
 
-  // convert this to status printout?
-  // if (status === 'encoding') {
-  //   return <Encoding file={file} />
-  // }
-
-  // if (status === 'uploading') {
-  //   return <Uploading file={file} cid={rootCid} />
-  // }
-
-  // if (status === 'done') {
-  //   return error ? <Errored error={error} /> : <Done file={file} cid={rootCid} />
-  // }
+  const printStatus = (status === 'done' && error) ? error : status
 
   return (
     <div>
-      <p><button onClick={takePhoto}>Take photo</button> {status}</p>
+      <p><button onClick={takePhoto}>Take photo</button> {printStatus}</p>
       <Camera ref={camera} />
 
       {images.map(({ cid, data }) => {
@@ -84,39 +69,5 @@ export function ContentPage () {
     </div>
   )
 }
-
-const Encoding = ({ file }) => (
-  <div className='flex items-center'>
-    <div className='spinner mr3 flex-none' />
-    <div className='flex-auto'>
-      <p className='truncate'>Building DAG for {file.name}</p>
-    </div>
-  </div>
-)
-
-const Uploading = ({ file, cid }) => (
-  <div className='flex items-center'>
-    <div className='spinner mr3 flex-none' />
-    <div className='flex-auto'>
-      <p className='truncate'>Uploading DAG for {file.name}</p>
-      <p className='f6 code truncate'>{cid}</p>
-    </div>
-  </div>
-)
-
-const Errored = ({ error }) => (
-  <div>
-    <h1 className='near-white'>⚠️ Error: failed to upload file: {error.message}</h1>
-    <p>Check the browser console for details.</p>
-  </div>
-)
-
-const Done = ({ file, cid }) => (
-  <div>
-    <h1 className='near-white'>Done!</h1>
-    <p className='f6 code truncate'>{cid}</p>
-    <p><a href={`https://w3s.link/ipfs/${cid}`} className='blue'>View {file.name} on IPFS Gateway.</a></p>
-  </div>
-)
 
 export default withIdentity(ContentPage)
