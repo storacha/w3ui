@@ -1,7 +1,21 @@
-import React, { useState } from 'react'
+/* global Blob, File */
+
+import React, { useState, useRef } from 'react'
 import { useUploader } from '@w3ui/react-uploader'
 import { withIdentity } from './components/Authenticator'
+import { Camera } from 'react-camera-pro'
+
 import './spinner.css'
+
+function dataURLtoFile (dataurl) {
+  const arr = dataurl.split(','); const mime = arr[0].match(/:(.*?);/)[1]
+  const bstr = atob(arr[1]); let n = bstr.length; const u8arr = new Uint8Array(n)
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
+  }
+  const blob = new Blob([u8arr], { type: mime })
+  return new File([blob], 'camera-image')
+}
 
 export function ContentPage () {
   const { uploader } = useUploader()
@@ -9,15 +23,23 @@ export function ContentPage () {
   const [rootCid, setRootCid] = useState('')
   const [status, setStatus] = useState('')
   const [error, setError] = useState(null)
+  const camera = useRef(null)
+  const [image, setImage] = useState(null)
 
   if (!uploader) return null
 
-  const handleUploadSubmit = async e => {
+  // refactor to be pure func with return values?
+  const takePhoto = async e => {
     e.preventDefault()
+    const imgdata = camera.current.takePhoto()
+    setImage(imgdata)
+
     try {
       // Build a DAG from the file data to obtain the root CID.
       setStatus('encoding')
-      const { cid, car } = await uploader.encodeFile(file)
+      const theFile = dataURLtoFile(imgdata)
+      setFile(theFile)
+      const { cid, car } = await uploader.encodeFile(theFile)
       setRootCid(cid.toString())
 
       // Upload the DAG to the service.
@@ -31,6 +53,7 @@ export function ContentPage () {
     }
   }
 
+  // convert this to status printout?
   if (status === 'encoding') {
     return <Encoding file={file} />
   }
@@ -40,17 +63,14 @@ export function ContentPage () {
   }
 
   if (status === 'done') {
-    return error ? <Errored error={error} /> : <Done file={file} cid={rootCid} />
+    return error ? <Errored error={error} /> : <Done file={file} cid={rootCid} image={image} />
   }
 
   return (
-    <form onSubmit={handleUploadSubmit}>
-      <div className='db mb3'>
-        <label htmlFor='file' className='db mb2'>File:</label>
-        <input id='file' className='db pa2 w-100 ba br2' type='file' onChange={e => setFile(e.target.files[0])} required />
-      </div>
-      <button type='submit' className='ph3 pv2'>Upload</button>
-    </form>
+    <div>
+      <button onClick={takePhoto}>Take photo</button>
+      <Camera ref={camera} />
+    </div>
   )
 }
 
