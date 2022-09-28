@@ -24,7 +24,7 @@ export function ContentPage () {
   const [status, setStatus] = useState('')
   const [error, setError] = useState(null)
   const camera = useRef(null)
-  const [image, setImage] = useState(null)
+  const [images, setImages] = useState([])
 
   if (!uploader) return null
 
@@ -32,7 +32,6 @@ export function ContentPage () {
   const takePhoto = async e => {
     e.preventDefault()
     const imgdata = camera.current.takePhoto()
-    setImage(imgdata)
 
     try {
       // Build a DAG from the file data to obtain the root CID.
@@ -41,6 +40,8 @@ export function ContentPage () {
       setFile(theFile)
       const { cid, car } = await uploader.encodeFile(theFile)
       setRootCid(cid.toString())
+
+      setImages([{ cid: cid, data: imgdata }, ...images])
 
       // Upload the DAG to the service.
       setStatus('uploading')
@@ -54,22 +55,32 @@ export function ContentPage () {
   }
 
   // convert this to status printout?
-  if (status === 'encoding') {
-    return <Encoding file={file} />
-  }
+  // if (status === 'encoding') {
+  //   return <Encoding file={file} />
+  // }
 
-  if (status === 'uploading') {
-    return <Uploading file={file} cid={rootCid} />
-  }
+  // if (status === 'uploading') {
+  //   return <Uploading file={file} cid={rootCid} />
+  // }
 
-  if (status === 'done') {
-    return error ? <Errored error={error} /> : <Done file={file} cid={rootCid} image={image} />
-  }
+  // if (status === 'done') {
+  //   return error ? <Errored error={error} /> : <Done file={file} cid={rootCid} />
+  // }
 
   return (
     <div>
-      <button onClick={takePhoto}>Take photo</button>
+      <p><button onClick={takePhoto}>Take photo</button> {status}</p>
       <Camera ref={camera} />
+
+      {images.map(({ cid, data }) => {
+        return (
+          <li key={cid}>
+            <a href={`https://w3s.link/ipfs/${cid}`}>
+              <img alt='camera output' src={data} />
+            </a>
+          </li>
+        )
+      })}
     </div>
   )
 }
