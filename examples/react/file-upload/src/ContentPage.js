@@ -30,7 +30,7 @@ function ImageListItem ({ cid, data }) {
   return (
     <li key={cid}>
       <a href={`https://w3s.link/ipfs/${cid}`}>
-        <img alt='camera output' src={imgSrc} />
+        <img width="200px" alt='camera output' src={imgSrc} />
       </a>
     </li>
   )
@@ -45,9 +45,7 @@ export function ContentPage () {
   // eslint-disable-next-line no-unused-vars
   const { loading, error: listError, data: listData, reload: listReload } = useUploadsList()
 
-  console.log('listData', listData)
   const printListData = (listData && listData.results) || []
-  console.log('printListData', printListData)
 
   if (!uploader) return null
 
@@ -83,13 +81,14 @@ export function ContentPage () {
         <button onClick={takePhoto}>Take photo</button> {printStatus}
       </p>
       <Camera ref={camera} />
-
+      <ul className='images'>
       {images.map(({ cid, data }) => (
         <ImageListItem key={cid} cid={cid} data={data} />
       ))}
-      {printListData.map((cid) => (
+      {printListData.map(({dataCid: cid}) => (
         <ImageListItem key={cid} cid={cid} />
       ))}
+      </ul>
     </div>
   )
 }

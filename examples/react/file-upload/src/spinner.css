@@ -23,3 +23,11 @@
     -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
   }
 }
+
+ul.images {
+  list-style-type: none;
+}
+ul.images li {
+  display:inline-block;
+  margin:2px
+}
