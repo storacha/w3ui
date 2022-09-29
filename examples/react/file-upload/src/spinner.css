@@ -31,3 +31,7 @@ ul.images li {
   display:inline-block;
   margin:2px
 }
+button {
+  width: 100%;
+  padding: 20px;
+}
