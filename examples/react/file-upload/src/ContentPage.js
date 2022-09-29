@@ -46,6 +46,8 @@ export function ContentPage () {
   const { loading, error: listError, data: listData, reload: listReload } = useUploadsList()
 
   console.log('listData', listData)
+  const printListData = (listData && listData.results) || []
+  console.log('printListData', printListData)
 
   if (!uploader) return null
 
@@ -85,7 +87,7 @@ export function ContentPage () {
       {images.map(({ cid, data }) => (
         <ImageListItem key={cid} cid={cid} data={data} />
       ))}
-      {listData.map((cid) => (
+      {printListData.map((cid) => (
         <ImageListItem key={cid} cid={cid} />
       ))}
     </div>
