@@ -1,13 +1,22 @@
 import { createContext, useContext, createComponent, ParentComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { uploadCarChunks, CarChunkMeta } from '@w3ui/uploader-core'
+import { uploadCarChunks, CarChunkMeta, encodeFile, chunkBlocks, encodeDirectory } from '@w3ui/uploader-core'
 import { useAuth } from '@w3ui/solid-wallet'
+import { CID } from 'multiformats/cid'
 
 export interface UploaderContextState {
   uploadedCarChunks: CarChunkMeta[]
 }
 
 export interface UploaderContextActions {
+  /**
+   * Upload a single file to the service.
+   */
+  uploadFile: (file: Blob) => Promise<CID>
+  /**
+   * Upload a directory of files to the service.
+   */
+  uploadDirectory: (files: File[]) => Promise<CID>
   /**
    * Upload CAR bytes to the service.
    */
@@ -21,22 +30,37 @@ export type UploaderContextValue = [
 
 const UploaderContext = createContext<UploaderContextValue>([
   { uploadedCarChunks: [] },
-  { uploadCarChunks: async () => { throw new Error('missing uploader context provider') } }
+  {
+    uploadFile: async () => { throw new Error('missing uploader context provider') },
+    uploadDirectory: async () => { throw new Error('missing uploader context provider') },
+    uploadCarChunks: async () => { throw new Error('missing uploader context provider') }
+  }
 ])
 
 export const UploaderProvider: ParentComponent = props => {
   const [auth] = useAuth()
-  const [state] = createStore<UploaderContextState>({ uploadedCarChunks: [] })
+  const [state, setState] = createStore<UploaderContextState>({ uploadedCarChunks: [] })
 
   const actions: UploaderContextActions = {
+    async uploadFile (file: Blob) {
+      const { cid, blocks } = encodeFile(file)
+      await actions.uploadCarChunks(chunkBlocks(blocks))
+      return await cid
+    },
+    async uploadDirectory (files: File[]) {
+      const { cid, blocks } = encodeDirectory(files)
+      await actions.uploadCarChunks(chunkBlocks(blocks))
+      return await cid
+    },
     async uploadCarChunks (chunks) {
       if (auth.identity == null) {
         throw new Error('missing identity')
       }
-      state.uploadedCarChunks = []
+
+      setState('uploadedCarChunks', [])
       await uploadCarChunks(auth.identity.signingPrincipal, chunks, {
         onChunkUploaded: e => {
-          state.uploadedCarChunks = [...state.uploadedCarChunks, e.meta]
+          setState('uploadedCarChunks', [...state.uploadedCarChunks, e.meta])
         }
       })
     }

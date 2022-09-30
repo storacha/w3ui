@@ -3,7 +3,8 @@ import { CarWriter } from '@ipld/car'
 import { CID } from 'multiformats/cid'
 import { toIterable } from './streams'
 
-const CHUNK_SIZE = 1024 * 1024 * 10
+// most thing are < 30MB
+const CHUNK_SIZE = 1024 * 1024 * 30
 
 export interface ChunkerOptions {
   /**

@@ -1,6 +1,7 @@
 import React, { useContext, createContext, useState, ReactNode } from 'react'
-import { uploadCarChunks, CarChunkMeta } from '@w3ui/uploader-core'
+import { encodeFile, encodeDirectory, chunkBlocks, uploadCarChunks, CarChunkMeta, CarData } from '@w3ui/uploader-core'
 import { useAuth } from '@w3ui/react-wallet'
+import { CID } from 'multiformats/cid'
 
 export interface UploaderContextState {
   uploadedCarChunks: CarChunkMeta[]
@@ -8,9 +9,17 @@ export interface UploaderContextState {
 
 export interface UploaderContextActions {
   /**
+   * Upload a single file to the service.
+   */
+  uploadFile: (file: Blob) => Promise<CID>
+  /**
+   * Upload a directory of files to the service.
+   */
+  uploadDirectory: (files: File[]) => Promise<CID>
+  /**
    * Upload CAR bytes to the service.
    */
-  uploadCarChunks: (chunks: AsyncIterable<AsyncIterable<Uint8Array>>) => Promise<void>
+  uploadCarChunks: (chunks: AsyncIterable<CarData>) => Promise<void>
 }
 
 export type UploaderContextValue = [
@@ -20,7 +29,11 @@ export type UploaderContextValue = [
 
 const UploaderContext = createContext<UploaderContextValue>([
   { uploadedCarChunks: [] },
-  { uploadCarChunks: async () => { throw new Error('missing uploader context provider') } }
+  {
+    uploadFile: async () => { throw new Error('missing uploader context provider') },
+    uploadDirectory: async () => { throw new Error('missing uploader context provider') },
+    uploadCarChunks: async () => { throw new Error('missing uploader context provider') }
+  }
 ])
 
 export interface UploaderProviderProps {
@@ -33,10 +46,18 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
 
   const state = { uploadedCarChunks }
   const actions: UploaderContextActions = {
+    async uploadFile (file: Blob) {
+      const { cid, blocks } = encodeFile(file)
+      await actions.uploadCarChunks(chunkBlocks(blocks))
+      return await cid
+    },
+    async uploadDirectory (files: File[]) {
+      const { cid, blocks } = encodeDirectory(files)
+      await actions.uploadCarChunks(chunkBlocks(blocks))
+      return await cid
+    },
     async uploadCarChunks (chunks) {
-      if (identity == null) {
-        throw new Error('missing identity')
-      }
+      if (identity == null) throw new Error('missing identity')
       const uploadedChunks: CarChunkMeta[] = []
       setUploadedCarChunks(uploadedChunks)
       await uploadCarChunks(identity.signingPrincipal, chunks, {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useUploader, encodeFile, chunkBlocks } from '@w3ui/react-uploader'
+import { useUploader } from '@w3ui/react-uploader'
 import { withIdentity } from './components/Authenticator'
 import './spinner.css'
 
@@ -15,13 +15,9 @@ export function ContentPage () {
   const handleUploadSubmit = async e => {
     e.preventDefault()
     try {
-      // Build a DAG from the file data to obtain the data CID.
-      const { cid, blocks } = encodeFile(file)
-
-      // Upload the DAG to the service.
       setStatus('uploading')
-      await uploader.uploadCarChunks(chunkBlocks(blocks))
-      setDataCid(await cid)
+      const cid = await uploader.uploadFile(file)
+      setDataCid(cid)
     } catch (err) {
       console.error(err)
       setError(err)

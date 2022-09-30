@@ -40,10 +40,13 @@ export interface UploadCarChunksOptions extends Retryable {
   onChunkUploaded?: (event: CarChunkUploadedEvent) => void
 }
 
+export type CarData = AsyncIterable<Uint8Array>
+
 /**
- * Upload multiple CAR chunks to the service.
+ * Upload multiple CAR chunks to the service, linking them together after
+ * successful completion.
  */
-export async function uploadCarChunks (principal: SigningPrincipal, chunks: AsyncIterable<AsyncIterable<Uint8Array>>, options: UploadCarChunksOptions = {}): Promise<CID[]> {
+export async function uploadCarChunks (principal: SigningPrincipal, chunks: AsyncIterable<CarData>, options: UploadCarChunksOptions = {}): Promise<CID[]> {
   const onChunkUploaded = options.onChunkUploaded ?? (() => {})
 
   const uploads = transform(CONCURRENT_UPLOADS, async chunk => {
