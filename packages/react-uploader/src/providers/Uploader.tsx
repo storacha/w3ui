@@ -1,29 +1,27 @@
-import React, { useContext, createContext, useState, useEffect, ReactNode } from 'react'
-import { encodeFile, encodeDirectory, uploadCarBytes, EncodeResult } from '@w3ui/uploader-core'
+import React, { useContext, createContext, useState, ReactNode } from 'react'
+import { uploadCarChunks, CarChunkMeta } from '@w3ui/uploader-core'
 import { useAuth } from '@w3ui/react-wallet'
 
-export interface Uploader {
-  /**
-   * Create a UnixFS DAG from the passed file data and serialize to a CAR file.
-   */
-  encodeFile: (data: Blob) => Promise<EncodeResult>
-  /**
-   * Create a UnixFS DAG from the passed file data and serialize to a CAR file.
-   * All files are added to a container directory, with paths in file names
-   * preserved.
-   */
-  encodeDirectory: (files: Iterable<File>) => Promise<EncodeResult>
+export interface UploaderContextState {
+  uploadedCarChunks: CarChunkMeta[]
+}
+
+export interface UploaderContextActions {
   /**
    * Upload CAR bytes to the service.
    */
-  uploadCar: (car: AsyncIterable<Uint8Array>) => Promise<void>
+  uploadCarChunks: (chunks: AsyncIterable<AsyncIterable<Uint8Array>>) => Promise<void>
 }
 
-export interface UploaderContextValue {
-  uploader?: Uploader
-}
+export type UploaderContextValue = [
+  state: UploaderContextState,
+  actions: UploaderContextActions
+]
 
-const UploaderContext = createContext<UploaderContextValue>({})
+const UploaderContext = createContext<UploaderContextValue>([
+  { uploadedCarChunks: [] },
+  { uploadCarChunks: async () => { throw new Error('missing uploader context provider') } }
+])
 
 export interface UploaderProviderProps {
   children?: ReactNode
@@ -31,27 +29,27 @@ export interface UploaderProviderProps {
 
 export function UploaderProvider ({ children }: UploaderProviderProps): ReactNode {
   const { identity } = useAuth()
-  const [uploader, setUploader] = useState<Uploader|undefined>(undefined)
+  const [uploadedCarChunks, setUploadedCarChunks] = useState<UploaderContextState['uploadedCarChunks']>([])
 
-  useEffect(() => {
-    if (identity != null) {
-      setUploader({
-        encodeFile,
-        encodeDirectory,
-        async uploadCar (car: AsyncIterable<Uint8Array>) {
-          const chunks: Uint8Array[] = []
-          for await (const chunk of car) {
-            chunks.push(chunk)
-          }
-          const bytes = new Uint8Array(await new Blob(chunks).arrayBuffer())
-          await uploadCarBytes(identity.signingPrincipal, bytes)
+  const state = { uploadedCarChunks }
+  const actions: UploaderContextActions = {
+    async uploadCarChunks (chunks) {
+      if (identity == null) {
+        throw new Error('missing identity')
+      }
+      const uploadedChunks: CarChunkMeta[] = []
+      setUploadedCarChunks(uploadedChunks)
+      await uploadCarChunks(identity.signingPrincipal, chunks, {
+        onChunkUploaded: e => {
+          uploadedChunks.push(e.meta)
+          setUploadedCarChunks([...uploadedChunks])
         }
       })
     }
-  }, [identity])
+  }
 
   return (
-    <UploaderContext.Provider value={{ uploader }}>
+    <UploaderContext.Provider value={[state, actions]}>
       {children}
     </UploaderContext.Provider>
   )

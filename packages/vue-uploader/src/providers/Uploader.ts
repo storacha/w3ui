@@ -1,50 +1,47 @@
-import { defineComponent, provide, InjectionKey, inject } from 'vue'
+import { defineComponent, provide, InjectionKey, inject, Ref, shallowReactive, computed } from 'vue'
 import { AuthProviderInjectionKey } from '@w3ui/vue-wallet'
-import { encodeFile, encodeDirectory, uploadCarBytes, EncodeResult } from '@w3ui/uploader-core'
+import { uploadCarChunks, CarChunkMeta } from '@w3ui/uploader-core'
 
 /**
  * Injection keys for uploader context.
  */
 export const UploaderProviderInjectionKey = {
-  encodeFile: Symbol('w3ui uploader encodeFile') as InjectionKey<UploaderContextActions['encodeFile']>,
-  encodeDirectory: Symbol('w3ui uploader encodeDirectory') as InjectionKey<UploaderContextActions['encodeDirectory']>,
-  uploadCar: Symbol('w3ui uploader uploadCar') as InjectionKey<UploaderContextActions['uploadCar']>
+  uploadedCarChunks: Symbol('w3ui uploader uploadedCarChunks') as InjectionKey<Ref<UploaderContextState['uploadedCarChunks']>>,
+  uploadCarChunks: Symbol('w3ui uploader uploadCarChunks') as InjectionKey<UploaderContextActions['uploadCarChunks']>
+}
+
+export interface UploaderContextState {
+  uploadedCarChunks: CarChunkMeta[]
 }
 
 export interface UploaderContextActions {
   /**
-   * Create a UnixFS DAG from the passed file data and serialize to a CAR file.
-   */
-  encodeFile: (data: Blob) => Promise<EncodeResult>
-  /**
-   * Create a UnixFS DAG from the passed file data and serialize to a CAR file.
-   * All files are added to a container directory, with paths in file names
-   * preserved.
-   */
-  encodeDirectory: (files: Iterable<File>) => Promise<EncodeResult>
-  /**
    * Upload CAR bytes to the service.
    */
-  uploadCar: (car: AsyncIterable<Uint8Array>) => Promise<void>
+  uploadCarChunks: (chunks: AsyncIterable<AsyncIterable<Uint8Array>>) => Promise<void>
 }
 
 export const UploaderProvider = defineComponent({
   setup () {
     const identity = inject(AuthProviderInjectionKey.identity)
+    const state = shallowReactive<UploaderContextState>({
+      uploadedCarChunks: []
+    })
 
-    provide(UploaderProviderInjectionKey.encodeFile, encodeFile)
-    provide(UploaderProviderInjectionKey.encodeDirectory, encodeDirectory)
-    provide(UploaderProviderInjectionKey.uploadCar, async car => {
+    provide(UploaderProviderInjectionKey.uploadedCarChunks, computed(() => state.uploadedCarChunks))
+    provide(UploaderProviderInjectionKey.uploadCarChunks, async (chunks) => {
       if (identity?.value == null) {
         throw new Error('missing identity')
       }
-      const chunks: Uint8Array[] = []
-      for await (const chunk of car) {
-        chunks.push(chunk)
-      }
-      const bytes = new Uint8Array(await new Blob(chunks).arrayBuffer())
-      await uploadCarBytes(identity.value.signingPrincipal, bytes)
+      state.uploadedCarChunks = []
+      await uploadCarChunks(identity.value.signingPrincipal, chunks, {
+        onChunkUploaded: e => {
+          state.uploadedCarChunks = [...state.uploadedCarChunks, e.meta]
+        }
+      })
     })
+
+    return state
   },
 
   // Our provider component is a renderless component
