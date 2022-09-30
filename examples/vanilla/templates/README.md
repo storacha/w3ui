@@ -12,7 +12,7 @@ To run this example:
 - Change to this example directory and install dependencies
 
   ```sh
-  cd examples/vue/template
+  cd examples/vanilla/template
   npm install
   ```
 
