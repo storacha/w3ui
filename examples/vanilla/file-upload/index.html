@@ -22,12 +22,6 @@
             <button type="submit" class="ph3 pv2">Register</button>
           </form>
         </register-form>
-
-
-        <upload-form id="upload-form-component">
-        </upload-form>
-
-
       </div>
     </div>
 
@@ -65,7 +59,7 @@
       <div class='flex items-center'>
         <div class='spinner mr3 flex-none'></div>
         <div class='flex-auto'>
-          <p class='truncate'>Building DAG for {{file.name}}</p>
+          <p class='truncate'>Building DAG for <span data-file-name-slot></span></p>
         </div>
       </div>
     </template>
@@ -75,26 +69,26 @@
       <div class='flex items-center'>
         <div class='spinner mr3 flex-none'></div>
         <div class='flex-auto'>
-          <p class='truncate'>Uploading DAG for {{file.name}}</p>
-          <p class='f6 code truncate'>{{rootCid}}</p>
+          <p class='truncate'>Uploading DAG for <span data-file-name-slot></span></p>
+          <p class='f6 code truncate'><span data-root-cid-slot></span></p>
         </div>
-      </div>
-    </template>
-
-    <!-- Upload complete -->
-    <template id="upload-complete-template">
-      <div>
-        <h1 class='near-white'>⚠️ Error: failed to upload file: {{error.message}}</h1>
-        <p>Check the browser console for details.</p>
       </div>
     </template>
 
     <!-- File Upload error -->
     <template id="upload-error-template">
       <div>
+        <h1 class='near-white'>⚠️ Error: failed to upload file: <span data-error-messages-slot></span></h1>
+        <p>Check the browser console for details.</p>
+      </div>
+    </template>
+
+    <!-- Upload complete -->
+    <template id="upload-complete-template">
+      <div>
         <h1 class='near-white'>Done!</h1>
-        <p class='f6 code truncate'>{{rootCid}}</p>
-        <p><a href="'https://w3s.link/ipfs/' + rootCid" class='blue'>View {{file.name}} on IPFS Gateway.</a></p>
+        <p class='f6 code truncate'><span data-root-cid-slot></span></p>
+        <p><a href="'https://w3s.link/ipfs/' + rootCid" class='blue'>View <span data-file-name-slot></span> on IPFS Gateway.</a></p>
       </div>
     </template>
 

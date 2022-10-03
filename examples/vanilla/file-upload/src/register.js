@@ -51,7 +51,7 @@ export class RegisterForm extends HTMLElement {
   }
 
   formatTemplateContent(templateContent) {
-    templateContent.querySelector('[data-email-slot]').innerHTML = this.email
+    templateContent.querySelector('[data-email-slot]').innerText = this.email
     return templateContent
   }
 

@@ -17,7 +17,8 @@ document.addEventListener(EVENTS.registrationSuccess, (event) => {
   // Switch components
   registerEl.remove();
   const uploadEl = document.createElement("upload-form")
-  document.body.appendChild(uploadEl);
+  const container = document.querySelector("#app div");
+  container.appendChild(uploadEl);
 })
 
 // Create a listener for the sign in complete event
