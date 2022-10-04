@@ -19,7 +19,7 @@ const SELECTORS = {
   confirmationTemplate: '#registration-success-template'
 }
 
-export class RegisterForm extends HTMLElement {
+export class RegisterForm extends window.HTMLElement {
   constructor () {
     super()
     this.identity = null
@@ -60,7 +60,7 @@ export class RegisterForm extends HTMLElement {
     this.signOutButton$.addEventListener('click', this.signOutHandler)
 
     // Fire sign in success event
-    const event = new CustomEvent(EVENTS.registrationSuccess, { bubbles: true })
+    const event = new window.CustomEvent(EVENTS.registrationSuccess, { bubbles: true })
     this.dispatchEvent(event)
   }
 
@@ -77,7 +77,7 @@ export class RegisterForm extends HTMLElement {
 
   cancelRegistrationHandler (e) {
     e.preventDefault()
-    location.reload()
+    window.location.reload()
   }
 
   async signOutHandler (e) {
@@ -85,12 +85,12 @@ export class RegisterForm extends HTMLElement {
     if (this.identity) {
       await removeIdentity(this.identity)
     }
-    location.reload()
+    window.location.reload()
   }
 
   async submitHandler (e) {
     e.preventDefault()
-    const fd = new FormData(e.target)
+    const fd = new window.FormData(e.target)
     // log in a user by their email
     const email = fd.get('email')
     this.email = email
@@ -124,4 +124,4 @@ export class RegisterForm extends HTMLElement {
   };
 }
 
-customElements.define('register-form', RegisterForm)
+window.customElements.define('register-form', RegisterForm)

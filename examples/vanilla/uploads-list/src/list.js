@@ -8,7 +8,7 @@ const SELECTORS = {
   table: 'table'
 }
 
-export class ListFiles extends HTMLElement {
+export class ListFiles extends window.HTMLElement {
   constructor () {
     super()
     this.listTemplate$ = document.querySelector(SELECTORS.listTemplate)
@@ -57,4 +57,4 @@ export class ListFiles extends HTMLElement {
   }
 }
 
-customElements.define('list-files', ListFiles)
+window.customElements.define('list-files', ListFiles)

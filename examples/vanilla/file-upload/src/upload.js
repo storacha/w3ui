@@ -10,7 +10,7 @@ const SELECTORS = {
   uploadErrorTemplate: '#upload-error-template'
 }
 
-export class UploadFileForm extends HTMLElement {
+export class UploadFileForm extends window.HTMLElement {
   constructor () {
     super()
     this.form$ = document.querySelector(SELECTORS.uploadForm)
@@ -110,4 +110,4 @@ export class UploadFileForm extends HTMLElement {
   }
 }
 
-customElements.define('upload-form', UploadFileForm)
+window.customElements.define('upload-form', UploadFileForm)
