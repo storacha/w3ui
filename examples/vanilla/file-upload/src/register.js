@@ -8,122 +8,120 @@ import {
   waitIdentityVerification,
   removeIdentity,
   storeIdentity,
-  loadDefaultIdentity,
-} from "@w3ui/wallet-core";
+  loadDefaultIdentity
+} from '@w3ui/wallet-core'
 
 const SELECTORS = {
-  authForm: "#sign-up-in-form",
-  cancelRegistrationButton: "#cancel-registration",
-  signOutButton: "#sign-out",
-  verificationTemplate: "#verification-required-template",
-  confirmationTemplate: "#registration-success-template",
-};
-
-
+  authForm: '#sign-up-in-form',
+  cancelRegistrationButton: '#cancel-registration',
+  signOutButton: '#sign-out',
+  verificationTemplate: '#verification-required-template',
+  confirmationTemplate: '#registration-success-template'
+}
 
 export class RegisterForm extends HTMLElement {
-  constructor() {
-    super();
-    this.identity = null;
-    this.email = null;
-    this.form$ = document.querySelector(SELECTORS.authForm);
-    this.confirmationTemplate$ = document.querySelector(SELECTORS.confirmationTemplate);
-    this.verificationTemplate$ = document.querySelector(SELECTORS.verificationTemplate);
-    this.submitHandler = this.submitHandler.bind(this);
-    this.cancelRegistrationHandler = this.cancelRegistrationHandler.bind(this);
-    this.signOutHandler = this.signOutHandler.bind(this);
-    this.formatTemplateContent = this.formatTemplateContent.bind(this);
+  constructor () {
+    super()
+    this.identity = null
+    this.email = null
+    this.form$ = document.querySelector(SELECTORS.authForm)
+    this.confirmationTemplate$ = document.querySelector(SELECTORS.confirmationTemplate)
+    this.verificationTemplate$ = document.querySelector(SELECTORS.verificationTemplate)
+    this.submitHandler = this.submitHandler.bind(this)
+    this.cancelRegistrationHandler = this.cancelRegistrationHandler.bind(this)
+    this.signOutHandler = this.signOutHandler.bind(this)
+    this.formatTemplateContent = this.formatTemplateContent.bind(this)
   }
 
-  async connectedCallback() {
-    this.form$.addEventListener("submit", this.submitHandler);
+  async connectedCallback () {
+    this.form$.addEventListener('submit', this.submitHandler)
 
-    const identity = await loadDefaultIdentity();
+    const identity = await loadDefaultIdentity()
 
     if (identity) {
-      this.identity = identity;
-      this.email = identity.email;
-      this.toggleConfirmation();
-      console.log(`DID: ${identity.signingPrincipal.did()}`);
+      this.identity = identity
+      this.email = identity.email
+      this.toggleConfirmation()
+      console.log(`DID: ${identity.signingPrincipal.did()}`)
     } else {
-      console.log('No identity registered');
+      console.log('No identity registered')
     }
   }
 
-  formatTemplateContent(templateContent) {
+  formatTemplateContent (templateContent) {
     templateContent.querySelector('[data-email-slot]').innerText = this.email
     return templateContent
   }
 
-  toggleConfirmation() {
-    const templateContent = this.confirmationTemplate$.content;
-    this.replaceChildren(this.formatTemplateContent(templateContent));
-    this.signOutButton$ = document.querySelector(SELECTORS.signOutButton);
-    this.signOutButton$.addEventListener("click", this.signOutHandler);
+  toggleConfirmation () {
+    const templateContent = this.confirmationTemplate$.content
+    this.replaceChildren(this.formatTemplateContent(templateContent))
+    this.signOutButton$ = document.querySelector(SELECTORS.signOutButton)
+    this.signOutButton$.addEventListener('click', this.signOutHandler)
 
     // Fire sign in success event
-    const event = new CustomEvent(EVENTS.registrationSuccess, {bubbles: true});
-    this.dispatchEvent(event);
+    const event = new CustomEvent(EVENTS.registrationSuccess, { bubbles: true })
+    this.dispatchEvent(event)
   }
 
-  toggleVerification() {
-    const templateContent = this.verificationTemplate$.content;
-    this.replaceChildren(this.formatTemplateContent(templateContent));
-    this.cancelRegistrationButton$ = document.querySelector(SELECTORS.cancelRegistrationButton);
-    this.cancelRegistrationButton$.addEventListener("click", this.cancelRegistrationHandler);
+  toggleVerification () {
+    const templateContent = this.verificationTemplate$.content
+    this.replaceChildren(this.formatTemplateContent(templateContent))
+    this.cancelRegistrationButton$ = document.querySelector(SELECTORS.cancelRegistrationButton)
+    this.cancelRegistrationButton$.addEventListener('click', this.cancelRegistrationHandler)
   }
 
-  disconnectedCallback() {
-    this.form$?.removeEventListener("submit", this.submitHandler);
+  disconnectedCallback () {
+    this.form$?.removeEventListener('submit', this.submitHandler)
   }
 
-  cancelRegistrationHandler = async (e) => {
-    e.preventDefault();
-    location.reload();
+  cancelRegistrationHandler (e) {
+    e.preventDefault()
+    location.reload()
   }
 
-  signOutHandler = async (e) => {
-    e.preventDefault();
+  async signOutHandler (e) {
+    e.preventDefault()
     if (this.identity) {
-      await removeIdentity(this.identity);
+      await removeIdentity(this.identity)
     }
-    location.reload();
+    location.reload()
   }
 
-  submitHandler = async (e) => {
-    e.preventDefault();
-    const fd = new FormData(e.target);
+  async submitHandler (e) {
+    e.preventDefault()
+    const fd = new FormData(e.target)
     // log in a user by their email
-    const email = fd.get("email");
-    this.email = email;
-    let identity;
-    let proof;
+    const email = fd.get('email')
+    this.email = email
+    let identity
+    let proof
 
     if (email) {
-      const unverifiedIdentity = await createIdentity({ email });
-      console.log(`DID: ${unverifiedIdentity.signingPrincipal.did()}`);
-      await sendVerificationEmail(unverifiedIdentity);
-      const controller = new AbortController();
+      const unverifiedIdentity = await createIdentity({ email })
+      console.log(`DID: ${unverifiedIdentity.signingPrincipal.did()}`)
+      await sendVerificationEmail(unverifiedIdentity)
+      const controller = new AbortController()
 
       try {
         this.toggleVerification(true);
         ({ identity, proof } = await waitIdentityVerification(
           unverifiedIdentity,
           {
-            signal: controller.signal,
+            signal: controller.signal
           }
-        ));
-        await registerIdentity(identity, proof);
+        ))
+        await registerIdentity(identity, proof)
         await storeIdentity(identity)
-        this.identity = identity;
+        this.identity = identity
       } catch (err) {
-        console.error("Registration failed:", err);
-        this.email = null;
+        console.error('Registration failed:', err)
+        this.email = null
       } finally {
-        this.toggleConfirmation(true);
+        this.toggleConfirmation(true)
       }
     }
   };
 }
 
-customElements.define("register-form", RegisterForm);
+customElements.define('register-form', RegisterForm)

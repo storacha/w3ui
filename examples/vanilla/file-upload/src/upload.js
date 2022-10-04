@@ -1,6 +1,5 @@
-import { EVENTS } from './main'
 import { loadDefaultIdentity } from '@w3ui/wallet-core'
-import { uploadCarChunks, encodeFile, chunkBlocks, encodeDirectory } from '@w3ui/uploader-core'
+import { uploadCarChunks, encodeFile, chunkBlocks } from '@w3ui/uploader-core'
 
 const SELECTORS = {
   uploadForm: '#upload-form',
@@ -8,7 +7,7 @@ const SELECTORS = {
   encodingTemplate: '#file-encoding-template',
   uploadingTemplate: '#file-uploading-template',
   uploadCompleteTemplate: '#upload-complete-template',
-  uploadErrorTemplate: '#upload-error-template',
+  uploadErrorTemplate: '#upload-error-template'
 }
 
 export class UploadFileForm extends HTMLElement {
@@ -46,7 +45,7 @@ export class UploadFileForm extends HTMLElement {
     } catch(error) {
       this.toggleUploadError();
     } finally {
-      this.toggleUploadComplete();
+      this.toggleUploadComplete()
     }
   }
 
@@ -98,17 +97,17 @@ export class UploadFileForm extends HTMLElement {
     return templateContent;
   }
 
-  async connectedCallback() {
-    const templateContent = this.uploadFormTemplate$.content;
-    this.replaceChildren(templateContent);
-    this.handleFileUpload = this.handleFileUpload.bind(this);
-    this.form$ = document.querySelector(SELECTORS.uploadForm);
-    this.form$.addEventListener("submit", this.handleFileUpload);
+  async connectedCallback () {
+    const templateContent = this.uploadFormTemplate$.content
+    this.replaceChildren(templateContent)
+    this.handleFileUpload = this.handleFileUpload.bind(this)
+    this.form$ = document.querySelector(SELECTORS.uploadForm)
+    this.form$.addEventListener('submit', this.handleFileUpload)
   }
 
-  disconnectedCallback() {
-    this.form$.removeEventListener("submit", this.handleFileUpload);
+  disconnectedCallback () {
+    this.form$.removeEventListener('submit', this.handleFileUpload)
   }
 }
 
-customElements.define("upload-form", UploadFileForm);
+customElements.define('upload-form', UploadFileForm)
