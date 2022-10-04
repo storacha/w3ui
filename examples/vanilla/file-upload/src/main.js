@@ -1,4 +1,5 @@
 import './assets/tachyons.min.css'
+import './assets/spinner.css'
 import { RegisterForm } from './register'
 import { UploadFileForm } from './upload'
 
