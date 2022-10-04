@@ -35,7 +35,6 @@
       </div>
     </template>
 
-
     <!-- Logged in -->
     <template id="registration-success-template">
       <div>
@@ -76,15 +75,15 @@
       </tr>
     </template>
 
-
-    <!-- Verification version -->
-    <template id="verification-required-template">
-      <div>
-        <h1 class="near-white">Verify your email address!</h1>
-        <p>Click the link in the email we sent to <span data-email-slot></span>to sign in.</p>
-        <button type="button" id="cancel-registration" class="ph3 pv2">Cancel</button>
+    <!-- No upload template -->
+    <template id="no-uploads">
+      <div class="tc">
+        <p class="tc">No uploads</p>
+        <button data-reload-button type="button" class="ph3 pv2 mr3">Refresh</button>
+        <span class="spinner dib"></span>
       </div>
     </template>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
