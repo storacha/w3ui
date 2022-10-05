@@ -1,5 +1,4 @@
 import { loadDefaultIdentity } from '@w3ui/wallet-core'
-import { listUploads } from '@w3ui/uploads-list-core'
 import { uploadCarChunks, encodeFile, encodeDirectory, chunkBlocks } from '@w3ui/uploader-core'
 
 const SELECTORS = {
@@ -32,11 +31,11 @@ export class UploadFileForm extends window.HTMLElement {
     this.allowDirectorySelection = event.target.checked
     const fileInputEl$ = this.form$.querySelector(SELECTORS.fileInput)
     if (fileInputEl$ && event.target.checked) {
-      fileInputEl$.setAttribute('type', 'file');
+      fileInputEl$.setAttribute('type', 'file')
       fileInputEl$.setAttribute('webkitdirectory', 'true')
       fileInputEl$.removeAttribute('multiple')
     } else if (fileInputEl$) {
-      fileInputEl$.removeAttribute('type');
+      fileInputEl$.removeAttribute('type')
       fileInputEl$.removeAttribute('webkitdirectory')
       fileInputEl$.toggleAttribute('multiple', true)
     }
@@ -141,13 +140,13 @@ export class UploadFileForm extends window.HTMLElement {
     this.form$ = document.querySelector(SELECTORS.uploadForm)
     this.form$.addEventListener('submit', this.handleFileUpload)
 
-    this.allowDirectorySelectionCheckbox$ = document.querySelector(SELECTORS.allowDirectorySelectionCheckbox);
-    this.allowDirectorySelectionCheckbox$.addEventListener('click', this.allowDirectorySelectionHandler);
+    this.allowDirectorySelectionCheckbox$ = document.querySelector(SELECTORS.allowDirectorySelectionCheckbox)
+    this.allowDirectorySelectionCheckbox$.addEventListener('click', this.allowDirectorySelectionHandler)
   }
 
   disconnectedCallback () {
     this.form$.removeEventListener('submit', this.handleFileUpload)
-    this.allowDirectorySelectionCheckbox$.removeEventListener('click', this.allowDirectorySelectionHandler);
+    this.allowDirectorySelectionCheckbox$.removeEventListener('click', this.allowDirectorySelectionHandler)
   }
 }
 

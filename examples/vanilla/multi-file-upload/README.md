@@ -12,7 +12,7 @@ To run this example:
 - Change to this example directory and install dependencies
 
   ```sh
-  cd examples/vanilla/template
+  cd examples/vanilla/multi-file-upload
   npm install
   ```
 
