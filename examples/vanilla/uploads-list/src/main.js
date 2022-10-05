@@ -21,8 +21,6 @@ document.addEventListener(EVENTS.registrationSuccess, (event) => {
   container.appendChild(uploadEl)
 })
 
-// Create a listener for the sign in complete event
-
 export {
   RegisterForm,
   ListFiles

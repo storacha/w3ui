@@ -21,6 +21,14 @@ export class UploadFileForm extends window.HTMLElement {
     this.uploadErrorTemplate$ = document.querySelector(SELECTORS.uploadErrorTemplate)
   }
 
+  async connectedCallback () {
+    const templateContent = this.uploadFormTemplate$.content
+    this.replaceChildren(templateContent)
+    this.handleFileUpload = this.handleFileUpload.bind(this)
+    this.form$ = document.querySelector(SELECTORS.uploadForm)
+    this.form$.addEventListener('submit', this.handleFileUpload)
+  }
+
   async handleFileUpload (event) {
     event.preventDefault()
     const fileInputEl = this.form$.querySelector('input[type=file')
@@ -95,14 +103,6 @@ export class UploadFileForm extends window.HTMLElement {
     const hrefSlot = templateContent.querySelector('[data-root-cid-href-slot]')
     hrefSlot.href = `https://w3s.link/ipfs/${this.cid}`
     return templateContent
-  }
-
-  async connectedCallback () {
-    const templateContent = this.uploadFormTemplate$.content
-    this.replaceChildren(templateContent)
-    this.handleFileUpload = this.handleFileUpload.bind(this)
-    this.form$ = document.querySelector(SELECTORS.uploadForm)
-    this.form$.addEventListener('submit', this.handleFileUpload)
   }
 
   disconnectedCallback () {

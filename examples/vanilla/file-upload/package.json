@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@w3ui/uploader-core": "^2.0.0",
+    "@w3ui/uploads-list-core": "^1.0.2",
     "@w3ui/wallet-core": "^1.2.2"
   },
   "devDependencies": {
