@@ -66,7 +66,11 @@ export class ListFiles extends window.HTMLElement {
   renderFileRow (file) {
     const item = this.listItemTemplate$?.content.cloneNode(true)
     const columns = item.querySelectorAll('td')
-    columns[0].textContent = file.dataCid
+    const gatewayLinkEl = document.createElement('a')
+    gatewayLinkEl.href = `https://w3s.link/ipfs/${file.dataCid}`
+    gatewayLinkEl.textContent = file.dataCid
+    gatewayLinkEl.classList.add(...['white', 'link'])
+    columns[0].appendChild(gatewayLinkEl)
     columns[1].textContent = file.carCids[0]
     columns[2].textContent = new Date(file.uploadedAt).toLocaleString()
     return item
