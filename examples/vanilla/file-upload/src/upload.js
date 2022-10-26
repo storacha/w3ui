@@ -1,5 +1,5 @@
-import { loadDefaultIdentity } from '@w3ui/keyring-core'
-import { uploadCarChunks, encodeFile, chunkBlocks } from '@w3ui/uploader-core'
+import { loadDefaultIdentity } from '@w3ui/keyring-core';
+import { uploadCarChunks, encodeFile, chunkBlocks } from '@w3ui/uploader-core';
 
 const SELECTORS = {
   uploadForm: '#upload-form',
@@ -7,107 +7,119 @@ const SELECTORS = {
   encodingTemplate: '#file-encoding-template',
   uploadingTemplate: '#file-uploading-template',
   uploadCompleteTemplate: '#upload-complete-template',
-  uploadErrorTemplate: '#upload-error-template'
-}
+  uploadErrorTemplate: '#upload-error-template',
+};
 
 export class UploadFileForm extends window.HTMLElement {
-  constructor () {
-    super()
-    this.form$ = document.querySelector(SELECTORS.uploadForm)
-    this.uploadFormTemplate$ = document.querySelector(SELECTORS.uploadFormTemplate)
-    this.encodingTemplate$ = document.querySelector(SELECTORS.encodingTemplate)
-    this.uploadingTemplate$ = document.querySelector(SELECTORS.uploadingTemplate)
-    this.uploadCompleteTemplate$ = document.querySelector(SELECTORS.uploadCompleteTemplate)
-    this.uploadErrorTemplate$ = document.querySelector(SELECTORS.uploadErrorTemplate)
+  constructor() {
+    super();
+    this.form$ = document.querySelector(SELECTORS.uploadForm);
+    this.uploadFormTemplate$ = document.querySelector(
+      SELECTORS.uploadFormTemplate
+    );
+    this.encodingTemplate$ = document.querySelector(SELECTORS.encodingTemplate);
+    this.uploadingTemplate$ = document.querySelector(
+      SELECTORS.uploadingTemplate
+    );
+    this.uploadCompleteTemplate$ = document.querySelector(
+      SELECTORS.uploadCompleteTemplate
+    );
+    this.uploadErrorTemplate$ = document.querySelector(
+      SELECTORS.uploadErrorTemplate
+    );
   }
 
-  async connectedCallback () {
-    const templateContent = this.uploadFormTemplate$.content
-    this.replaceChildren(templateContent)
-    this.handleFileUpload = this.handleFileUpload.bind(this)
-    this.form$ = document.querySelector(SELECTORS.uploadForm)
-    this.form$.addEventListener('submit', this.handleFileUpload)
+  async connectedCallback() {
+    const templateContent = this.uploadFormTemplate$.content;
+    this.replaceChildren(templateContent);
+    this.handleFileUpload = this.handleFileUpload.bind(this);
+    this.form$ = document.querySelector(SELECTORS.uploadForm);
+    this.form$.addEventListener('submit', this.handleFileUpload);
   }
 
-  async handleFileUpload (event) {
-    event.preventDefault()
-    const fileInputEl = this.form$.querySelector('input[type=file')
-    this.file = fileInputEl.files[0]
-    const identity = await loadDefaultIdentity()
+  async handleFileUpload(event) {
+    event.preventDefault();
+    const fileInputEl = this.form$.querySelector('input[type=file');
+    this.file = fileInputEl.files[0];
+    const identity = await loadDefaultIdentity();
 
     if (identity) {
-      console.log(`DID2: ${identity.signingPrincipal.did()}`)
+      console.log(`DID2: ${identity.signingPrincipal.did()}`);
     } else {
-      console.log('No identity registered2')
+      console.log('No identity registered2');
     }
 
     try {
-      this.toggleEncoding()
-      const { cid, blocks } = await encodeFile(this.file)
-      cid.then(cid => {
-        this.cid = cid
-        this.toggleUploading()
-      })
-      const chunks = chunkBlocks(blocks)
-      await uploadCarChunks(identity.signingPrincipal, chunks)
+      this.toggleEncoding();
+      const { cid, blocks } = await encodeFile(this.file);
+      cid.then((cid) => {
+        this.cid = cid;
+        this.toggleUploading();
+      });
+      const chunks = chunkBlocks(blocks);
+      await uploadCarChunks(identity.signingPrincipal, chunks, cid);
     } catch (error) {
-      this.toggleUploadError()
+      this.toggleUploadError();
     } finally {
-      this.toggleUploadComplete()
+      this.toggleUploadComplete();
     }
   }
 
-  toggleEncoding () {
-    const templateContent = this.encodingTemplate$.content
-    this.replaceChildren(this.formatEncodingTemplateContent(templateContent))
+  toggleEncoding() {
+    const templateContent = this.encodingTemplate$.content;
+    this.replaceChildren(this.formatEncodingTemplateContent(templateContent));
   }
 
-  toggleUploading () {
-    const templateContent = this.uploadingTemplate$.content
-    this.replaceChildren(this.formatUploadingTemplateContent(templateContent))
+  toggleUploading() {
+    const templateContent = this.uploadingTemplate$.content;
+    this.replaceChildren(this.formatUploadingTemplateContent(templateContent));
   }
 
-  toggleUploadComplete () {
-    const templateContent = this.uploadCompleteTemplate$.content
-    this.replaceChildren(this.formatUploadCompleteTemplateContent(templateContent))
+  toggleUploadComplete() {
+    const templateContent = this.uploadCompleteTemplate$.content;
+    this.replaceChildren(
+      this.formatUploadCompleteTemplateContent(templateContent)
+    );
   }
 
-  toggleUploadError () {
-    const templateContent = this.uploadErrorTemplate$.content
-    this.replaceChildren(this.formatUploadErrorTemplateContent(templateContent))
+  toggleUploadError() {
+    const templateContent = this.uploadErrorTemplate$.content;
+    this.replaceChildren(
+      this.formatUploadErrorTemplateContent(templateContent)
+    );
   }
 
-  formatEncodingTemplateContent (templateContent) {
-    const fileNameSlot = templateContent.querySelector('[data-file-name-slot]')
-    fileNameSlot.innerText = this.file.name
-    return templateContent
+  formatEncodingTemplateContent(templateContent) {
+    const fileNameSlot = templateContent.querySelector('[data-file-name-slot]');
+    fileNameSlot.innerText = this.file.name;
+    return templateContent;
   }
 
-  formatUploadingTemplateContent (templateContent) {
-    const cidSlot = templateContent.querySelector('[data-root-cid-slot]')
-    cidSlot.innerText = this.cid
-    const fileNameSlot = templateContent.querySelector('[data-file-name-slot]')
-    fileNameSlot.innerText = this.file.name
-    return templateContent
+  formatUploadingTemplateContent(templateContent) {
+    const cidSlot = templateContent.querySelector('[data-root-cid-slot]');
+    cidSlot.innerText = this.cid;
+    const fileNameSlot = templateContent.querySelector('[data-file-name-slot]');
+    fileNameSlot.innerText = this.file.name;
+    return templateContent;
   }
 
-  formatUploadErrorTemplateContent (templateContent) {
-    const slot = templateContent.querySelector('[data-error-messages-slot]')
-    slot.innerText = this.errors
-    return templateContent
+  formatUploadErrorTemplateContent(templateContent) {
+    const slot = templateContent.querySelector('[data-error-messages-slot]');
+    slot.innerText = this.errors;
+    return templateContent;
   }
 
-  formatUploadCompleteTemplateContent (templateContent) {
-    const slot = templateContent.querySelector('[data-root-cid-slot]')
-    slot.innerText = this.cid
-    const hrefSlot = templateContent.querySelector('[data-root-cid-href-slot]')
-    hrefSlot.href = `https://w3s.link/ipfs/${this.cid}`
-    return templateContent
+  formatUploadCompleteTemplateContent(templateContent) {
+    const slot = templateContent.querySelector('[data-root-cid-slot]');
+    slot.innerText = this.cid;
+    const hrefSlot = templateContent.querySelector('[data-root-cid-href-slot]');
+    hrefSlot.href = `https://w3s.link/ipfs/${this.cid}`;
+    return templateContent;
   }
 
-  disconnectedCallback () {
-    this.form$.removeEventListener('submit', this.handleFileUpload)
+  disconnectedCallback() {
+    this.form$.removeEventListener('submit', this.handleFileUpload);
   }
 }
 
-window.customElements.define('upload-form', UploadFileForm)
+window.customElements.define('upload-form', UploadFileForm);

@@ -4,15 +4,18 @@ import { Principal } from '@ucanto/principal'
 import * as CAR from '@ucanto/transport/car'
 import * as CBOR from '@ucanto/transport/cbor'
 import * as HTTP from '@ucanto/transport/http'
-import { storeList } from '@web3-storage/access/capabilities'
+// @ts-expect-error
+import * as Uploads from '@web3-storage/access/capabilities/upload'
 import { CID } from 'multiformats/cid'
 
 // Production
-const storeApiUrl = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
+const storeApiUrl = 
+  //new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
+  new URL('https://mk00d0sf0h.execute-api.us-east-1.amazonaws.com/') //STAGING URL
 const storeDid = Principal.parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
 
-interface Service { store: { list: ServiceMethod<StoreList, ServiceListPage, never> } }
-interface StoreList extends Capability<'store/list', DID> {}
+interface Service { Uploads: { list: ServiceMethod<UploadsList, ServiceListPage, never> } }
+interface UploadsList extends Capability<'upload/list', DID> {}
 
 interface ServiceListPage {
   count: number
@@ -23,7 +26,7 @@ interface ServiceListPage {
 
 interface ServiceListResult {
   carCID: CID
-  rootContentCID: CID
+  dataCID: CID
   uploadedAt: number
 }
 
@@ -50,7 +53,7 @@ export async function listUploads (principal: SigningPrincipal, _: { signal?: Ab
     })
   })
 
-  const res = await storeList.invoke({
+  const res = await Uploads.list.invoke({
     issuer: principal,
     audience: storeDid,
     with: principal.did()
@@ -66,7 +69,7 @@ export async function listUploads (principal: SigningPrincipal, _: { signal?: Ab
     page: res.page,
     pageSize: res.pagesize,
     results: results.map(r => ({
-      dataCid: r.rootContentCID,
+      dataCid: r.dataCID,
       carCids: [r.carCID],
       uploadedAt: new Date(r.uploadedAt)
     }))
