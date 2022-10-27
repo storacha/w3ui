@@ -1,46 +1,48 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react'
-import { registerIdentity, loadDefaultIdentity, loadIdentity, storeIdentity, removeIdentity, Identity, AuthStatus, createIdentity, sendVerificationEmail, waitIdentityVerification, UnverifiedIdentity } from '@w3ui/keyring-core'
+import { createAgent, Account, AuthStatus } from '@w3ui/keyring-core'
+import type { Agent } from '@web3-storage/access'
+import type { RSASigner } from '@ucanto/principal/rsa'
 
 export interface AuthContextValue {
   /**
-   * The current identity
+   * The current account
    */
-  identity?: Identity
+  account?: Account
   /**
-   * Load the default identity from secure storage. If the identity is not
+   * Load the default account from secure storage. If the account is not
    * verified, the registration flow will be automatically resumed.
    */
-  loadDefaultIdentity: () => Promise<void>
+  loadDefaultAccount: () => Promise<void>
   /**
-   * Unload the current identity from memory.
+   * Unload the current account from memory.
    */
-  unloadIdentity: () => Promise<void>
+  unloadAccount: () => Promise<void>
   /**
-   * Unload the current identity from memory and remove from secure storage.
+   * Unload the current account from memory and remove from secure storage.
    */
-  unloadAndRemoveIdentity: () => Promise<void>
+  unloadAndRemoveAccount: () => Promise<void>
   /**
-   * Register a new identity, verify the email address and store in secure
-   * storage. Use cancelRegisterAndStoreIdentity to abort.
+   * Register a new account, verify the email address and store in secure
+   * storage. Use cancelRegisterAndStoreAccount to abort.
    */
-  registerAndStoreIdentity: (email: string) => Promise<void>
+  registerAndStoreAccount: (email: string) => Promise<void>
   /**
-   * Abort an ongoing identity registration.
+   * Abort an ongoing account registration.
    */
-  cancelRegisterAndStoreIdentity: () => void
+  cancelRegisterAndStoreAccount: () => void
   /**
-   * Authentication status of the current identity.
+   * Authentication status of the current account.
    */
   authStatus: AuthStatus
 }
 
 export const AuthContext = createContext<AuthContextValue>({
-  identity: undefined,
-  loadDefaultIdentity: async () => {},
-  unloadIdentity: async () => {},
-  unloadAndRemoveIdentity: async () => {},
-  registerAndStoreIdentity: async () => {},
-  cancelRegisterAndStoreIdentity: () => {},
+  account: undefined,
+  loadDefaultAccount: async () => {},
+  unloadAccount: async () => {},
+  unloadAndRemoveAccount: async () => {},
+  registerAndStoreAccount: async () => {},
+  cancelRegisterAndStoreAccount: () => {},
   authStatus: AuthStatus.SignedOut
 })
 
@@ -52,19 +54,25 @@ export interface AuthProviderProps {
  * Provider for authentication with the service.
  */
 export function AuthProvider ({ children }: AuthProviderProps): ReactNode {
+  const [agent, setAgent] = useState<Agent<RSASigner>>()
   const [authStatus, setAuthStatus] = useState(AuthStatus.SignedOut)
-  const [identity, setIdentity] = useState<Identity>()
+  const [account, setAccount] = useState<Account>()
   const [registerAbortController, setRegisterAbortController] = useState<AbortController>()
 
+  const getAgent = async (): Promise<Agent<Account>> => {
+    if (agent == null) {
+      const a = await createAgent()
+      setAgent(a)
+      return a
+    }
+    return agent
+  }
+
   const load = async (): Promise<void> => {
-    const id = await loadDefaultIdentity()
-    if (id != null) {
-      setIdentity(id)
-      if (id.verified) {
-        setAuthStatus(AuthStatus.SignedIn)
-        return
-      }
-      await verifyAndRegisterAndStore(id as UnverifiedIdentity)
+    const agent = await getAgent()
+    const account = agent.data.accounts.at(-1)
+    if (account == null) {
+      setAccount(account)
     }
   }
 
@@ -75,30 +83,32 @@ export function AuthProvider ({ children }: AuthProviderProps): ReactNode {
   }
 
   const register = async (email: string): Promise<void> => {
-    let id: Identity | undefined
-    if (identity != null) {
-      if (identity.email !== email) {
-        throw new Error('unload current identity before registering a new one')
+    const agent = await getAgent()
+    let acc: Account | undefined
+    if (account != null) {
+      let info
+      try {
+        info = await agent.getAccountInfo(account.did())
+      } catch (err) {
+        console.warn(err)
       }
-      id = identity
-    } else {
-      id = await loadIdentity({ email })
-      if (id == null) {
-        id = await createIdentity({ email })
-        await storeIdentity(id)
+
+      if (info != null) {
+        if (info.email !== email) {
+          throw new Error('unload current account before registering a new one')
+        }
+        setAuthStatus(AuthStatus.SignedIn)
+        return
       }
     }
 
-    setIdentity(id)
+    const controller = new AbortController()
+    setRegisterAbortController(controller)
+    await agent.createAccount(email, { signal: controller.signal })
+    acc = agent.data.accounts.at(-1)
 
-    if (id.verified) { // nothing to do
-      setAuthStatus(AuthStatus.SignedIn)
-      return
-    }
-
-    const unverifiedIdentity = id as UnverifiedIdentity
-    await sendVerificationEmail(unverifiedIdentity)
-    await verifyAndRegisterAndStore(unverifiedIdentity)
+    setAccount(acc)
+    setAuthStatus(AuthStatus.SignedIn)
   }
 
   const verifyAndRegisterAndStore = async (unverifiedIdentity: UnverifiedIdentity): Promise<void> => {
