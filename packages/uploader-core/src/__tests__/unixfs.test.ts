@@ -2,11 +2,10 @@ import { Blob, File } from '@web-std/file'
 import { exporter, UnixFSEntry, UnixFSDirectory } from 'ipfs-unixfs-exporter'
 import { MemoryBlockstore } from 'blockstore-core/memory'
 import path from 'path'
-import { encodeFile, encodeDirectory } from '../unixfs-car'
+import { encodeFile, encodeDirectory } from '../unixfs'
 import { Block } from '@ipld/unixfs'
 import * as raw from 'multiformats/codecs/raw'
-import { toIterable } from '../streams'
-import { collect } from './helpers'
+import { collect } from 'streaming-iterables'
 
 async function collectDir (dir: UnixFSDirectory): Promise<UnixFSEntry[]> {
   const entries: UnixFSEntry[] = []
@@ -20,9 +19,9 @@ async function collectDir (dir: UnixFSDirectory): Promise<UnixFSEntry[]> {
   return entries
 }
 
-async function blocksToBlockstore (blocks: ReadableStream<Block>): Promise<MemoryBlockstore> {
+async function blocksToBlockstore (blocks: Iterable<Block>): Promise<MemoryBlockstore> {
   const blockstore = new MemoryBlockstore()
-  for await (const block of toIterable(blocks)) {
+  for (const block of blocks) {
     // @ts-expect-error https://github.com/ipld/js-unixfs/issues/30
     await blockstore.put(block.cid, block.bytes)
   }
@@ -32,9 +31,9 @@ async function blocksToBlockstore (blocks: ReadableStream<Block>): Promise<Memor
 describe('UnixFS CAR encoder', () => {
   it('encodes a file', async () => {
     const file = new Blob(['test'])
-    const { cid, blocks } = encodeFile(file)
+    const { cid, blocks } = await encodeFile(file)
     const blockstore = await blocksToBlockstore(blocks)
-    const entry = await exporter(await cid, blockstore)
+    const entry = await exporter(cid.toString(), blockstore)
     const out = new Blob(await collect(entry.content()))
     expect(await out.text()).toEqual(await file.text())
   })
@@ -51,10 +50,9 @@ describe('UnixFS CAR encoder', () => {
       new File(['another in the child'], 'dir/deeper/six.mp4')
     ]
 
-    const { cid: cidPromise, blocks } = encodeDirectory(files)
+    const { cid, blocks } = await encodeDirectory(files)
     const blockstore = await blocksToBlockstore(blocks)
-    const cid = await cidPromise
-    const dirEntry = await exporter(cid, blockstore)
+    const dirEntry = await exporter(cid.toString(), blockstore)
     expect(dirEntry).toHaveProperty('type', 'directory')
 
     const expectedPaths = files.map(f => path.join((cid).toString(), f.name))
@@ -66,8 +64,7 @@ describe('UnixFS CAR encoder', () => {
 
   it('configured to use raw leaves', async () => {
     const file = new Blob(['test'])
-    const { cid, blocks } = encodeFile(file)
-    await blocksToBlockstore(blocks)
-    expect((await cid).code).toEqual(raw.code)
+    const { cid } = await encodeFile(file)
+    expect(cid.code).toEqual(raw.code)
   })
 })

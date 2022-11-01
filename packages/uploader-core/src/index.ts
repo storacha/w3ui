@@ -1,21 +1,21 @@
-import { SigningPrincipal } from '@ucanto/interface'
-import { Principal } from '@ucanto/principal'
+import { Signer, DID } from '@ucanto/interface'
 import { CAR } from '@ucanto/transport'
-// @ts-expect-error
+import { parse } from '@ipld/dag-ucan/did'
 import { add as storeAdd } from '@web3-storage/access/capabilities/store'
-// @ts-expect-error
 import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
 import { connection } from '@web3-storage/access/connection'
 import retry, { AbortError } from 'p-retry'
 import { CID } from 'multiformats/cid'
-import { transform } from 'streaming-iterables'
+import { transform, collect } from 'streaming-iterables'
+import { toIterable } from './utils'
 
-export * from './unixfs-car'
-export * from './car-chunker'
+export * from './unixfs'
+export * from './sharding'
+export { BlockMemoStream } from './utils'
 
 // Production
-const serviceUrl = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
-const serviceDid = Principal.parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
+const serviceURL = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
+const serviceDID = parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
 
 const RETRIES = 3
 const CONCURRENT_UPLOADS = 3
@@ -24,7 +24,7 @@ export interface Retryable {
   retries?: number
 }
 
-export interface CarChunkMeta {
+export interface ShardMeta {
   /**
    * CID of the CAR file (not the data it contains).
    */
@@ -35,73 +35,94 @@ export interface CarChunkMeta {
   size: number
 }
 
-export interface CarChunkUploadedEvent {
-  meta: CarChunkMeta
+export interface ShardStoredEvent {
+  meta: ShardMeta
 }
 
-export interface UploadCarChunksOptions extends Retryable {
-  onChunkUploaded?: (event: CarChunkUploadedEvent) => void
+export interface StoreShardsOptions extends Retryable {
+  onShardStored?: (event: ShardStoredEvent) => void
 }
 
 export type CarData = AsyncIterable<Uint8Array>
 
 /**
- * Upload multiple CAR chunks to the service, linking them together after
- * successful completion.
+ * Upload multiple DAG shards (encoded as CAR files) to the service.
+ *
+ * Note: an "upload" must be registered in order to link multiple shards
+ * together as a complete upload.
+ *
+ * @param receiver The receiver of the stored item. Usually the DID of the account.
+ * @param signer Signing authority. Usually the user agent.
+ * @param shards DAG shards encoded as CAR files.
  */
-export async function uploadCarChunks (principal: SigningPrincipal, chunks: AsyncIterable<CarData>, options: UploadCarChunksOptions = {}): Promise<CID[]> {
-  const onChunkUploaded = options.onChunkUploaded ?? (() => {})
+export async function storeDAGShards (receiver: DID, signer: Signer, shards: ReadableStream<CarData>, options: StoreShardsOptions = {}): Promise<CID[]> {
+  const onShardStored = options.onShardStored ?? (() => {})
 
-  const uploads = transform(CONCURRENT_UPLOADS, async chunk => {
-    const carChunks = await collect(chunk)
-    const bytes = new Uint8Array(await new Blob(carChunks).arrayBuffer())
-    const cid = await uploadCarBytes(principal, bytes, options)
-    onChunkUploaded({ meta: { cid, size: bytes.length } })
+  const uploads = transform(CONCURRENT_UPLOADS, async shard => {
+    const shards = await collect(shard)
+    const bytes = new Uint8Array(await new Blob(shards).arrayBuffer())
+    const cid = await storeDAG(receiver, signer, bytes, options)
+    onShardStored({ meta: { cid, size: bytes.length } })
     return cid
-  }, chunks)
+  }, toIterable(shards))
 
-  const carCids = await collect(uploads)
-
-  return carCids
+  return await collect(uploads)
 }
 
-export async function createUpload (principal: SigningPrincipal, rootCid: CID, carCids: CID[]): Promise<void> {
+/**
+ * Register an "upload" with the service.
+ *
+ * @param receiver The receiver of the upload registration. Usually the DID of the account.
+ * @param signer Signing authority. Usually the user agent.
+ * @param root Root data CID for the DAG that was stored.
+ * @param shards CIDs of CAR files that contain the DAG.
+ */
+export async function registerUpload (receiver: DID, signer: Signer, root: CID, shards: CID[]): Promise<void> {
   const conn = connection({
-    id: serviceDid,
-    url: serviceUrl
+    // @ts-expect-error
+    id: serviceDID,
+    url: serviceURL
   })
   const result = await uploadAdd.invoke({
-    issuer: principal,
-    audience: serviceDid,
-    with: principal.did(),
-    caveats: {
-      root: rootCid,
-      shards: carCids
-    }
+    issuer: signer,
+    audience: serviceDID,
+    with: receiver,
+    // @ts-expect-error
+    caveats: { root, shards }
+  // @ts-expect-error
   }).execute(conn)
   if (result?.error === true) throw result
 }
 
-export async function uploadCarBytes (principal: SigningPrincipal, bytes: Uint8Array, options: Retryable = {}): Promise<CID> {
+/**
+ * Store a DAG encoded as a CAR file.
+ *
+ * @param receiver The receiver of the stored item. Usually the DID of the account.
+ * @param signer Signing authority. Usually the user agent.
+ * @param bytes CAR file bytes.
+ */
+export async function storeDAG (receiver: DID, signer: Signer, bytes: Uint8Array, options: Retryable = {}): Promise<CID> {
   const link = await CAR.codec.link(bytes)
   const conn = connection({
-    id: serviceDid,
-    url: serviceUrl
+    // @ts-expect-error
+    id: serviceDID,
+    url: serviceURL
   })
   const result = await retry(async () => {
     const res = await storeAdd.invoke({
-      issuer: principal,
-      audience: serviceDid,
-      with: principal.did(),
-      caveats: {
-        link
-      }
+      issuer: signer,
+      audience: serviceDID,
+      with: receiver,
+      // @ts-expect-error
+      caveats: { link }
+    // @ts-expect-error
     }).execute(conn)
     return res
   }, { onFailedAttempt: console.warn, retries: options.retries ?? RETRIES })
 
   // Return early if it was already uploaded.
   if (result.status === 'done') {
+    // @ts-expect-error
     return link
   }
 
@@ -127,11 +148,6 @@ export async function uploadCarBytes (principal: SigningPrincipal, bytes: Uint8A
     throw new Error('upload failed')
   }
 
+  // @ts-expect-error
   return link
-}
-
-async function collect<T> (collectable: AsyncIterable<T>|Iterable<T>): Promise<T[]> {
-  const chunks: T[] = []
-  for await (const chunk of collectable) chunks.push(chunk)
-  return chunks
 }

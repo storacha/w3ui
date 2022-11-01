@@ -1,10 +1,10 @@
 import React, { useContext, createContext, useState, ReactNode } from 'react'
-import { encodeFile, encodeDirectory, chunkBlocks, uploadCarChunks, CarChunkMeta, CarData, createUpload } from '@w3ui/uploader-core'
+import { createFileEncoderStream, createDirectoryEncoderStream, ShardingStream, storeDAGShards, ShardMeta, CarData, registerUpload, BlockMemoStream } from '@w3ui/uploader-core'
 import { useAuth } from '@w3ui/react-keyring'
 import { CID } from 'multiformats/cid'
 
 export interface UploaderContextState {
-  uploadedCarChunks: CarChunkMeta[]
+  storedDAGShards: ShardMeta[]
 }
 
 export interface UploaderContextActions {
@@ -17,9 +17,13 @@ export interface UploaderContextActions {
    */
   uploadDirectory: (files: File[]) => Promise<CID>
   /**
-   * Upload CAR bytes to the service.
+   * Store shards of a DAG (encoded as CAR files) to the service.
    */
-  uploadCarChunks: (chunks: AsyncIterable<CarData>) => Promise<CID[]>
+  storeDAGShards: (shards: ReadableStream<CarData>) => Promise<CID[]>
+  /**
+   * Register an "upload" with the service.
+   */
+  registerUpload: (root: CID, shards: CID[]) => Promise<void>
 }
 
 export type UploaderContextValue = [
@@ -28,11 +32,12 @@ export type UploaderContextValue = [
 ]
 
 const UploaderContext = createContext<UploaderContextValue>([
-  { uploadedCarChunks: [] },
+  { storedDAGShards: [] },
   {
     uploadFile: async () => { throw new Error('missing uploader context provider') },
     uploadDirectory: async () => { throw new Error('missing uploader context provider') },
-    uploadCarChunks: async () => { throw new Error('missing uploader context provider') }
+    storeDAGShards: async () => { throw new Error('missing uploader context provider') },
+    registerUpload: async () => { throw new Error('missing uploader context provider') }
   }
 ])
 
@@ -44,43 +49,53 @@ export interface UploaderProviderProps {
  * Provider for actions and state to facilitate uploads to the service.
  */
 export function UploaderProvider ({ children }: UploaderProviderProps): ReactNode {
-  const { identity } = useAuth()
-  const [uploadedCarChunks, setUploadedCarChunks] = useState<UploaderContextState['uploadedCarChunks']>([])
+  const { account, issuer } = useAuth()
+  const [storedDAGShards, setStoredDAGShards] = useState<UploaderContextState['storedDAGShards']>([])
 
-  const state = { uploadedCarChunks }
+  const state = { storedDAGShards }
   const actions: UploaderContextActions = {
     async uploadFile (file: Blob) {
-      if (identity == null) throw new Error('missing identity')
+      const fileStream = createFileEncoderStream(file)
+      const blockMemoStream = new BlockMemoStream()
+      const shardStream = new ShardingStream()
 
-      const { cid: cidPromise, blocks } = encodeFile(file)
-      const carCids = await actions.uploadCarChunks(chunkBlocks(blocks))
+      const shards = await actions.storeDAGShards(fileStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
+      const root = CID.asCID(blockMemoStream.memo?.cid)
+      if (root == null) throw new Error('missing root block')
 
-      const cid = await cidPromise
-      await createUpload(identity.signingPrincipal, cid, carCids)
-      return cid
+      await actions.registerUpload(root, shards)
+      return root
     },
     async uploadDirectory (files: File[]) {
-      if (identity == null) throw new Error('missing identity')
+      const dirStream = createDirectoryEncoderStream(files)
+      const blockMemoStream = new BlockMemoStream()
+      const shardStream = new ShardingStream()
 
-      const { cid: cidPromise, blocks } = encodeDirectory(files)
-      const carCids = await actions.uploadCarChunks(chunkBlocks(blocks))
+      const shards = await actions.storeDAGShards(dirStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
+      const root = CID.asCID(blockMemoStream.memo?.cid)
+      if (root == null) throw new Error('missing root block')
 
-      const cid = await cidPromise
-      await createUpload(identity.signingPrincipal, cid, carCids)
-      return cid
+      await actions.registerUpload(root, shards)
+      return root
     },
-    async uploadCarChunks (chunks) {
-      if (identity == null) throw new Error('missing identity')
+    async storeDAGShards (shards) {
+      if (account == null) throw new Error('missing account')
+      if (issuer == null) throw new Error('missing issuer')
 
-      const uploadedChunks: CarChunkMeta[] = []
-      setUploadedCarChunks(uploadedChunks)
+      const storedShards: ShardMeta[] = []
+      setStoredDAGShards(storedShards)
 
-      return await uploadCarChunks(identity.signingPrincipal, chunks, {
-        onChunkUploaded: e => {
-          uploadedChunks.push(e.meta)
-          setUploadedCarChunks([...uploadedChunks])
+      return await storeDAGShards(account, issuer, shards, {
+        onShardStored: e => {
+          storedShards.push(e.meta)
+          setStoredDAGShards([...storedShards])
         }
       })
+    },
+    async registerUpload (root: CID, shards: CID[]) {
+      if (account == null) throw new Error('missing account')
+      if (issuer == null) throw new Error('missing issuer')
+      await registerUpload(account, issuer, root, shards)
     }
   }
 

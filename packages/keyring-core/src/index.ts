@@ -4,7 +4,7 @@ import type { RSASigner } from '@ucanto/principal/rsa'
 
 export enum AuthStatus {
   /**
-   * Identity loaded.
+   * Account/agent loaded.
    */
   SignedIn,
   /**
@@ -16,8 +16,6 @@ export enum AuthStatus {
    */
   EmailVerification
 }
-
-export interface Account extends RSASigner {}
 
 const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
