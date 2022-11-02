@@ -1,6 +1,15 @@
 import { defineComponent, provide, InjectionKey, inject, Ref, shallowReactive, computed } from 'vue'
 import { AuthProviderInjectionKey } from '@w3ui/vue-keyring'
-import { uploadCarChunks, CarChunkMeta, CarData, encodeFile, chunkBlocks, encodeDirectory, createUpload } from '@w3ui/uploader-core'
+import {
+  createFileEncoderStream,
+  createDirectoryEncoderStream,
+  BlockMemoStream,
+  ShardingStream,
+  ShardStoringStream,
+  CARMeta,
+  CARData,
+  registerUpload
+} from '@w3ui/uploader-core'
 import { CID } from 'multiformats/cid'
 
 /**
@@ -9,12 +18,13 @@ import { CID } from 'multiformats/cid'
 export const UploaderProviderInjectionKey = {
   uploadFile: Symbol('w3ui uploader uploadFile') as InjectionKey<UploaderContextActions['uploadFile']>,
   uploadDirectory: Symbol('w3ui uploader uploadDirectory') as InjectionKey<UploaderContextActions['uploadDirectory']>,
-  uploadCarChunks: Symbol('w3ui uploader uploadCarChunks') as InjectionKey<UploaderContextActions['uploadCarChunks']>,
-  uploadedCarChunks: Symbol('w3ui uploader uploadedCarChunks') as InjectionKey<Ref<UploaderContextState['uploadedCarChunks']>>
+  storeDAGShards: Symbol('w3ui uploader storeDAGShards') as InjectionKey<UploaderContextActions['storeDAGShards']>,
+  registerUpload: Symbol('w3ui uploader registerUpload') as InjectionKey<UploaderContextActions['registerUpload']>,
+  storedDAGShards: Symbol('w3ui uploader storedDAGShards') as InjectionKey<Ref<UploaderContextState['storedDAGShards']>>
 }
 
 export interface UploaderContextState {
-  uploadedCarChunks: CarChunkMeta[]
+  storedDAGShards: CARMeta[]
 }
 
 export interface UploaderContextActions {
@@ -27,9 +37,14 @@ export interface UploaderContextActions {
    */
   uploadDirectory: (files: File[]) => Promise<CID>
   /**
-   * Upload CAR bytes to the service.
+   * Store shards of a DAG (encoded as CAR files) to the service.
    */
-  uploadCarChunks: (chunks: AsyncIterable<CarData>) => Promise<CID[]>
+  storeDAGShards: (shards: ReadableStream<CARData>) => Promise<CARMeta[]>
+  /**
+   * Register an "upload" with the service. Note: only required when using
+   * `storeDAGShards`.
+   */
+  registerUpload: (root: CID, shards: CID[]) => Promise<void>
 }
 
 /**
@@ -37,55 +52,70 @@ export interface UploaderContextActions {
  */
 export const UploaderProvider = defineComponent({
   setup () {
-    const identity = inject(AuthProviderInjectionKey.identity)
+    const account = inject(AuthProviderInjectionKey.account)
+    const issuer = inject(AuthProviderInjectionKey.issuer)
     const state = shallowReactive<UploaderContextState>({
-      uploadedCarChunks: []
+      storedDAGShards: []
     })
 
-    provide(UploaderProviderInjectionKey.uploadedCarChunks, computed(() => state.uploadedCarChunks))
+    provide(UploaderProviderInjectionKey.storedDAGShards, computed(() => state.storedDAGShards))
 
     const actions: UploaderContextActions = {
       async uploadFile (file: Blob) {
-        if (identity?.value == null) {
-          throw new Error('missing identity')
-        }
+        const fileStream = createFileEncoderStream(file)
+        const blockMemoStream = new BlockMemoStream()
+        const shardStream = new ShardingStream()
 
-        const { cid: cidPromise, blocks } = encodeFile(file)
-        const carCids = await actions.uploadCarChunks(chunkBlocks(blocks))
+        const meta = await actions.storeDAGShards(fileStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
+        const root = CID.asCID(blockMemoStream.memo?.cid)
+        if (root == null) throw new Error('missing root block')
 
-        const cid = await cidPromise
-        await createUpload(identity.value.signingPrincipal, cid, carCids)
-        return cid
+        await actions.registerUpload(root, meta.map(m => m.cid))
+        return root
       },
       async uploadDirectory (files: File[]) {
-        if (identity?.value == null) {
-          throw new Error('missing identity')
-        }
+        const dirStream = createDirectoryEncoderStream(files)
+        const blockMemoStream = new BlockMemoStream()
+        const shardStream = new ShardingStream()
 
-        const { cid: cidPromise, blocks } = encodeDirectory(files)
-        const carCids = await actions.uploadCarChunks(chunkBlocks(blocks))
+        const meta = await actions.storeDAGShards(dirStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
+        const root = CID.asCID(blockMemoStream.memo?.cid)
+        if (root == null) throw new Error('missing root block')
 
-        const cid = await cidPromise
-        await createUpload(identity.value.signingPrincipal, cid, carCids)
-        return cid
+        await actions.registerUpload(root, meta.map(m => m.cid))
+        return root
       },
-      async uploadCarChunks (chunks) {
-        if (identity?.value == null) {
-          throw new Error('missing identity')
-        }
-
-        state.uploadedCarChunks = []
-        return await uploadCarChunks(identity.value.signingPrincipal, chunks, {
-          onChunkUploaded: e => {
-            state.uploadedCarChunks = [...state.uploadedCarChunks, e.meta]
-          }
-        })
+      async storeDAGShards (shards) {
+        if (account?.value == null) throw new Error('missing account')
+        if (issuer?.value == null) throw new Error('missing issuer')
+  
+        const storedShards: CARMeta[] = []
+        state.storedDAGShards = storedShards
+  
+        await shards
+          .pipeThrough(new ShardStoringStream(account.value, issuer.value))
+          .pipeThrough(new TransformStream({
+            transform (meta, controller) {
+              storedShards.push(meta)
+              state.storedDAGShards = [...storedShards]
+              controller.enqueue(meta)
+            }
+          }))
+          .pipeTo(new WritableStream())
+  
+        return storedShards
+      },
+      async registerUpload (root: CID, shards: CID[]) {
+        if (account?.value == null) throw new Error('missing account')
+        if (issuer?.value == null) throw new Error('missing issuer')
+        await registerUpload(account.value, issuer.value, root, shards)
       }
     }
 
     provide(UploaderProviderInjectionKey.uploadFile, actions.uploadFile)
     provide(UploaderProviderInjectionKey.uploadDirectory, actions.uploadDirectory)
-    provide(UploaderProviderInjectionKey.uploadCarChunks, actions.uploadCarChunks)
+    provide(UploaderProviderInjectionKey.storeDAGShards, actions.storeDAGShards)
+    provide(UploaderProviderInjectionKey.registerUpload, actions.registerUpload)
 
     return state
   },

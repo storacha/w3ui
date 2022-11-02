@@ -4,19 +4,26 @@ import type { Agent } from '@web3-storage/access'
 import type { DID, Signer } from '@ucanto/interface'
 import type { RSASigner } from '@ucanto/principal/rsa'
 
-export interface AuthContextValue {
+export interface AuthContextState {
   /**
    * The current user account.
    */
-  account?: DID
+  readonly account?: DID
   /**
    * The current user agent (this device).
    */
-  agent?: DID
+  readonly agent?: DID
   /**
    * Signing authority from the agent that is able to issue UCAN invocations.
    */
-  issuer?: Signer
+  readonly issuer?: Signer
+  /**
+   * Authentication status of the current identity.
+   */
+  readonly authStatus: AuthStatus
+}
+
+export interface AuthContextValue extends AuthContextState {
   /**
    * Load the user agent and all stored data from secure storage.
    */
@@ -44,23 +51,19 @@ export interface AuthContextValue {
    * Abort an ongoing account registration.
    */
   cancelRegisterAccount: () => void
-  /**
-   * Authentication status of the current account.
-   */
-  authStatus: AuthStatus
 }
 
 export const AuthContext = createContext<AuthContextValue>({
   account: undefined,
   agent: undefined,
   issuer: undefined,
+  authStatus: AuthStatus.SignedOut,
   loadAgent: async () => {},
   unloadAgent: async () => {},
   resetAgent: async () => {},
   selectAccount: async () => {},
   registerAccount: async () => {},
-  cancelRegisterAccount: () => {},
-  authStatus: AuthStatus.SignedOut
+  cancelRegisterAccount: () => {}
 })
 
 export interface AuthProviderProps {
@@ -154,10 +157,10 @@ export function AuthProvider ({ children }: AuthProviderProps): ReactNode {
   }
 
   const value = {
-    authStatus,
     account: accountDID,
     agent: agentDID,
     issuer,
+    authStatus,
     loadAgent,
     unloadAgent,
     resetAgent,

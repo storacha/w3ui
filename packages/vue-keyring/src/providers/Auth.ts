@@ -1,24 +1,38 @@
 import { defineComponent, provide, computed, InjectionKey, Ref, shallowReactive } from 'vue'
-import { registerIdentity, loadDefaultIdentity, loadIdentity, storeIdentity, removeIdentity, Identity, AuthStatus, createIdentity, sendVerificationEmail, waitIdentityVerification, UnverifiedIdentity } from '@w3ui/keyring-core'
+import { createAgent, AuthStatus } from '@w3ui/keyring-core'
+import type { Agent } from '@web3-storage/access'
+import type { DID, Signer } from '@ucanto/interface'
+import type { RSASigner } from '@ucanto/principal/rsa'
 
 /**
  * Injection keys for auth provider context.
  */
 export const AuthProviderInjectionKey = {
-  identity: Symbol('w3ui keyring identity') as InjectionKey<Ref<AuthContextState['identity']>>,
+  account: Symbol('w3ui keyring account') as InjectionKey<Ref<AuthContextState['account']>>,
+  agent: Symbol('w3ui keyring agent') as InjectionKey<Ref<AuthContextState['agent']>>,
+  issuer: Symbol('w3ui keyring issuer') as InjectionKey<Ref<AuthContextState['issuer']>>,
   status: Symbol('w3ui keyring auth status') as InjectionKey<Ref<AuthContextState['status']>>,
-  loadDefaultIdentity: Symbol('w3ui keyring loadDefaultIdentity') as InjectionKey<AuthContextActions['loadDefaultIdentity']>,
-  cancelRegisterAndStoreIdentity: Symbol('w3ui keyring cancelRegisterAndStoreIdentityKey') as InjectionKey<AuthContextActions['cancelRegisterAndStoreIdentity']>,
-  registerAndStoreIdentity: Symbol('w3ui keyring registerAndStoreIdentity') as InjectionKey<AuthContextActions['registerAndStoreIdentity']>,
-  unloadIdentity: Symbol('w3ui keyring unloadIdentity') as InjectionKey<AuthContextActions['unloadIdentity']>,
-  unloadAndRemoveIdentity: Symbol('w3ui keyring unloadAndRemoveIdentity') as InjectionKey<AuthContextActions['unloadAndRemoveIdentity']>
+  loadAgent: Symbol('w3ui keyring loadAgent') as InjectionKey<AuthContextActions['loadAgent']>,
+  unloadAgent: Symbol('w3ui keyring unloadAgent') as InjectionKey<AuthContextActions['unloadAgent']>,
+  resetAgent: Symbol('w3ui keyring resetAgent') as InjectionKey<AuthContextActions['resetAgent']>,
+  selectAccount: Symbol('w3ui keyring selectAccount') as InjectionKey<AuthContextActions['selectAccount']>,
+  registerAccount: Symbol('w3ui keyring registerAccount') as InjectionKey<AuthContextActions['registerAccount']>,
+  cancelRegisterAccount: Symbol('w3ui keyring cancelRegisterAccount') as InjectionKey<AuthContextActions['cancelRegisterAccount']>
 }
 
 export interface AuthContextState {
   /**
-   * The current identity
+   * The current user account.
    */
-  identity?: Identity
+  account?: DID
+  /**
+   * The current user agent (this device).
+   */
+  agent?: DID
+  /**
+   * Signing authority from the agent that is able to issue UCAN invocations.
+   */
+  issuer?: Signer
   /**
    * Authentication status of the current identity.
    */
@@ -27,27 +41,32 @@ export interface AuthContextState {
 
 export interface AuthContextActions {
   /**
-   * Load the default identity from secure storage. If the identity is not
-   * verified, the registration flow will be automatically resumed.
+   * Load the user agent and all stored data from secure storage.
    */
-  loadDefaultIdentity: () => Promise<void>
+  loadAgent: () => Promise<void>
   /**
-   * Unload the current identity from memory.
+   * Unload the user agent and all stored data from secure storage. Note: this
+   * does not remove data, use `resetAgent` if that is desired.
    */
-  unloadIdentity: () => Promise<void>
+  unloadAgent: () => Promise<void>
   /**
-   * Unload the current identity from memory and remove from secure storage.
+   * Unload the current account and agent from memory and remove from secure
+   * storage. Note: this removes all data and is unrecoverable.
    */
-  unloadAndRemoveIdentity: () => Promise<void>
+  resetAgent: () => Promise<void>
   /**
-   * Register a new identity, verify the email address and store in secure
-   * storage. Use cancelRegisterAndStoreIdentity to abort.
+   * Use a specific account.
    */
-  registerAndStoreIdentity: (email: string) => Promise<void>
+  selectAccount: (did: DID) => Promise<void>
   /**
-   * Abort an ongoing identity registration.
+   * Register a new account, verify the email address and store in secure
+   * storage. Use cancelRegisterAccount to abort.
    */
-  cancelRegisterAndStoreIdentity: () => void
+  registerAccount: (email: string) => Promise<void>
+  /**
+   * Abort an ongoing account registration.
+   */
+  cancelRegisterAccount: () => void
 }
 
 /**
@@ -56,72 +75,57 @@ export interface AuthContextActions {
 export const AuthProvider = defineComponent({
   setup () {
     const state = shallowReactive<AuthContextState>({
-      identity: undefined,
+      account: undefined,
+      agent: undefined,
+      issuer: undefined,
       status: AuthStatus.SignedOut
     })
+    let agent: Agent<RSASigner>|undefined
     let registerAbortController: AbortController
 
-    provide(AuthProviderInjectionKey.identity, computed(() => state.identity))
+    provide(AuthProviderInjectionKey.account, computed(() => state.account))
+    provide(AuthProviderInjectionKey.agent, computed(() => state.agent))
+    provide(AuthProviderInjectionKey.issuer, computed(() => state.issuer))
     provide(AuthProviderInjectionKey.status, computed(() => state.status))
 
-    const load = async (): Promise<void> => {
-      const id = await loadDefaultIdentity()
-      if (id != null) {
-        state.identity = id
-        if (id.verified) {
+    const getAgent = async (): Promise<Agent<RSASigner>> => {
+      if (agent == null) {
+        agent = await createAgent()
+        state.agent = agent.did()
+        state.issuer = agent.issuer
+        const account = agent.data.accounts.at(-1)
+        if (account != null) {
+          state.account = account.did()
           state.status = AuthStatus.SignedIn
-          return
         }
-        await verifyAndRegisterAndStore(id as UnverifiedIdentity)
       }
+      return agent
     }
-    provide(AuthProviderInjectionKey.loadDefaultIdentity, load)
 
-    provide(AuthProviderInjectionKey.cancelRegisterAndStoreIdentity, (): void => {
+    provide(AuthProviderInjectionKey.cancelRegisterAccount, (): void => {
       if (registerAbortController != null) {
         registerAbortController.abort()
       }
     })
 
-    provide(AuthProviderInjectionKey.registerAndStoreIdentity, async (email: string): Promise<void> => {
-      let id: Identity | undefined
-      if (state.identity != null) {
-        if (state.identity.email !== email) {
-          throw new Error('unload current identity before registering a new one')
-        }
-        id = state.identity
-      } else {
-        id = await loadIdentity({ email })
-        if (id == null) {
-          id = await createIdentity({ email })
-          await storeIdentity(id)
-        }
-      }
-
-      state.identity = id
-
-      if (id.verified) { // nothing to do
+    provide(AuthProviderInjectionKey.registerAccount, async (email: string): Promise<void> => {
+      const agent = await getAgent()
+      const infos = await Promise.all(agent.data.accounts.map(a => agent.getAccountInfo(a.did())))
+      const info = infos.find(i => i.email === email)
+      if (info != null) {
+        state.account = info.did
         state.status = AuthStatus.SignedIn
         return
       }
 
-      const unverifiedIdentity = id as UnverifiedIdentity
-      await sendVerificationEmail(unverifiedIdentity)
-      await verifyAndRegisterAndStore(unverifiedIdentity)
-    })
-
-    const verifyAndRegisterAndStore = async (unverifiedIdentity: UnverifiedIdentity): Promise<void> => {
       const controller = new AbortController()
       registerAbortController = controller
 
       try {
         state.status = AuthStatus.EmailVerification
-
-        const { identity, proof } = await waitIdentityVerification(unverifiedIdentity, { signal: controller.signal })
-        await registerIdentity(identity, proof)
-        await storeIdentity(identity)
-
-        state.identity = identity
+        await agent.createAccount(email, { signal: controller.signal })
+        const account = agent.data.accounts.at(-1)
+        state.account = account?.did()
         state.status = AuthStatus.SignedIn
       } catch (err) {
         state.status = AuthStatus.SignedOut
@@ -129,22 +133,37 @@ export const AuthProvider = defineComponent({
           throw err
         }
       }
-    }
-
-    const unload = async (): Promise<void> => {
-      state.status = AuthStatus.SignedOut
-      state.identity = undefined
-    }
-    provide(AuthProviderInjectionKey.unloadIdentity, unload)
-
-    provide(AuthProviderInjectionKey.unloadAndRemoveIdentity, async (): Promise<void> => {
-      if (state.identity == null) {
-        throw new Error('missing current identity')
-      }
-      await Promise.all([removeIdentity(state.identity), unload()])
     })
 
-    void load()
+    provide(AuthProviderInjectionKey.selectAccount, async (did: DID): Promise<void> => {
+      const agent = await getAgent()
+      const account = agent.data.accounts.find(a => a.did() === did)
+      if (account == null) throw new Error(`account not found: ${did}`)
+      state.account = account.did()
+      state.status = AuthStatus.SignedIn
+    })
+
+    const loadAgent = async (): Promise<void> => {
+      if (agent != null) return
+      await getAgent()
+    }
+    provide(AuthProviderInjectionKey.loadAgent, loadAgent)
+
+    const unloadAgent = async (): Promise<void> => {
+      state.status = AuthStatus.SignedOut
+      state.account = undefined
+      state.issuer = undefined
+      state.agent = undefined
+      agent = undefined
+    }
+    provide(AuthProviderInjectionKey.unloadAgent, unloadAgent)
+
+    provide(AuthProviderInjectionKey.resetAgent, async (): Promise<void> => {
+      const agent = await getAgent()
+      await Promise.all([agent.store.reset(), unloadAgent()])
+    })
+
+    // void loadAgent()
 
     return state
   },

@@ -6,8 +6,8 @@ import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
 import { connection } from '@web3-storage/access/connection'
 import retry, { AbortError } from 'p-retry'
 import { CID } from 'multiformats/cid'
-import { transform, collect } from 'streaming-iterables'
-import { toIterable } from './utils'
+import { collect } from './utils'
+import Queue from 'p-queue'
 
 export * from './unixfs'
 export * from './sharding'
@@ -24,7 +24,7 @@ export interface Retryable {
   retries?: number
 }
 
-export interface ShardMeta {
+export interface CARMeta {
   /**
    * CID of the CAR file (not the data it contains).
    */
@@ -35,15 +35,7 @@ export interface ShardMeta {
   size: number
 }
 
-export interface ShardStoredEvent {
-  meta: ShardMeta
-}
-
-export interface StoreShardsOptions extends Retryable {
-  onShardStored?: (event: ShardStoredEvent) => void
-}
-
-export type CarData = AsyncIterable<Uint8Array>
+export type CARData = AsyncIterable<Uint8Array>
 
 /**
  * Upload multiple DAG shards (encoded as CAR files) to the service.
@@ -51,22 +43,36 @@ export type CarData = AsyncIterable<Uint8Array>
  * Note: an "upload" must be registered in order to link multiple shards
  * together as a complete upload.
  *
- * @param receiver The receiver of the stored item. Usually the DID of the account.
- * @param signer Signing authority. Usually the user agent.
- * @param shards DAG shards encoded as CAR files.
+ * The writeable side of this transform stream accepts CAR files and the
+ * readable side yields `CARMeta`.
  */
-export async function storeDAGShards (receiver: DID, signer: Signer, shards: ReadableStream<CarData>, options: StoreShardsOptions = {}): Promise<CID[]> {
-  const onShardStored = options.onShardStored ?? (() => {})
-
-  const uploads = transform(CONCURRENT_UPLOADS, async shard => {
-    const shards = await collect(shard)
-    const bytes = new Uint8Array(await new Blob(shards).arrayBuffer())
-    const cid = await storeDAG(receiver, signer, bytes, options)
-    onShardStored({ meta: { cid, size: bytes.length } })
-    return cid
-  }, toIterable(shards))
-
-  return await collect(uploads)
+export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
+  /**
+   * @param receiver The receiver of the stored item. Usually the DID of the account.
+   * @param signer Signing authority. Usually the user agent.
+   */
+  constructor (receiver: DID, signer: Signer, options: Retryable = {}) {
+    const queue = new Queue({ concurrency: CONCURRENT_UPLOADS })
+    const abortController = new AbortController()
+    super({
+      transform (chunk, controller) {
+        void queue.add(async () => {
+          try {
+            const data = await collect(chunk)
+            const bytes = new Uint8Array(await new Blob(data).arrayBuffer())
+            const cid = await storeDAG(receiver, signer, bytes, options)
+            controller.enqueue({ cid, size: bytes.length })
+          } catch (err) {
+            controller.error(err)
+            abortController.abort(err)
+          }
+        }, { signal: abortController.signal })
+      },
+      async flush () {
+        await queue.onIdle()
+      }
+    })
+  }
 }
 
 /**
@@ -77,21 +83,23 @@ export async function storeDAGShards (receiver: DID, signer: Signer, shards: Rea
  * @param root Root data CID for the DAG that was stored.
  * @param shards CIDs of CAR files that contain the DAG.
  */
-export async function registerUpload (receiver: DID, signer: Signer, root: CID, shards: CID[]): Promise<void> {
+export async function registerUpload (receiver: DID, signer: Signer, root: CID, shards: CID[], options: Retryable = {}): Promise<void> {
   const conn = connection({
     // @ts-expect-error
     id: serviceDID,
     url: serviceURL
   })
-  const result = await uploadAdd.invoke({
-    issuer: signer,
-    audience: serviceDID,
-    with: receiver,
+  await retry(async () => {
+    const result = await uploadAdd.invoke({
+      issuer: signer,
+      audience: serviceDID,
+      with: receiver,
+      // @ts-expect-error
+      caveats: { root, shards }
     // @ts-expect-error
-    caveats: { root, shards }
-  // @ts-expect-error
-  }).execute(conn)
-  if (result?.error === true) throw result
+    }).execute(conn)
+    if (result?.error === true) throw result
+  }, { onFailedAttempt: console.warn, retries: options.retries ?? RETRIES })
 }
 
 /**

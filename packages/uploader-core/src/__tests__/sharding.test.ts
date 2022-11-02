@@ -1,7 +1,6 @@
 import { Blob } from '@web-std/file'
 import { randomBytes } from 'crypto'
-import { collect } from 'streaming-iterables'
-import { toIterable } from '../utils'
+import { toIterable, collect } from '../utils'
 import { createFileEncoderStream } from '../unixfs'
 import { ShardingStream } from '../sharding'
 

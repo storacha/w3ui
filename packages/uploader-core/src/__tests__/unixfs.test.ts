@@ -5,7 +5,7 @@ import path from 'path'
 import { encodeFile, encodeDirectory } from '../unixfs'
 import { Block } from '@ipld/unixfs'
 import * as raw from 'multiformats/codecs/raw'
-import { collect } from 'streaming-iterables'
+import { collect } from '../utils'
 
 async function collectDir (dir: UnixFSDirectory): Promise<UnixFSEntry[]> {
   const entries: UnixFSEntry[] = []

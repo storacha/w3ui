@@ -26,7 +26,7 @@
   "dependencies": {
     "@w3ui/uploader-core": "^2.0.2",
     "@w3ui/vue-keyring": "^1.0.1",
-    "multiformats": "^9.9.0"
+    "multiformats": "^10.0.2"
   },
   "peerDependencies": {
     "vue": "^3.0.0"

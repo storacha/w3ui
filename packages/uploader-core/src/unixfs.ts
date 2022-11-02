@@ -2,8 +2,7 @@ import * as UnixFS from '@ipld/unixfs'
 import type { Block } from '@ipld/unixfs'
 import type { Link } from 'multiformats/link'
 import * as raw from 'multiformats/codecs/raw'
-import { collect } from 'streaming-iterables'
-import { toIterable } from './utils'
+import { toIterable, collect } from './utils'
 
 const queuingStrategy = UnixFS.withCapacity(1048576 * 175)
 

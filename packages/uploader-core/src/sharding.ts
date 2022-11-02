@@ -25,7 +25,7 @@ export class ShardingStream extends TransformStream<Block, AsyncIterable<Uint8Ar
     let size = 0
 
     super({
-      async transform (block, controller) {
+      transform (block, controller) {
         if (readyShard != null) {
           controller.enqueue(encodeCar(readyShard))
           readyShard = null

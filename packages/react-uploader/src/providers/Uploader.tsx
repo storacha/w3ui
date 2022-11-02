@@ -1,10 +1,19 @@
 import React, { useContext, createContext, useState, ReactNode } from 'react'
-import { createFileEncoderStream, createDirectoryEncoderStream, ShardingStream, storeDAGShards, ShardMeta, CarData, registerUpload, BlockMemoStream } from '@w3ui/uploader-core'
+import {
+  createFileEncoderStream,
+  createDirectoryEncoderStream,
+  BlockMemoStream,
+  ShardingStream,
+  ShardStoringStream,
+  CARMeta,
+  CARData,
+  registerUpload
+} from '@w3ui/uploader-core'
 import { useAuth } from '@w3ui/react-keyring'
 import { CID } from 'multiformats/cid'
 
 export interface UploaderContextState {
-  storedDAGShards: ShardMeta[]
+  storedDAGShards: CARMeta[]
 }
 
 export interface UploaderContextActions {
@@ -19,9 +28,10 @@ export interface UploaderContextActions {
   /**
    * Store shards of a DAG (encoded as CAR files) to the service.
    */
-  storeDAGShards: (shards: ReadableStream<CarData>) => Promise<CID[]>
+  storeDAGShards: (shards: ReadableStream<CARData>) => Promise<CARMeta[]>
   /**
-   * Register an "upload" with the service.
+   * Register an "upload" with the service. Note: only required when using
+   * `storeDAGShards`.
    */
   registerUpload: (root: CID, shards: CID[]) => Promise<void>
 }
@@ -59,11 +69,11 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
       const blockMemoStream = new BlockMemoStream()
       const shardStream = new ShardingStream()
 
-      const shards = await actions.storeDAGShards(fileStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
+      const meta = await actions.storeDAGShards(fileStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
       const root = CID.asCID(blockMemoStream.memo?.cid)
       if (root == null) throw new Error('missing root block')
 
-      await actions.registerUpload(root, shards)
+      await actions.registerUpload(root, meta.map(m => m.cid))
       return root
     },
     async uploadDirectory (files: File[]) {
@@ -71,26 +81,32 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
       const blockMemoStream = new BlockMemoStream()
       const shardStream = new ShardingStream()
 
-      const shards = await actions.storeDAGShards(dirStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
+      const meta = await actions.storeDAGShards(dirStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
       const root = CID.asCID(blockMemoStream.memo?.cid)
       if (root == null) throw new Error('missing root block')
 
-      await actions.registerUpload(root, shards)
+      await actions.registerUpload(root, meta.map(m => m.cid))
       return root
     },
     async storeDAGShards (shards) {
       if (account == null) throw new Error('missing account')
       if (issuer == null) throw new Error('missing issuer')
 
-      const storedShards: ShardMeta[] = []
+      const storedShards: CARMeta[] = []
       setStoredDAGShards(storedShards)
 
-      return await storeDAGShards(account, issuer, shards, {
-        onShardStored: e => {
-          storedShards.push(e.meta)
-          setStoredDAGShards([...storedShards])
-        }
-      })
+      await shards
+        .pipeThrough(new ShardStoringStream(account, issuer))
+        .pipeThrough(new TransformStream({
+          transform (meta, controller) {
+            storedShards.push(meta)
+            setStoredDAGShards([...storedShards])
+            controller.enqueue(meta)
+          }
+        }))
+        .pipeTo(new WritableStream())
+
+      return storedShards
     },
     async registerUpload (root: CID, shards: CID[]) {
       if (account == null) throw new Error('missing account')

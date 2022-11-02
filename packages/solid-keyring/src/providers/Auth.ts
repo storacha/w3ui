@@ -1,12 +1,23 @@
 import { createContext, useContext, createSignal, createComponent, ParentComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { registerIdentity, loadDefaultIdentity, loadIdentity, storeIdentity, removeIdentity, Identity, AuthStatus, createIdentity, sendVerificationEmail, waitIdentityVerification, UnverifiedIdentity } from '@w3ui/keyring-core'
+import { createAgent, AuthStatus } from '@w3ui/keyring-core'
+import type { Agent } from '@web3-storage/access'
+import type { DID, Signer } from '@ucanto/interface'
+import type { RSASigner } from '@ucanto/principal/rsa'
 
 export interface AuthContextState {
   /**
-   * The current identity
+   * The current user account.
    */
-  readonly identity?: Identity
+  readonly account?: DID
+  /**
+   * The current user agent (this device).
+   */
+  readonly agent?: DID
+  /**
+   * Signing authority from the agent that is able to issue UCAN invocations.
+   */
+  readonly issuer?: Signer
   /**
    * Authentication status of the current identity.
    */
@@ -17,43 +28,51 @@ export type AuthContextValue = [
   state: AuthContextState,
   actions: {
     /**
-     * Load the default identity from secure storage. If the identity is not
-     * verified, the registration flow will be automatically resumed.
+     * Load the user agent and all stored data from secure storage.
      */
-    loadDefaultIdentity: () => Promise<void>
+    loadAgent: () => Promise<void>
     /**
-     * Unload the current identity from memory.
+     * Unload the user agent and all stored data from secure storage. Note: this
+     * does not remove data, use `resetAgent` if that is desired.
      */
-    unloadIdentity: () => Promise<void>
+    unloadAgent: () => Promise<void>
     /**
-     * Unload the current identity from memory and remove from secure storage.
+     * Unload the current account and agent from memory and remove from secure
+     * storage. Note: this removes all data and is unrecoverable.
      */
-    unloadAndRemoveIdentity: () => Promise<void>
+    resetAgent: () => Promise<void>
     /**
-     * Register a new identity, verify the email address and store in secure
-     * storage. Use cancelRegisterAndStoreIdentity to abort.
+     * Use a specific account.
      */
-    registerAndStoreIdentity: (email: string) => Promise<void>
+    selectAccount: (did: DID) => Promise<void>
     /**
-     * Abort an ongoing identity registration.
+     * Register a new account, verify the email address and store in secure
+     * storage. Use cancelRegisterAccount to abort.
      */
-    cancelRegisterAndStoreIdentity: () => void
+    registerAccount: (email: string) => Promise<void>
+    /**
+     * Abort an ongoing account registration.
+     */
+    cancelRegisterAccount: () => void
   }
 ]
 
 const defaultState: AuthContextState = {
-  identity: undefined,
+  account: undefined,
+  agent: undefined,
+  issuer: undefined,
   status: AuthStatus.SignedOut
 }
 
 export const AuthContext = createContext<AuthContextValue>([
   defaultState,
   {
-    loadDefaultIdentity: async () => {},
-    unloadIdentity: async () => {},
-    unloadAndRemoveIdentity: async () => {},
-    registerAndStoreIdentity: async () => {},
-    cancelRegisterAndStoreIdentity: () => {}
+    loadAgent: async () => {},
+    unloadAgent: async () => {},
+    resetAgent: async () => {},
+    selectAccount: async () => {},
+    registerAccount: async () => {},
+    cancelRegisterAccount: () => {}
   }
 ])
 
@@ -62,70 +81,56 @@ export const AuthContext = createContext<AuthContextValue>([
  */
 export const AuthProvider: ParentComponent = props => {
   const [state, setState] = createStore({
-    identity: defaultState.identity,
+    account: defaultState.account,
+    agent: defaultState.agent,
+    issuer: defaultState.issuer,
     status: defaultState.status
   })
 
+  const [agent, setAgent] = createSignal<Agent<RSASigner>>()
   const [registerAbortController, setRegisterAbortController] = createSignal<AbortController>()
 
-  const load = async (): Promise<void> => {
-    const id = await loadDefaultIdentity()
-    if (id != null) {
-      setState('identity', id)
-      if (id.verified) {
+  const getAgent = async (): Promise<Agent<RSASigner>> => {
+    let a = agent()
+    if (a == null) {
+      a = await createAgent()
+      setAgent(a)
+      setState('agent', a.did())
+      setState('issuer', a.issuer)
+      const account = a.data.accounts.at(-1)
+      if (account != null) {
+        setState('account', account.did())
         setState('status', AuthStatus.SignedIn)
-        return
       }
-      await verifyAndRegisterAndStore(id as UnverifiedIdentity)
     }
+    return a
   }
 
-  const cancel = (): void => {
+  const cancelRegisterAccount = (): void => {
     const controller = registerAbortController()
     if (controller != null) {
       controller.abort()
     }
   }
 
-  const register = async (email: string): Promise<void> => {
-    let id: Identity | undefined
-    if (state.identity != null) {
-      if (state.identity.email !== email) {
-        throw new Error('unload current identity before registering a new one')
-      }
-      id = state.identity
-    } else {
-      id = await loadIdentity({ email })
-      if (id == null) {
-        id = await createIdentity({ email })
-        await storeIdentity(id)
-      }
-    }
-
-    setState('identity', id)
-
-    if (id.verified) { // nothing to do
+  const registerAccount = async (email: string): Promise<void> => {
+    const agent = await getAgent()
+    const infos = await Promise.all(agent.data.accounts.map(a => agent.getAccountInfo(a.did())))
+    const info = infos.find(i => i.email === email)
+    if (info != null) {
+      setState('account', info.did)
       setState('status', AuthStatus.SignedIn)
       return
     }
 
-    const unverifiedIdentity = id as UnverifiedIdentity
-    await sendVerificationEmail(unverifiedIdentity)
-    await verifyAndRegisterAndStore(unverifiedIdentity)
-  }
-
-  const verifyAndRegisterAndStore = async (unverifiedIdentity: UnverifiedIdentity): Promise<void> => {
     const controller = new AbortController()
     setRegisterAbortController(controller)
 
     try {
       setState('status', AuthStatus.EmailVerification)
-
-      const { identity, proof } = await waitIdentityVerification(unverifiedIdentity, { signal: controller.signal })
-      await registerIdentity(identity, proof)
-      await storeIdentity(identity)
-
-      setState('identity', identity)
+      await agent.createAccount(email, { signal: controller.signal })
+      const account = agent.data.accounts.at(-1)
+      setState('account', account?.did())
       setState('status', AuthStatus.SignedIn)
     } catch (err) {
       setState('status', AuthStatus.SignedOut)
@@ -135,24 +140,39 @@ export const AuthProvider: ParentComponent = props => {
     }
   }
 
-  const unload = async (): Promise<void> => {
-    setState('status', AuthStatus.SignedOut)
-    setState('identity', undefined)
+  const selectAccount = async (did: DID): Promise<void> => {
+    const agent = await getAgent()
+    const account = agent.data.accounts.find(a => a.did() === did)
+    if (account == null) throw new Error(`account not found: ${did}`)
+    setState('account', account.did())
+    setState('status', AuthStatus.SignedIn)
   }
 
-  const unloadAndRemove = async (): Promise<void> => {
-    if (state.identity == null) {
-      throw new Error('missing current identity')
-    }
-    await Promise.all([removeIdentity(state.identity), unload()])
+  const loadAgent = async (): Promise<void> => {
+    if (agent() != null) return
+    await getAgent()
+  }
+
+  const unloadAgent = async (): Promise<void> => {
+    setState('status', AuthStatus.SignedOut)
+    setState('account', undefined)
+    setState('issuer', undefined)
+    setState('agent', undefined)
+    setAgent(undefined)
+  }
+
+  const resetAgent = async (): Promise<void> => {
+    const agent = await getAgent()
+    await Promise.all([agent.store.reset(), unloadAgent()])
   }
 
   const actions = {
-    loadDefaultIdentity: load,
-    unloadIdentity: unload,
-    unloadAndRemoveIdentity: unloadAndRemove,
-    registerAndStoreIdentity: register,
-    cancelRegisterAndStoreIdentity: cancel
+    loadAgent,
+    unloadAgent,
+    resetAgent,
+    registerAccount,
+    cancelRegisterAccount,
+    selectAccount
   }
 
   return createComponent(AuthContext.Provider, {
