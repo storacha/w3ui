@@ -24,6 +24,10 @@ export interface Retryable {
   retries?: number
 }
 
+export interface Abortable {
+  signal?: AbortSignal
+}
+
 export interface CARMeta {
   /**
    * CID of the CAR file (not the data it contains).
@@ -60,7 +64,8 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
           try {
             const data = await collect(chunk)
             const bytes = new Uint8Array(await new Blob(data).arrayBuffer())
-            const cid = await storeDAG(receiver, signer, bytes, options)
+            const opts = { ...options, signal: abortController.signal }
+            const cid = await storeDAG(receiver, signer, bytes, opts)
             controller.enqueue({ cid, size: bytes.length })
           } catch (err) {
             controller.error(err)
@@ -72,7 +77,7 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
         await queue.onSizeLessThan(1)
       },
       async flush () {
-        // wait for queue empty AND running items complete
+        // wait for queue empty AND pending items complete
         await queue.onIdle()
       }
     })
@@ -87,7 +92,7 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
  * @param root Root data CID for the DAG that was stored.
  * @param shards CIDs of CAR files that contain the DAG.
  */
-export async function registerUpload (receiver: DID, signer: Signer, root: CID, shards: CID[], options: Retryable = {}): Promise<void> {
+export async function registerUpload (receiver: DID, signer: Signer, root: CID, shards: CID[], options: Retryable & Abortable = {}): Promise<void> {
   const conn = connection(serviceDID, fetch.bind(globalThis), serviceURL)
   await retry(async () => {
     const result = await uploadAdd.invoke({
@@ -109,7 +114,7 @@ export async function registerUpload (receiver: DID, signer: Signer, root: CID, 
  * @param signer Signing authority. Usually the user agent.
  * @param bytes CAR file bytes.
  */
-export async function storeDAG (receiver: DID, signer: Signer, bytes: Uint8Array, options: Retryable = {}): Promise<CID> {
+export async function storeDAG (receiver: DID, signer: Signer, bytes: Uint8Array, options: Retryable & Abortable = {}): Promise<CID> {
   const link = await CAR.codec.link(bytes)
   const conn = connection(serviceDID, fetch.bind(globalThis), serviceURL)
   const result = await retry(async () => {
@@ -136,16 +141,24 @@ export async function storeDAG (receiver: DID, signer: Signer, bytes: Uint8Array
   }
 
   const res = await retry(async () => {
-    const res = await fetch(result.url, {
-      method: 'PUT',
-      mode: 'cors',
-      body: bytes,
-      headers: result.headers
-    })
-    if (res.status >= 400 && res.status < 500) {
-      throw new AbortError(`upload failed: ${res.status}`)
+    try {
+      const res = await fetch(result.url, {
+        method: 'PUT',
+        mode: 'cors',
+        body: bytes,
+        headers: result.headers,
+        signal: options.signal
+      })
+      if (res.status >= 400 && res.status < 500) {
+        throw new AbortError(`upload failed: ${res.status}`)
+      }
+      return res
+    } catch (err) {
+      if (options?.signal?.aborted) {
+        throw new AbortError('upload aborted')
+      }
+      throw err
     }
-    return res
   }, { onFailedAttempt: console.warn, retries: options.retries ?? RETRIES })
 
   if (!res.ok) {
