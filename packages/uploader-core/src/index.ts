@@ -3,11 +3,10 @@ import { CAR } from '@ucanto/transport'
 import { parse } from '@ipld/dag-ucan/did'
 import { add as storeAdd } from '@web3-storage/access/capabilities/store'
 import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
-import { connection } from '@web3-storage/access/connection'
+import { connection } from '@web3-storage/access'
 import retry, { AbortError } from 'p-retry'
 import { CID } from 'multiformats/cid'
 import { collect } from './utils'
-import Queue from 'p-queue'
 
 export * from './unixfs'
 export * from './sharding'
@@ -18,7 +17,6 @@ const serviceURL = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.c
 const serviceDID = parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
 
 const RETRIES = 3
-const CONCURRENT_UPLOADS = 3
 
 export interface Retryable {
   retries?: number
@@ -52,24 +50,12 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
    * @param signer Signing authority. Usually the user agent.
    */
   constructor (receiver: DID, signer: Signer, options: Retryable = {}) {
-    const queue = new Queue({ concurrency: CONCURRENT_UPLOADS })
-    const abortController = new AbortController()
     super({
-      transform (chunk, controller) {
-        void queue.add(async () => {
-          try {
-            const data = await collect(chunk)
-            const bytes = new Uint8Array(await new Blob(data).arrayBuffer())
-            const cid = await storeDAG(receiver, signer, bytes, options)
-            controller.enqueue({ cid, size: bytes.length })
-          } catch (err) {
-            controller.error(err)
-            abortController.abort(err)
-          }
-        }, { signal: abortController.signal })
-      },
-      async flush () {
-        await queue.onIdle()
+      async transform (chunk, controller) {
+        const data = await collect(chunk)
+        const bytes = new Uint8Array(await new Blob(data).arrayBuffer())
+        const cid = await storeDAG(receiver, signer, bytes, options)
+        controller.enqueue({ cid, size: bytes.length })
       }
     })
   }
@@ -84,11 +70,7 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
  * @param shards CIDs of CAR files that contain the DAG.
  */
 export async function registerUpload (receiver: DID, signer: Signer, root: CID, shards: CID[], options: Retryable = {}): Promise<void> {
-  const conn = connection({
-    // @ts-expect-error
-    id: serviceDID,
-    url: serviceURL
-  })
+  const conn = connection(serviceDID, fetch.bind(globalThis), serviceURL)
   await retry(async () => {
     const result = await uploadAdd.invoke({
       issuer: signer,
@@ -111,11 +93,7 @@ export async function registerUpload (receiver: DID, signer: Signer, root: CID, 
  */
 export async function storeDAG (receiver: DID, signer: Signer, bytes: Uint8Array, options: Retryable = {}): Promise<CID> {
   const link = await CAR.codec.link(bytes)
-  const conn = connection({
-    // @ts-expect-error
-    id: serviceDID,
-    url: serviceURL
-  })
+  const conn = connection(serviceDID, fetch.bind(globalThis), serviceURL)
   const result = await retry(async () => {
     const res = await storeAdd.invoke({
       issuer: signer,
