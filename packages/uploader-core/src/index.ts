@@ -6,6 +6,7 @@ import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
 import { connection } from '@web3-storage/access'
 import retry, { AbortError } from 'p-retry'
 import { CID } from 'multiformats/cid'
+import Queue from 'p-queue'
 import { collect } from './utils'
 
 export * from './unixfs'
@@ -17,6 +18,7 @@ const serviceURL = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.c
 const serviceDID = parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
 
 const RETRIES = 3
+const CONCURRENT_UPLOADS = 3
 
 export interface Retryable {
   retries?: number
@@ -50,12 +52,28 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
    * @param signer Signing authority. Usually the user agent.
    */
   constructor (receiver: DID, signer: Signer, options: Retryable = {}) {
+    const queue = new Queue({ concurrency: CONCURRENT_UPLOADS })
+    const abortController = new AbortController()
     super({
       async transform (chunk, controller) {
-        const data = await collect(chunk)
-        const bytes = new Uint8Array(await new Blob(data).arrayBuffer())
-        const cid = await storeDAG(receiver, signer, bytes, options)
-        controller.enqueue({ cid, size: bytes.length })
+        void queue.add(async () => {
+          try {
+            const data = await collect(chunk)
+            const bytes = new Uint8Array(await new Blob(data).arrayBuffer())
+            const cid = await storeDAG(receiver, signer, bytes, options)
+            controller.enqueue({ cid, size: bytes.length })
+          } catch (err) {
+            controller.error(err)
+            abortController.abort(err)
+          }
+        }, { signal: abortController.signal })
+
+        // retain backpressure by not returning until no items queued to be run
+        await queue.onSizeLessThan(1)
+      },
+      async flush () {
+        // wait for queue empty AND running items complete
+        await queue.onIdle()
       }
     })
   }
