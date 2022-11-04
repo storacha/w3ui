@@ -7,10 +7,11 @@ import {
   ShardStoringStream,
   CARMeta,
   CARData,
+  CARLink,
   registerUpload
 } from '@w3ui/uploader-core'
 import { useAuth } from '@w3ui/react-keyring'
-import { CID } from 'multiformats/cid'
+import { Link, Version, UnknownLink } from 'multiformats/link'
 
 export interface UploaderContextState {
   storedDAGShards: CARMeta[]
@@ -20,11 +21,11 @@ export interface UploaderContextActions {
   /**
    * Upload a single file to the service.
    */
-  uploadFile: (file: Blob) => Promise<CID>
+  uploadFile: (file: Blob) => Promise<Link<unknown, number, number, Version>>
   /**
    * Upload a directory of files to the service.
    */
-  uploadDirectory: (files: File[]) => Promise<CID>
+  uploadDirectory: (files: File[]) => Promise<Link<unknown, number, number, Version>>
   /**
    * Store shards of a DAG (encoded as CAR files) to the service.
    */
@@ -33,7 +34,7 @@ export interface UploaderContextActions {
    * Register an "upload" with the service. Note: only required when using
    * `storeDAGShards`.
    */
-  registerUpload: (root: CID, shards: CID[]) => Promise<void>
+  registerUpload: (root: UnknownLink, shards: CARLink[]) => Promise<void>
 }
 
 export type UploaderContextValue = [
@@ -70,7 +71,7 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
       const shardStream = new ShardingStream()
 
       const meta = await actions.storeDAGShards(fileStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
-      const root = CID.asCID(blockMemoStream.memo?.cid)
+      const root = blockMemoStream.memo?.cid
       if (root == null) throw new Error('missing root block')
 
       await actions.registerUpload(root, meta.map(m => m.cid))
@@ -82,7 +83,7 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
       const shardStream = new ShardingStream()
 
       const meta = await actions.storeDAGShards(dirStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
-      const root = CID.asCID(blockMemoStream.memo?.cid)
+      const root = blockMemoStream.memo?.cid
       if (root == null) throw new Error('missing root block')
 
       await actions.registerUpload(root, meta.map(m => m.cid))
@@ -108,7 +109,7 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
 
       return storedShards
     },
-    async registerUpload (root: CID, shards: CID[]) {
+    async registerUpload (root: UnknownLink, shards: CARLink[]) {
       if (account == null) throw new Error('missing account')
       if (issuer == null) throw new Error('missing issuer')
       await registerUpload(account, issuer, root, shards)

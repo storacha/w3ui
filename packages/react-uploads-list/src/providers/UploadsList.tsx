@@ -34,20 +34,21 @@ export interface UploadsListProviderProps {
  * Provider for a list of items uploaded by the current identity.
  */
 export function UploadsListProvider ({ children }: UploadsListProviderProps): ReactNode {
-  const { identity } = useAuth()
+  const { account, issuer } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const [data, setData] = useState<ListPage>()
   const [controller, setController] = useState(new AbortController())
 
   const reload = async (): Promise<void> => {
-    if (identity == null) return
+    if (account == null) return
+    if (issuer == null) return
     controller.abort()
     const newController = new AbortController()
     setController(newController)
     setLoading(true)
     try {
-      setData(await listUploads(identity.signingPrincipal, { signal: newController.signal }))
+      setData(await listUploads(account, issuer, { signal: newController.signal }))
     } catch (err: any) {
       if (err.name !== 'AbortError') {
         console.error(err)
@@ -59,7 +60,7 @@ export function UploadsListProvider ({ children }: UploadsListProviderProps): Re
     }
   }
 
-  useEffect(() => { void reload() }, [identity])
+  useEffect(() => { void reload() }, [account, issuer])
 
   return (
     <UploadsListContext.Provider value={{ error, loading, data, reload }}>

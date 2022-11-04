@@ -24,8 +24,12 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/react-keyring",
   "dependencies": {
-    "@w3ui/keyring-core": "^1.0.2",
-    "@web3-storage/access": "^4.0.0"
+    "@w3ui/keyring-core": "^1.0.2"
+  },
+  "devDependencies": {
+    "@ucanto/interface": "^3.0.0",
+    "@ucanto/principal": "^3.0.0",
+    "@web3-storage/access": "^4.0.1"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"

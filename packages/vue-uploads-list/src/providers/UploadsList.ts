@@ -39,7 +39,8 @@ export interface UploadsListContextActions {
  */
 export const UploadsListProvider = defineComponent({
   setup () {
-    const identity = inject(AuthProviderInjectionKey.identity)
+    const account = inject(AuthProviderInjectionKey.account)
+    const issuer = inject(AuthProviderInjectionKey.issuer)
 
     const state = shallowReactive<UploadsListContextState>({
       loading: false,
@@ -54,12 +55,13 @@ export const UploadsListProvider = defineComponent({
     provide(UploadsListProviderInjectionKey.data, computed(() => state.data))
 
     const reload = async (): Promise<void> => {
-      if (identity == null || identity.value == null) return
+      if (account?.value == null) return
+      if (issuer?.value == null) return
       controller.abort()
       controller = new AbortController()
       state.loading = true
       try {
-        state.data = await listUploads(identity.value.signingPrincipal, { signal: controller.signal })
+        state.data = await listUploads(account.value, issuer.value, { signal: controller.signal })
       } catch (err: any) {
         if (err.name !== 'AbortError') {
           console.error(err)
@@ -72,7 +74,7 @@ export const UploadsListProvider = defineComponent({
     }
     provide(UploadsListProviderInjectionKey.reload, reload)
 
-    watch([identity], reload)
+    watch([account, issuer], reload)
 
     return state
   },

@@ -6,6 +6,7 @@ export {
   encodeCar,
   CARData,
   CARMeta,
+  CARLink,
   Retryable,
   ShardingStream,
   ShardingOptions

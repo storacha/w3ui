@@ -1,6 +1,6 @@
 import * as UnixFS from '@ipld/unixfs'
 import type { Block } from '@ipld/unixfs'
-import type { Link } from 'multiformats/link'
+import type { UnknownLink } from 'multiformats/link'
 import * as raw from 'multiformats/codecs/raw'
 import { toIterable, collect } from './utils'
 
@@ -10,7 +10,7 @@ export interface EncodeResult {
   /**
    * Root CID for the DAG.
    */
-  cid: Link<unknown, number, number, 0|1>
+  cid: UnknownLink
   /**
    * Blocks for the generated DAG.
    */

@@ -1,16 +1,21 @@
 import { createResource, InitializedResourceReturn, ResourceOptions, ResourceReturn, ResourceSource } from 'solid-js'
 import { listUploads, ListPage } from '@w3ui/uploads-list-core'
-import { Identity } from '@w3ui/solid-keyring'
+import type { DID, Signer } from '@ucanto/interface'
+
+interface UploadsListSource {
+  account: DID
+  issuer: Signer
+}
 
 /**
  * Create a solid resource configured to fetch data from the service. Please
  * see the docs for [`createResource`](https://www.solidjs.com/docs/latest/api#createresource)
  * for parameter and return type descriptions.
  */
-export function createUploadsListResource (source: ResourceSource<Identity>, options?: ResourceOptions<ListPage, Identity>): ResourceReturn<ListPage> | InitializedResourceReturn<ListPage> {
-  return createResource<ListPage, Identity>(
+export function createUploadsListResource (source: ResourceSource<UploadsListSource>, options?: ResourceOptions<ListPage, UploadsListSource>): ResourceReturn<ListPage> | InitializedResourceReturn<ListPage> {
+  return createResource<ListPage, UploadsListSource>(
     source,
-    async identity => { return await listUploads(identity.signingPrincipal) },
+    async ({ account, issuer }) => { return await listUploads(account, issuer) },
     options
   )
 }

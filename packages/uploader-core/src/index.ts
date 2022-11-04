@@ -1,11 +1,12 @@
-import { Signer, DID } from '@ucanto/interface'
-import { CAR } from '@ucanto/transport'
+import { connect } from '@ucanto/client'
+import { Signer, DID, ServiceMethod } from '@ucanto/interface'
+import { CAR, CBOR, HTTP } from '@ucanto/transport'
 import { parse } from '@ipld/dag-ucan/did'
 import { add as storeAdd } from '@web3-storage/access/capabilities/store'
 import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
-import { connection } from '@web3-storage/access'
+import { UploadAdd, StoreAdd } from '@web3-storage/access/capabilities/types'
 import retry, { AbortError } from 'p-retry'
-import { CID } from 'multiformats/cid'
+import { Link, UnknownLink } from 'multiformats/link'
 import Queue from 'p-queue'
 import { collect } from './utils'
 
@@ -16,6 +17,17 @@ export { BlockMemoStream } from './utils'
 // Production
 const serviceURL = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
 const serviceDID = parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
+
+interface Service {
+  store: { add: ServiceMethod<StoreAdd, StoreAddResponse, never> }
+  upload: { add: ServiceMethod<UploadAdd, null, never> }
+}
+
+interface StoreAddResponse {
+  status: string
+  headers: Record<string, string>
+  url: string
+}
 
 const RETRIES = 3
 const CONCURRENT_UPLOADS = 3
@@ -32,7 +44,7 @@ export interface CARMeta {
   /**
    * CID of the CAR file (not the data it contains).
    */
-  cid: CID
+  cid: CARLink
   /**
    * Size of the CAR file in bytes.
    */
@@ -40,6 +52,8 @@ export interface CARMeta {
 }
 
 export type CARData = AsyncIterable<Uint8Array>
+
+export type CARLink = Link<unknown, typeof CAR.codec.code>
 
 /**
  * Upload multiple DAG shards (encoded as CAR files) to the service.
@@ -52,10 +66,10 @@ export type CARData = AsyncIterable<Uint8Array>
  */
 export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
   /**
-   * @param receiver The receiver of the stored item. Usually the DID of the account.
+   * @param account DID of the account that is receiving the upload.
    * @param signer Signing authority. Usually the user agent.
    */
-  constructor (receiver: DID, signer: Signer, options: Retryable = {}) {
+  constructor (account: DID, signer: Signer, options: Retryable = {}) {
     const queue = new Queue({ concurrency: CONCURRENT_UPLOADS })
     const abortController = new AbortController()
     super({
@@ -65,7 +79,7 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
             const data = await collect(chunk)
             const bytes = new Uint8Array(await new Blob(data).arrayBuffer())
             const opts = { ...options, signal: abortController.signal }
-            const cid = await storeDAG(receiver, signer, bytes, opts)
+            const cid = await storeDAG(account, signer, bytes, opts)
             controller.enqueue({ cid, size: bytes.length })
           } catch (err) {
             controller.error(err)
@@ -87,21 +101,31 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
 /**
  * Register an "upload" with the service.
  *
- * @param receiver The receiver of the upload registration. Usually the DID of the account.
+ * @param account DID of the account that is receiving the upload.
  * @param signer Signing authority. Usually the user agent.
  * @param root Root data CID for the DAG that was stored.
  * @param shards CIDs of CAR files that contain the DAG.
  */
-export async function registerUpload (receiver: DID, signer: Signer, root: CID, shards: CID[], options: Retryable & Abortable = {}): Promise<void> {
-  const conn = connection(serviceDID, fetch.bind(globalThis), serviceURL)
+export async function registerUpload (account: DID, signer: Signer, root: UnknownLink, shards: CARLink[], options: Retryable & Abortable = {}): Promise<void> {
+  const conn = connect<Service>({
+    id: serviceDID,
+    encoder: CAR,
+    decoder: CBOR,
+    channel: HTTP.open({
+      url: serviceURL,
+      method: 'POST'
+    })
+  })
   await retry(async () => {
     const result = await uploadAdd.invoke({
       issuer: signer,
       audience: serviceDID,
-      with: receiver,
-      // @ts-expect-error
-      caveats: { root, shards }
-    // @ts-expect-error
+      with: account,
+      nb: {
+        // @ts-expect-error https://github.com/web3-storage/w3-protocol/pull/136
+        root,
+        shards
+      }
     }).execute(conn)
     if (result?.error === true) throw result
   }, { onFailedAttempt: console.warn, retries: options.retries ?? RETRIES })
@@ -110,34 +134,39 @@ export async function registerUpload (receiver: DID, signer: Signer, root: CID, 
 /**
  * Store a DAG encoded as a CAR file.
  *
- * @param receiver The receiver of the stored item. Usually the DID of the account.
+ * @param account DID of the account that is receiving the upload.
  * @param signer Signing authority. Usually the user agent.
  * @param bytes CAR file bytes.
  */
-export async function storeDAG (receiver: DID, signer: Signer, bytes: Uint8Array, options: Retryable & Abortable = {}): Promise<CID> {
+export async function storeDAG (account: DID, signer: Signer, bytes: Uint8Array, options: Retryable & Abortable = {}): Promise<CARLink> {
   const link = await CAR.codec.link(bytes)
-  const conn = connection(serviceDID, fetch.bind(globalThis), serviceURL)
+  const conn = connect<Service>({
+    id: serviceDID,
+    encoder: CAR,
+    decoder: CBOR,
+    channel: HTTP.open({
+      url: serviceURL,
+      method: 'POST'
+    })
+  })
   const result = await retry(async () => {
     const res = await storeAdd.invoke({
       issuer: signer,
       audience: serviceDID,
-      with: receiver,
-      // @ts-expect-error
-      caveats: { link }
-    // @ts-expect-error
+      with: account,
+      nb: { link }
     }).execute(conn)
     return res
   }, { onFailedAttempt: console.warn, retries: options.retries ?? RETRIES })
 
-  // Return early if it was already uploaded.
-  if (result.status === 'done') {
-    // @ts-expect-error
-    return link
-  }
-
   if (result.error != null) {
     // @ts-expect-error not cause yet
-    throw new Error('failed store/add invocation', { cause: result.error })
+    throw new Error('failed store/add invocation', { cause: result })
+  }
+
+  // Return early if it was already uploaded.
+  if (result.status === 'done') {
+    return link
   }
 
   const res = await retry(async () => {
@@ -154,7 +183,7 @@ export async function storeDAG (receiver: DID, signer: Signer, bytes: Uint8Array
       }
       return res
     } catch (err) {
-      if (options?.signal?.aborted) {
+      if (options.signal?.aborted === true) {
         throw new AbortError('upload aborted')
       }
       throw err
@@ -165,6 +194,5 @@ export async function storeDAG (receiver: DID, signer: Signer, bytes: Uint8Array
     throw new Error('upload failed')
   }
 
-  // @ts-expect-error
   return link
 }

@@ -1,19 +1,18 @@
 import { connect } from '@ucanto/client'
-import { SigningPrincipal, ServiceMethod, DID, Capability } from '@ucanto/interface'
-import { Principal } from '@ucanto/principal'
+import { Signer, DID, ServiceMethod } from '@ucanto/interface'
+import { parse } from '@ipld/dag-ucan/did'
 import * as CAR from '@ucanto/transport/car'
 import * as CBOR from '@ucanto/transport/cbor'
 import * as HTTP from '@ucanto/transport/http'
-// @ts-expect-error
-import { list } from '@web3-storage/access/capabilities/upload'
+import { list as uploadList } from '@web3-storage/access/capabilities/upload'
+import { UploadList } from '@web3-storage/access/capabilities/types'
 import { CID } from 'multiformats/cid'
 
 // Production
-const serviceUrl = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
-const serviceDid = Principal.parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
+const serviceURL = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
+const serviceDID = parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
 
-interface Service { uploads: { list: ServiceMethod<UploadsList, ServiceListPage, never> } }
-interface UploadsList extends Capability<'uploads/list', DID> {}
+interface Service { upload: { list: ServiceMethod<UploadList, ServiceListPage, never> } }
 
 interface ServiceListPage {
   count: number
@@ -40,21 +39,25 @@ export interface ListResult {
   uploadedAt: Date
 }
 
-export async function listUploads (principal: SigningPrincipal, _: { signal?: AbortSignal } = {}): Promise<ListPage> {
+export interface Abortable {
+  signal?: AbortSignal
+}
+
+export async function listUploads (account: DID, signer: Signer, _: Abortable = {}): Promise<ListPage> {
   const conn = connect<Service>({
-    id: serviceDid,
+    id: serviceDID,
     encoder: CAR,
     decoder: CBOR,
     channel: HTTP.open({
-      url: serviceUrl,
+      url: serviceURL,
       method: 'POST'
     })
   })
 
-  const res = await list.invoke({
-    issuer: principal,
-    audience: serviceDid,
-    with: principal.did()
+  const res = await uploadList.invoke({
+    issuer: signer,
+    audience: serviceDID,
+    with: account
   }).execute(conn)
 
   if (res.error != null) {
@@ -66,7 +69,6 @@ export async function listUploads (principal: SigningPrincipal, _: { signal?: Ab
   return {
     page: res.page,
     pageSize: res.pageSize,
-    // @ts-expect-error
     results: results.map(r => ({
       dataCid: r.dataCID,
       carCids: [r.carCID],
