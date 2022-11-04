@@ -121,11 +121,7 @@ export async function registerUpload (account: DID, signer: Signer, root: Unknow
       issuer: signer,
       audience: serviceDID,
       with: account,
-      nb: {
-        // @ts-expect-error https://github.com/web3-storage/w3-protocol/pull/136
-        root,
-        shards
-      }
+      nb: { root, shards }
     }).execute(conn)
     if (result?.error === true) throw result
   }, { onFailedAttempt: console.warn, retries: options.retries ?? RETRIES })

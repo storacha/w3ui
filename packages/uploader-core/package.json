@@ -31,7 +31,7 @@
     "@ucanto/interface": "^3.0.0",
     "@ucanto/principal": "^3.0.0",
     "@ucanto/transport": "^3.0.1",
-    "@web3-storage/access": "^4.0.0",
+    "@web3-storage/access": "^4.0.2",
     "multiformats": "^10.0.2",
     "p-queue": "^7.3.0",
     "p-retry": "^5.1.1"
