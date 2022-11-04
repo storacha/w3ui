@@ -3,7 +3,7 @@ export {
   createFileEncoderStream,
   encodeDirectory,
   createDirectoryEncoderStream,
-  encodeCar,
+  encodeCAR,
   CARData,
   CARMeta,
   CARLink,

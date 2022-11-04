@@ -27,7 +27,7 @@ export class ShardingStream extends TransformStream<Block, AsyncIterable<Uint8Ar
     super({
       transform (block, controller) {
         if (readyShard != null) {
-          controller.enqueue(encodeCar(readyShard))
+          controller.enqueue(encodeCAR(readyShard))
           readyShard = null
         }
         if (size + block.bytes.length > shardSize) {
@@ -41,18 +41,18 @@ export class ShardingStream extends TransformStream<Block, AsyncIterable<Uint8Ar
 
       flush (controller) {
         if (readyShard != null) {
-          controller.enqueue(encodeCar(readyShard))
+          controller.enqueue(encodeCAR(readyShard))
         }
 
         if (shard.length > 0) {
-          controller.enqueue(encodeCar(shard, shard.at(-1)?.cid))
+          controller.enqueue(encodeCAR(shard, shard.at(-1)?.cid))
         }
       }
     })
   }
 }
 
-export function encodeCar (blocks: Iterable<Block>, root?: Link<unknown, number, number, Version>): AsyncIterable<Uint8Array> {
+export function encodeCAR (blocks: Iterable<Block>, root?: Link<unknown, number, number, Version>): AsyncIterable<Uint8Array> {
   // @ts-expect-error
   const { writer, out } = CarWriter.create(root)
   void (async () => {

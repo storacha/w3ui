@@ -21,7 +21,8 @@ const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
 
 /**
- * Create an agent for managing identity.
+ * Create an agent for managing identity. It uses RSA keys that are stored in
+ * IndexedDB as unextractable `CryptoKey`s.
  */
 export async function createAgent (options: { url?: URL } = {}): Promise<Agent<RSASigner>> {
   const store = await StoreIndexedDB.create(DB_NAME, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
