@@ -17,9 +17,8 @@ describe('sharding', () => {
     expect(shards.length).toBeGreaterThan(1)
 
     for (const car of shards) {
-      const bytes = new Blob(await collect(car))
       // add 100 bytes leeway to the chunk size for encoded CAR data
-      expect(bytes.size).toBeLessThanOrEqual(shardSize + 100)
+      expect(car.size).toBeLessThanOrEqual(shardSize + 100)
     }
   })
 })

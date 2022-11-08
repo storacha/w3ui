@@ -6,13 +6,13 @@ import { add as storeAdd } from '@web3-storage/access/capabilities/store'
 import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
 import { UploadAdd, StoreAdd } from '@web3-storage/access/capabilities/types'
 import retry, { AbortError } from 'p-retry'
-import { Link, UnknownLink } from 'multiformats/link'
+import { UnknownLink } from 'multiformats/link'
 import Queue from 'p-queue'
-import { collect } from './utils'
+import { CARFile, CARMetadata, CARLink, Abortable, Retryable } from './types'
 
 export * from './unixfs'
 export * from './sharding'
-export { BlockMemoStream } from './utils'
+export * from './types'
 
 // Production
 const serviceURL = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
@@ -32,29 +32,6 @@ interface StoreAddResponse {
 const RETRIES = 3
 const CONCURRENT_UPLOADS = 3
 
-export interface Retryable {
-  retries?: number
-}
-
-export interface Abortable {
-  signal?: AbortSignal
-}
-
-export interface CARMeta {
-  /**
-   * CID of the CAR file (not the data it contains).
-   */
-  cid: CARLink
-  /**
-   * Size of the CAR file in bytes.
-   */
-  size: number
-}
-
-export type CARData = AsyncIterable<Uint8Array>
-
-export type CARLink = Link<unknown, typeof CAR.codec.code>
-
 /**
  * Upload multiple DAG shards (encoded as CAR files) to the service.
  *
@@ -62,9 +39,9 @@ export type CARLink = Link<unknown, typeof CAR.codec.code>
  * together as a complete upload.
  *
  * The writeable side of this transform stream accepts CAR files and the
- * readable side yields `CARMeta`.
+ * readable side yields `CARMetadata`.
  */
-export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
+export class ShardStoringStream extends TransformStream<CARFile, CARMetadata> {
   /**
    * @param account DID of the account that is receiving the upload.
    * @param signer Signing authority. Usually the user agent.
@@ -73,14 +50,13 @@ export class ShardStoringStream extends TransformStream<CARData, CARMeta> {
     const queue = new Queue({ concurrency: CONCURRENT_UPLOADS })
     const abortController = new AbortController()
     super({
-      async transform (chunk, controller) {
+      async transform (car, controller) {
         void queue.add(async () => {
           try {
-            const data = await collect(chunk)
-            const bytes = new Uint8Array(await new Blob(data).arrayBuffer())
             const opts = { ...options, signal: abortController.signal }
-            const cid = await storeDAG(account, signer, bytes, opts)
-            controller.enqueue({ cid, size: bytes.length })
+            const cid = await storeDAG(account, signer, car, opts)
+            const { version, roots } = car
+            controller.enqueue({ version, roots, cid, size: car.size })
           } catch (err) {
             controller.error(err)
             abortController.abort(err)
@@ -132,9 +108,11 @@ export async function registerUpload (account: DID, signer: Signer, root: Unknow
  *
  * @param account DID of the account that is receiving the upload.
  * @param signer Signing authority. Usually the user agent.
- * @param bytes CAR file bytes.
+ * @param car CAR file data.
  */
-export async function storeDAG (account: DID, signer: Signer, bytes: Uint8Array, options: Retryable & Abortable = {}): Promise<CARLink> {
+export async function storeDAG (account: DID, signer: Signer, car: Blob, options: Retryable & Abortable = {}): Promise<CARLink> {
+  // TODO: validate blob contains CAR data
+  const bytes = new Uint8Array(await car.arrayBuffer())
   const link = await CAR.codec.link(bytes)
   const conn = connect<Service>({
     id: serviceDID,
@@ -170,7 +148,7 @@ export async function storeDAG (account: DID, signer: Signer, bytes: Uint8Array,
       const res = await fetch(result.url, {
         method: 'PUT',
         mode: 'cors',
-        body: bytes,
+        body: car,
         headers: result.headers,
         signal: options.signal
       })

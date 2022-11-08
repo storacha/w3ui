@@ -1,21 +1,10 @@
 import * as UnixFS from '@ipld/unixfs'
 import type { Block } from '@ipld/unixfs'
-import type { UnknownLink } from 'multiformats/link'
 import * as raw from 'multiformats/codecs/raw'
 import { toIterable, collect } from './utils'
+import type { UnixFSEncodeResult } from './types'
 
 const queuingStrategy = UnixFS.withCapacity(1048576 * 175)
-
-export interface EncodeResult {
-  /**
-   * Root CID for the DAG.
-   */
-  cid: UnknownLink
-  /**
-   * Blocks for the generated DAG.
-   */
-  blocks: Block[]
-}
 
 // TODO: configure chunk size and max children https://github.com/ipld/js-unixfs/issues/36
 const settings = UnixFS.configure({
@@ -23,7 +12,7 @@ const settings = UnixFS.configure({
   smallFileEncoder: raw
 })
 
-export async function encodeFile (blob: Blob): Promise<EncodeResult> {
+export async function encodeFile (blob: Blob): Promise<UnixFSEncodeResult> {
   const readable = createFileEncoderStream(blob)
   const blocks = await collect(toIterable(readable))
   const rootBlock = blocks.at(-1)
@@ -74,7 +63,7 @@ class UnixFSDirectoryBuilder {
   }
 }
 
-export async function encodeDirectory (files: Iterable<File>): Promise<EncodeResult> {
+export async function encodeDirectory (files: Iterable<File>): Promise<UnixFSEncodeResult> {
   const readable = createDirectoryEncoderStream(files)
   const blocks = await collect(toIterable(readable))
   const rootBlock = blocks.at(-1)

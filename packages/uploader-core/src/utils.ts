@@ -1,22 +1,3 @@
-import { Block } from '@ipld/unixfs'
-
-export class BlockMemoStream extends TransformStream<Block, Block> {
-  #memo: Block|undefined
-
-  constructor () {
-    super({
-      transform: (block, controller) => {
-        this.#memo = block
-        controller.enqueue(block)
-      }
-    })
-  }
-
-  get memo (): Block|undefined {
-    return this.#memo
-  }
-}
-
 export function toIterable<T> (readable: ReadableStream<T> | NodeJS.ReadableStream): AsyncIterable<T> {
   // @ts-expect-error
   if (readable[Symbol.asyncIterator] != null) return readable

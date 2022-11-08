@@ -1,6 +1,8 @@
 import { Block } from '@ipld/unixfs'
 import { CarWriter } from '@ipld/car'
 import type { Link, Version } from 'multiformats/link'
+import type { CARFile } from './types'
+import { collect } from './utils'
 
 // most thing are < 30MB
 const SHARD_SIZE = 1024 * 1024 * 30
@@ -17,7 +19,7 @@ export interface ShardingOptions {
  * Shard a set of blocks into a set of CAR files. The last block is assumed to
  * be the DAG root and becomes the CAR root CID for the last CAR output.
  */
-export class ShardingStream extends TransformStream<Block, AsyncIterable<Uint8Array>> {
+export class ShardingStream extends TransformStream<Block, CARFile> {
   constructor (options: ShardingOptions = {}) {
     const shardSize = options.shardSize ?? SHARD_SIZE
     let shard: Block[] = []
@@ -25,9 +27,9 @@ export class ShardingStream extends TransformStream<Block, AsyncIterable<Uint8Ar
     let size = 0
 
     super({
-      transform (block, controller) {
+      async transform (block, controller) {
         if (readyShard != null) {
-          controller.enqueue(encodeCAR(readyShard))
+          controller.enqueue(await encodeCAR(readyShard))
           readyShard = null
         }
         if (size + block.bytes.length > shardSize) {
@@ -39,28 +41,39 @@ export class ShardingStream extends TransformStream<Block, AsyncIterable<Uint8Ar
         size += block.bytes.length
       },
 
-      flush (controller) {
+      async flush (controller) {
         if (readyShard != null) {
-          controller.enqueue(encodeCAR(readyShard))
+          controller.enqueue(await encodeCAR(readyShard))
         }
 
-        if (shard.length > 0) {
-          controller.enqueue(encodeCAR(shard, shard.at(-1)?.cid))
+        const rootBlock = shard.at(-1)
+        if (rootBlock != null) {
+          controller.enqueue(await encodeCAR(shard, rootBlock.cid))
         }
       }
     })
   }
 }
 
-export function encodeCAR (blocks: Iterable<Block>, root?: Link<unknown, number, number, Version>): AsyncIterable<Uint8Array> {
+export async function encodeCAR (blocks: Iterable<Block>|AsyncIterable<Block>, root?: Link<unknown, number, number, Version>): Promise<CARFile> {
   // @ts-expect-error
   const { writer, out } = CarWriter.create(root)
+  let error: Error
   void (async () => {
-    for (const block of blocks) {
-      // @ts-expect-error https://github.com/ipld/js-unixfs/issues/30
-      await writer.put(block)
+    try {
+      for await (const block of blocks) {
+        // @ts-expect-error
+        await writer.put(block)
+      }
+    } catch (err: any) {
+      error = err
+    } finally {
+      await writer.close()
     }
-    await writer.close()
   })()
-  return out
+  const chunks = await collect(out)
+  // @ts-expect-error
+  if (error != null) throw error
+  const roots = root != null ? [root] : []
+  return Object.assign(new Blob(chunks), { version: 1, roots })
 }

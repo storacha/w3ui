@@ -2,19 +2,18 @@ import React, { useContext, createContext, useState, ReactNode } from 'react'
 import {
   createFileEncoderStream,
   createDirectoryEncoderStream,
-  BlockMemoStream,
   ShardingStream,
   ShardStoringStream,
-  CARMeta,
-  CARData,
+  CARMetadata,
   CARLink,
-  registerUpload
+  registerUpload,
+  storeDAG
 } from '@w3ui/uploader-core'
 import { useAuth } from '@w3ui/react-keyring'
 import { Link, Version, UnknownLink } from 'multiformats/link'
 
 export interface UploaderContextState {
-  storedDAGShards: CARMeta[]
+  storedDAGShards: CARMetadata[]
 }
 
 export interface UploaderContextActions {
@@ -27,12 +26,12 @@ export interface UploaderContextActions {
    */
   uploadDirectory: (files: File[]) => Promise<Link<unknown, number, number, Version>>
   /**
-   * Store shards of a DAG (encoded as CAR files) to the service.
+   * Store a DAG (encoded as a CAR file) to the service.
    */
-  storeDAGShards: (shards: ReadableStream<CARData>) => Promise<CARMeta[]>
+  storeDAG: (data: Blob) => Promise<CARLink>
   /**
    * Register an "upload" with the service. Note: only required when using
-   * `storeDAGShards`.
+   * `storeDAG`.
    */
   registerUpload: (root: UnknownLink, shards: CARLink[]) => Promise<void>
 }
@@ -47,7 +46,7 @@ const UploaderContext = createContext<UploaderContextValue>([
   {
     uploadFile: async () => { throw new Error('missing uploader context provider') },
     uploadDirectory: async () => { throw new Error('missing uploader context provider') },
-    storeDAGShards: async () => { throw new Error('missing uploader context provider') },
+    storeDAG: async () => { throw new Error('missing uploader context provider') },
     registerUpload: async () => { throw new Error('missing uploader context provider') }
   }
 ])
@@ -66,48 +65,55 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
   const state = { storedDAGShards }
   const actions: UploaderContextActions = {
     async uploadFile (file: Blob) {
-      const fileStream = createFileEncoderStream(file)
-      const blockMemoStream = new BlockMemoStream()
-      const shardStream = new ShardingStream()
-
-      const meta = await actions.storeDAGShards(fileStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
-      const root = blockMemoStream.memo?.cid
-      if (root == null) throw new Error('missing root block')
-
-      await actions.registerUpload(root, meta.map(m => m.cid))
-      return root
-    },
-    async uploadDirectory (files: File[]) {
-      const dirStream = createDirectoryEncoderStream(files)
-      const blockMemoStream = new BlockMemoStream()
-      const shardStream = new ShardingStream()
-
-      const meta = await actions.storeDAGShards(dirStream.pipeThrough(blockMemoStream).pipeThrough(shardStream))
-      const root = blockMemoStream.memo?.cid
-      if (root == null) throw new Error('missing root block')
-
-      await actions.registerUpload(root, meta.map(m => m.cid))
-      return root
-    },
-    async storeDAGShards (shards) {
       if (account == null) throw new Error('missing account')
       if (issuer == null) throw new Error('missing issuer')
 
-      const storedShards: CARMeta[] = []
+      const storedShards: CARMetadata[] = []
       setStoredDAGShards(storedShards)
 
-      await shards
+      await createFileEncoderStream(file)
+        .pipeThrough(new ShardingStream())
         .pipeThrough(new ShardStoringStream(account, issuer))
-        .pipeThrough(new TransformStream({
-          transform (meta, controller) {
+        .pipeTo(new WritableStream({
+          write (meta) {
             storedShards.push(meta)
             setStoredDAGShards([...storedShards])
-            controller.enqueue(meta)
           }
         }))
-        .pipeTo(new WritableStream())
 
-      return storedShards
+      const root = storedShards.at(-1)?.roots[0]
+      if (root == null) throw new Error('missing root CID')
+
+      await actions.registerUpload(root, storedShards.map(s => s.cid))
+      return root
+    },
+    async uploadDirectory (files: File[]) {
+      if (account == null) throw new Error('missing account')
+      if (issuer == null) throw new Error('missing issuer')
+
+      const storedShards: CARMetadata[] = []
+      setStoredDAGShards(storedShards)
+
+      await createDirectoryEncoderStream(files)
+        .pipeThrough(new ShardingStream())
+        .pipeThrough(new ShardStoringStream(account, issuer))
+        .pipeTo(new WritableStream({
+          write (meta) {
+            storedShards.push(meta)
+            setStoredDAGShards([...storedShards])
+          }
+        }))
+
+      const root = storedShards.at(-1)?.roots[0]
+      if (root == null) throw new Error('missing root CID')
+
+      await actions.registerUpload(root, storedShards.map(s => s.cid))
+      return root
+    },
+    async storeDAG (data) {
+      if (account == null) throw new Error('missing account')
+      if (issuer == null) throw new Error('missing issuer')
+      return await storeDAG(account, issuer, data)
     },
     async registerUpload (root: UnknownLink, shards: CARLink[]) {
       if (account == null) throw new Error('missing account')
