@@ -46,35 +46,52 @@ const auth = useAuth()
 Hook to allow use of the [`AuthProvider`](#authprovider) value. The value returned is an `AuthContextValue`:
 
 ```ts
-interface AuthContextValue {
+interface AuthContextState {
   /**
-   * The current identity
+   * The current user account.
    */
-  identity?: Identity
+  readonly account?: DID
   /**
-   * Load the default identity from secure storage.
+   * The current user agent (this device).
    */
-  loadDefaultIdentity: () => Promise<void>
+  readonly agent?: DID
   /**
-   * Unload the current identity from memory.
+   * Signing authority from the agent that is able to issue UCAN invocations.
    */
-  unloadIdentity: () => Promise<void>
-  /**
-   * Unload the current identity from memory and remove from secure storage.
-   */
-  unloadAndRemoveIdentity: () => Promise<void>
-  /**
-   * Register a new identity, verify the email address and store in secure
-   * storage. Use cancelRegisterAndStoreIdentity to abort.
-   */
-  registerAndStoreIdentity: (email: string) => Promise<void>
-  /**
-   * Abort an ongoing identity registration.
-   */
-  cancelRegisterAndStoreIdentity: () => void
+  readonly issuer?: Signer
   /**
    * Authentication status of the current identity.
    */
-  authStatus: AuthStatus
+  readonly authStatus: AuthStatus
+}
+
+interface AuthContextValue extends AuthContextState {
+  /**
+   * Load the user agent and all stored data from secure storage.
+   */
+  loadAgent: () => Promise<void>
+  /**
+   * Unload the user agent and all stored data from secure storage. Note: this
+   * does not remove data, use `resetAgent` if that is desired.
+   */
+  unloadAgent: () => Promise<void>
+  /**
+   * Unload the current account and agent from memory and remove from secure
+   * storage. Note: this removes all data and is unrecoverable.
+   */
+  resetAgent: () => Promise<void>
+  /**
+   * Use a specific account.
+   */
+  selectAccount: (did: DID) => Promise<void>
+  /**
+   * Register a new account, verify the email address and store in secure
+   * storage. Use cancelRegisterAccount to abort.
+   */
+  registerAccount: (email: string) => Promise<void>
+  /**
+   * Abort an ongoing account registration.
+   */
+  cancelRegisterAccount: () => void
 }
 ```
