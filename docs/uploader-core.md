@@ -14,35 +14,33 @@ import * as UploaderCore from '@w3ui/uploader-core'
 
 ## Exports
 
+* [`encodeCAR`](#encodecar)
 * [`encodeDirectory`](#encodedirectory)
 * [`encodeFile`](#encodefile)
-* [`uploadCarChunks`](#uploadcarchunks)
-* [`uploadCarBytes`](#uploadcarbytes)
+* [`registerUpload`](#registerupload)
+* [`storeDAG`](#storedag)
 
 ---
 
-### `chunkBlocks`
+### `encodeCAR`
 
 ```ts
-chunkBlocks (stream: ReadableStream<Block>, options?: ChunkerOptions): AsyncIterable<CarData>
+encodeCAR (blocks: Iterable<Block>, root?: CID): Promise<Blob & { version: 1, roots: CID[] }>
 ```
 
-Split a stream of blocks into chunks of CAR files.
+Encode a DAG as a CAR file.
 
-```ts
-interface ChunkerOptions {
-  /**
-   * The target chunk size. Actual size of CAR output may be bigger due to
-   * CAR header and block encoding data.
-   */
-  chunkSize?: number
-}
+Example:
+
+```js
+const { cid, blocks } = await encodeFile(new File(['data'], 'doc.txt'))
+const car = await encodeCAR(blocks, cid)
 ```
 
 ### `encodeDirectory`
 
 ```ts
-encodeDirectory (files: Iterable<File>): { cid: Promise<CID>, blocks: ReadableStream<Block> }
+encodeDirectory (files: Iterable<File>): { cid: CID, blocks: Block[] }
 ```
 
 Create a UnixFS DAG from the passed file data. All files are added to a container directory, with paths in file names preserved.
@@ -62,7 +60,7 @@ const { cid, blocks } = encodeDirectory([
 ### `encodeFile`
 
 ```ts
-encodeFile (file: Blob): { cid: Promise<CID>, blocks: AsyncIterable<CarData> }
+encodeFile (file: Blob): { cid: CID, blocks: Block[] }
 ```
 
 Create a UnixFS DAG from the passed file data.
@@ -74,36 +72,18 @@ const { cid, blocks } = await encodeFile(new File(['data'], 'doc.txt'))
 // Note: file name is not preserved - use encodeDirectory if required.
 ```
 
-### `uploadCarChunks`
+### `registerUpload`
 
 ```ts
-uploadCarChunks (principal: SigningPrincipal, chunks: AsyncIterable<CarData>, options?: UploadCarChunksOptions): Promise<CID[]>
+registerUpload (account: DID, signer: Signer, root: CID, shards: CID[], options: { retries?: number, signal?: AbortSignal } = {}): Promise<void>
 ```
 
-Upload multiple CAR chunks to the service, linking them together after successful completion. Returns an array of CIDs of the CARs that were uploaded.
+Register a set of stored CAR files as an "upload" in the system. A DAG can be split between multipe CAR files. Calling this function allows multiple stored CAR files to be considered as a single upload.
+
+### `storeDAG`
 
 ```ts
-interface UploadCarChunksOptions {
-  retries?: number
-  onChunkUploaded?: (event: { meta: CarChunkMeta }) => void
-}
-
-interface CarChunkMeta {
-  /**
-   * CID of the CAR file (not the data it contains).
-   */
-  cid: CID
-  /**
-   * Size of the CAR file in bytes.
-   */
-  size: number
-}
+storeDAG (account: DID, signer: Signer, car: Blob, options: { retries?: number, signal?: AbortSignal } = {}): Promise<CID>
 ```
 
-### `uploadCarBytes`
-
-```ts
-uploadCarBytes (principal: SigningPrincipal, bytes: Uint8Array): Promise<void>
-```
-
-Upload CAR bytes to the service. The principal can be obtained from [`createIdentity`](./keyring-core#createidentity).
+Store a CAR file to the service.

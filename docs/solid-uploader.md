@@ -46,16 +46,16 @@ const [progress, uploader] = useUploader()
 Hook to allow use of the [`UploaderProvider`](#uploaderprovider) value. The value returned is an `UploaderContextValue`:
 
 ```ts
-export type UploaderContextValue = [
+type UploaderContextValue = [
   state: UploaderContextState,
   actions: UploaderContextActions
 ]
 
-export interface UploaderContextState {
-  uploadedCarChunks: CarChunkMeta[]
+interface UploaderContextState {
+  storedDAGShards: CARMetadata[]
 }
 
-export interface UploaderContextActions {
+interface UploaderContextActions {
   /**
    * Upload a single file to the service.
    */
@@ -65,8 +65,13 @@ export interface UploaderContextActions {
    */
   uploadDirectory: (files: File[]) => Promise<CID>
   /**
-   * Upload CAR bytes to the service.
+   * Store a DAG (encoded as a CAR file) to the service.
    */
-  uploadCarChunks: (chunks: AsyncIterable<CarData>) => Promise<void>
+  storeDAG: (data: Blob) => Promise<CID>
+  /**
+   * Register an "upload" with the service. Note: only required when using
+   * `storeDAG`.
+   */
+  registerUpload: (root: CID, shards: CID[]) => Promise<void>
 }
 ```
