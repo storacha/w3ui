@@ -33,7 +33,7 @@ export interface UploadsListProviderProps {
 /**
  * Provider for a list of items uploaded by the current identity.
  */
-export function UploadsListProvider ({ children }: UploadsListProviderProps): ReactNode {
+export function UploadsListProvider ({ children }: UploadsListProviderProps): JSX.Element {
   const { identity } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()

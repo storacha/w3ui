@@ -51,7 +51,7 @@ export interface AuthProviderProps {
 /**
  * Provider for authentication with the service.
  */
-export function AuthProvider ({ children }: AuthProviderProps): ReactNode {
+export function AuthProvider ({ children }: AuthProviderProps): JSX.Element {
   const [authStatus, setAuthStatus] = useState(AuthStatus.SignedOut)
   const [identity, setIdentity] = useState<Identity>()
   const [registerAbortController, setRegisterAbortController] = useState<AbortController>()

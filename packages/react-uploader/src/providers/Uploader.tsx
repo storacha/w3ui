@@ -43,7 +43,7 @@ export interface UploaderProviderProps {
 /**
  * Provider for actions and state to facilitate uploads to the service.
  */
-export function UploaderProvider ({ children }: UploaderProviderProps): ReactNode {
+export function UploaderProvider ({ children }: UploaderProviderProps): JSX.Element {
   const { identity } = useAuth()
   const [uploadedCarChunks, setUploadedCarChunks] = useState<UploaderContextState['uploadedCarChunks']>([])
 
