@@ -1,24 +1,118 @@
 import { Agent } from '@web3-storage/access'
 import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
+import type { Capability, DID, Proof, Signer, Principal } from '@ucanto/interface'
 import type { RSASigner } from '@ucanto/principal/rsa'
-
-export enum AuthStatus {
-  /**
-   * Account/agent loaded.
-   */
-  SignedIn,
-  /**
-   * Not authorized.
-   */
-  SignedOut,
-  /**
-   * Email verification email has been sent.
-   */
-  EmailVerification
-}
 
 const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
+
+export class Space implements Principal {
+  #did: DID
+  #meta: Record<string, any>
+
+  constructor (did: DID, meta: Record<string, any> = {}) {
+    this.#did = did
+    this.#meta = meta
+  }
+
+  /**
+   * The given space name, or the space DID if not set.
+   */
+  name () {
+    return String(this.#meta.name) ?? this.#did
+  }
+
+  /**
+   * The DID of the space.
+   */
+  did () {
+    return this.#did
+  }
+
+  /**
+   * Whether the space has been registered with the service.
+   */
+  registered () {
+    return Boolean(this.#meta.isRegistered)
+  }
+
+  /**
+   * User defined space metadata.
+   */
+  meta () {
+    return this.#meta
+  }
+}
+
+export interface KeyringContextState {
+  /**
+   * The current space.
+   */
+  space?: Space
+  /**
+   * Spaces available to this agent.
+   */
+  spaces: Space[]
+  /**
+   * The current user agent (this device).
+   */
+  agent?: Signer
+}
+
+export interface KeyringContextActions {
+  /**
+   * Load the user agent and all stored data from secure storage.
+   */
+  loadAgent: () => Promise<void>
+  /**
+   * Unload the user agent and all stored data from secure storage. Note: this
+   * does not remove data, use `resetAgent` if that is desired.
+   */
+  unloadAgent: () => Promise<void>
+  /**
+   * Unload the current space and agent from memory and remove from secure
+   * storage. Note: this removes all data and is unrecoverable.
+   */
+  resetAgent: () => Promise<void>
+  /**
+   * Create a new space with the passed name and set it as the current space.
+   */
+  createSpace: (name?: string) => Promise<void>
+  /**
+   * Use a specific space.
+   */
+  setCurrentSpace: (did: DID) => Promise<void>
+  /**
+   * Register the current space, verify the email address and store in secure
+   * storage. Use cancelRegisterSpace to abort. Automatically sets the
+   * newly registered space as the current space.
+   */
+  registerSpace: (email: string) => Promise<void>
+  /**
+   * Abort an ongoing account registration.
+   */
+  cancelRegisterSpace: () => void,
+  /**
+   * Get all the proofs matching the capabilities. Proofs are delegations with
+   * an audience matching the agent DID.
+   */
+  getProofs: (caps: Capability[]) => Promise<Proof[]>
+}
+
+export function getCurrentSpace (agent: Agent<any>): Space | undefined {
+  const did = agent.currentSpace()
+  if (!did) return
+  const meta = agent.data.spaces.get(did)
+  return new Space(did, meta)
+}
+
+export function getSpaces (agent: Agent<any>): Space[] {
+  const spaces: Space[] = []
+  for (const [did, meta] of agent.data.spaces.entries()) {
+    spaces.push(new Space(did, meta))
+  }
+  return spaces
+}
 
 /**
  * Create an agent for managing identity. It uses RSA keys that are stored in

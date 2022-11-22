@@ -1,16 +1,8 @@
 import { defineComponent, provide, InjectionKey, inject, Ref, shallowReactive, computed } from 'vue'
-import { AuthProviderInjectionKey } from '@w3ui/vue-keyring'
-import {
-  createFileEncoderStream,
-  createDirectoryEncoderStream,
-  ShardingStream,
-  ShardStoringStream,
-  CARMetadata,
-  CARLink,
-  registerUpload,
-  storeDAG
-} from '@w3ui/uploader-core'
-import { Link, Version, UnknownLink } from 'multiformats/link'
+import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata } from '@w3ui/uploader-core'
+import { KeyringProviderInjectionKey } from '@w3ui/vue-keyring'
+import { add as storeAdd } from '@web3-storage/access/capabilities/store'
+import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
 
 /**
  * Injection keys for uploader context.
@@ -18,33 +10,7 @@ import { Link, Version, UnknownLink } from 'multiformats/link'
 export const UploaderProviderInjectionKey = {
   uploadFile: Symbol('w3ui uploader uploadFile') as InjectionKey<UploaderContextActions['uploadFile']>,
   uploadDirectory: Symbol('w3ui uploader uploadDirectory') as InjectionKey<UploaderContextActions['uploadDirectory']>,
-  storeDAG: Symbol('w3ui uploader storeDAG') as InjectionKey<UploaderContextActions['storeDAG']>,
-  registerUpload: Symbol('w3ui uploader registerUpload') as InjectionKey<UploaderContextActions['registerUpload']>,
   storedDAGShards: Symbol('w3ui uploader storedDAGShards') as InjectionKey<Ref<UploaderContextState['storedDAGShards']>>
-}
-
-export interface UploaderContextState {
-  storedDAGShards: CARMetadata[]
-}
-
-export interface UploaderContextActions {
-  /**
-   * Upload a single file to the service.
-   */
-  uploadFile: (file: Blob) => Promise<Link<unknown, number, number, Version>>
-  /**
-   * Upload a directory of files to the service.
-   */
-  uploadDirectory: (files: File[]) => Promise<Link<unknown, number, number, Version>>
-  /**
-   * Store a DAG (encoded as a CAR file) to the service.
-   */
-  storeDAG: (data: Blob) => Promise<CARLink>
-  /**
-   * Register an "upload" with the service. Note: only required when using
-   * `storeDAG`.
-   */
-  registerUpload: (root: UnknownLink, shards: CARLink[]) => Promise<void>
 }
 
 /**
@@ -52,8 +18,9 @@ export interface UploaderContextActions {
  */
 export const UploaderProvider = defineComponent({
   setup () {
-    const account = inject(AuthProviderInjectionKey.account)
-    const issuer = inject(AuthProviderInjectionKey.issuer)
+    const space = inject(KeyringProviderInjectionKey.space)
+    const agent = inject(KeyringProviderInjectionKey.agent)
+    const getProofs = inject(KeyringProviderInjectionKey.getProofs)
     const state = shallowReactive<UploaderContextState>({
       storedDAGShards: []
     })
@@ -62,67 +29,57 @@ export const UploaderProvider = defineComponent({
 
     const actions: UploaderContextActions = {
       async uploadFile (file: Blob) {
-        if (account?.value == null) throw new Error('missing account')
-        if (issuer?.value == null) throw new Error('missing issuer')
+        if (space?.value == null) throw new Error('missing space')
+        if (agent?.value == null) throw new Error('missing agent')
+        if (getProofs == null) throw new Error('missing getProofs')
 
         const storedShards: CARMetadata[] = []
         state.storedDAGShards = storedShards
 
-        await createFileEncoderStream(file)
-          .pipeThrough(new ShardingStream())
-          .pipeThrough(new ShardStoringStream(account.value, issuer.value))
-          .pipeTo(new WritableStream({
-            write (meta) {
-              storedShards.push(meta)
-              state.storedDAGShards = [...storedShards]
-            }
-          }))
+        const conf = {
+          issuer: agent.value,
+          with: space.value.did(),
+          proofs: await getProofs([
+            { can: storeAdd.can, with: space.value.did() },
+            { can: uploadAdd.can, with: space.value.did() }
+          ])
+        }
 
-        const root = storedShards.at(-1)?.roots[0]
-        if (root == null) throw new Error('missing root CID')
-
-        await actions.registerUpload(root, storedShards.map(s => s.cid))
-        return root
+        return await uploadFile(conf, file, {
+          onShardStored: meta => {
+            storedShards.push(meta)
+            state.storedDAGShards = [...storedShards]
+          }
+        })
       },
       async uploadDirectory (files: File[]) {
-        if (account?.value == null) throw new Error('missing account')
-        if (issuer?.value == null) throw new Error('missing issuer')
+        if (space?.value == null) throw new Error('missing space')
+        if (agent?.value == null) throw new Error('missing agent')
+        if (getProofs == null) throw new Error('missing getProofs')
 
         const storedShards: CARMetadata[] = []
         state.storedDAGShards = storedShards
 
-        await createDirectoryEncoderStream(files)
-          .pipeThrough(new ShardingStream())
-          .pipeThrough(new ShardStoringStream(account.value, issuer.value))
-          .pipeTo(new WritableStream({
-            write (meta) {
-              storedShards.push(meta)
-              state.storedDAGShards = [...storedShards]
-            }
-          }))
+        const conf = {
+          issuer: agent.value,
+          with: space.value.did(),
+          proofs: await getProofs([
+            { can: storeAdd.can, with: space.value.did() },
+            { can: uploadAdd.can, with: space.value.did() }
+          ])
+        }
 
-        const root = storedShards.at(-1)?.roots[0]
-        if (root == null) throw new Error('missing root CID')
-
-        await actions.registerUpload(root, storedShards.map(s => s.cid))
-        return root
-      },
-      async storeDAG (data) {
-        if (account?.value == null) throw new Error('missing account')
-        if (issuer?.value == null) throw new Error('missing issuer')
-        return await storeDAG(account.value, issuer.value, data)
-      },
-      async registerUpload (root: UnknownLink, shards: CARLink[]) {
-        if (account?.value == null) throw new Error('missing account')
-        if (issuer?.value == null) throw new Error('missing issuer')
-        await registerUpload(account.value, issuer.value, root, shards)
+        return await uploadDirectory(conf, files, {
+          onShardStored: meta => {
+            storedShards.push(meta)
+            state.storedDAGShards = [...storedShards]
+          }
+        })
       }
     }
 
     provide(UploaderProviderInjectionKey.uploadFile, actions.uploadFile)
     provide(UploaderProviderInjectionKey.uploadDirectory, actions.uploadDirectory)
-    provide(UploaderProviderInjectionKey.storeDAG, actions.storeDAG)
-    provide(UploaderProviderInjectionKey.registerUpload, actions.registerUpload)
 
     return state
   },

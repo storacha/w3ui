@@ -1,14 +1,11 @@
 export {
-  encodeFile,
-  createFileEncoderStream,
-  encodeDirectory,
-  createDirectoryEncoderStream,
-  encodeCAR,
-  CARFile,
-  CARMetadata,
-  CARLink,
-  Retryable,
+  uploadFile,
+  uploadDirectory,
+  UnixFS,
+  CAR,
   ShardingStream,
-  ShardingOptions
+  ShardStoringStream,
+  Store,
+  Upload
 } from '@w3ui/uploader-core'
 export * from './providers/Uploader'
