@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react'
-import { createAgent, Space, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions } from '@w3ui/keyring-core'
+import { createAgent, Space, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Capability, DID, Proof, Signer } from '@ucanto/interface'
 import type { RSASigner } from '@ucanto/principal/rsa'
@@ -22,14 +22,14 @@ export const KeyringContext = createContext<KeyringContextValue>({
   getProofs: async () => []
 })
 
-export interface AuthProviderProps {
+export interface KeyringProviderProps extends ServiceConfig {
   children?: ReactNode
 }
 
 /**
  * Key management provider.
  */
-export function KeyringProvider ({ children }: AuthProviderProps): ReactNode {
+export function KeyringProvider ({ children, serviceURL }: KeyringProviderProps): ReactNode {
   const [agent, setAgent] = useState<Agent<RSASigner>>()
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
@@ -38,7 +38,7 @@ export function KeyringProvider ({ children }: AuthProviderProps): ReactNode {
 
   const getAgent = async (): Promise<Agent<RSASigner>> => {
     if (agent == null) {
-      const a = await createAgent()
+      const a = await createAgent({ serviceURL })
       setAgent(a)
       setIssuer(a.issuer)
       setSpace(getCurrentSpace(a))

@@ -1,11 +1,17 @@
 import { Link, Version } from 'multiformats'
-import { CARMetadata } from '@web3-storage/upload-client/types'
+import { CARMetadata, Service } from '@web3-storage/upload-client/types'
+import { ConnectionView, Principal } from '@ucanto/interface'
 export * from '@web3-storage/upload-client'
 
-export { CARMetadata, Link }
+export { CARMetadata, Link, Service }
 
 export interface UploaderContextState {
   storedDAGShards: CARMetadata[]
+}
+
+export interface ServiceConfig {
+  servicePrincipal?: Principal
+  connection?: ConnectionView<Service>
 }
 
 export interface UploaderContextActions {

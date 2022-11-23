@@ -1,6 +1,6 @@
 import { createContext, useContext, createComponent, ParentComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata } from '@w3ui/uploader-core'
+import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata, ServiceConfig } from '@w3ui/uploader-core'
 import { useKeyring } from '@w3ui/solid-keyring'
 import { add as storeAdd } from '@web3-storage/access/capabilities/store'
 import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
@@ -18,10 +18,12 @@ const UploaderContext = createContext<UploaderContextValue>([
   }
 ])
 
+export interface UploaderProviderProps extends ServiceConfig {}
+
 /**
  * Provider for actions and state to facilitate uploads to the service.
  */
-export const UploaderProvider: ParentComponent = props => {
+export const UploaderProvider: ParentComponent<UploaderProviderProps> = props => {
   const [keyringState, keyringActions] = useKeyring()
   const [state, setState] = createStore<UploaderContextState>({ storedDAGShards: [] })
 
@@ -36,6 +38,7 @@ export const UploaderProvider: ParentComponent = props => {
       const conf = {
         issuer: keyringState.agent,
         with: keyringState.space.did(),
+        audience: props.servicePrincipal,
         proofs: await keyringActions.getProofs([
           { can: storeAdd.can, with: keyringState.space.did() },
           { can: uploadAdd.can, with: keyringState.space.did() }
@@ -46,7 +49,8 @@ export const UploaderProvider: ParentComponent = props => {
         onShardStored: meta => {
           storedShards.push(meta)
           setState('storedDAGShards', [...storedShards])
-        }
+        },
+        connection: props.connection
       })
     },
     async uploadDirectory (files: File[]) {
@@ -59,10 +63,12 @@ export const UploaderProvider: ParentComponent = props => {
       const conf = {
         issuer: keyringState.agent,
         with: keyringState.space.did(),
+        audience: props.servicePrincipal,
         proofs: await keyringActions.getProofs([
           { can: storeAdd.can, with: keyringState.space.did() },
           { can: uploadAdd.can, with: keyringState.space.did() }
-        ])
+        ]),
+        connection: props.connection
       }
 
       return await uploadDirectory(conf, files, {

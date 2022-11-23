@@ -1,5 +1,5 @@
 import { defineComponent, provide, computed, InjectionKey, Ref, shallowReactive } from 'vue'
-import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions } from '@w3ui/keyring-core'
+import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Capability, DID, Proof } from '@ucanto/interface'
 import type { RSASigner } from '@ucanto/principal/rsa'
@@ -25,11 +25,13 @@ export const KeyringProviderInjectionKey = {
   getProofs: Symbol('w3ui keyring getProofs') as InjectionKey<KeyringContextActions['getProofs']>
 }
 
+export interface KeyringProviderProps extends ServiceConfig {}
+
 /**
  * Provider for authentication with the service.
  */
-export const KeyringProvider = defineComponent({
-  setup () {
+export const KeyringProvider = defineComponent<KeyringProviderProps>({
+  setup ({ serviceURL }) {
     const state = shallowReactive<KeyringContextState>({
       agent: undefined,
       space: undefined,
@@ -44,7 +46,7 @@ export const KeyringProvider = defineComponent({
 
     const getAgent = async (): Promise<Agent<RSASigner>> => {
       if (agent == null) {
-        agent = await createAgent()
+        agent = await createAgent({ serviceURL })
         state.agent = agent.issuer
         state.space = getCurrentSpace(agent)
         state.spaces = getSpaces(agent)

@@ -1,5 +1,5 @@
 import React, { useContext, createContext, useState, ReactNode } from 'react'
-import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata } from '@w3ui/uploader-core'
+import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata, ServiceConfig } from '@w3ui/uploader-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { add as storeAdd } from '@web3-storage/access/capabilities/store'
 import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
@@ -17,14 +17,14 @@ const UploaderContext = createContext<UploaderContextValue>([
   }
 ])
 
-export interface UploaderProviderProps {
+export interface UploaderProviderProps extends ServiceConfig {
   children?: ReactNode
 }
 
 /**
  * Provider for actions and state to facilitate uploads to the service.
  */
-export function UploaderProvider ({ children }: UploaderProviderProps): ReactNode {
+export function UploaderProvider ({ servicePrincipal, connection, children }: UploaderProviderProps): ReactNode {
   const { space, agent, getProofs } = useKeyring()
   const [storedDAGShards, setStoredDAGShards] = useState<UploaderContextState['storedDAGShards']>([])
 
@@ -40,6 +40,7 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
       const conf = {
         issuer: agent,
         with: space.did(),
+        audience: servicePrincipal,
         proofs: await getProofs([
           { can: storeAdd.can, with: space.did() },
           { can: uploadAdd.can, with: space.did() }
@@ -50,7 +51,8 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
         onShardStored: meta => {
           storedShards.push(meta)
           setStoredDAGShards([...storedShards])
-        }
+        },
+        connection
       })
     },
     async uploadDirectory (files: File[]) {
@@ -73,7 +75,8 @@ export function UploaderProvider ({ children }: UploaderProviderProps): ReactNod
         onShardStored: meta => {
           storedShards.push(meta)
           setStoredDAGShards([...storedShards])
-        }
+        },
+        connection
       })
     }
   }

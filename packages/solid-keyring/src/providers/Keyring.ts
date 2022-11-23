@@ -1,6 +1,6 @@
 import { createContext, useContext, createSignal, createComponent, ParentComponent } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions } from '@w3ui/keyring-core'
+import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Capability, DID } from '@ucanto/interface'
 import type { RSASigner } from '@ucanto/principal/rsa'
@@ -32,10 +32,12 @@ export const AuthContext = createContext<KeyringContextValue>([
   }
 ])
 
+export interface KeyringProviderProps extends ServiceConfig {}
+
 /**
  * Key management provider.
  */
-export const KeyringProvider: ParentComponent = props => {
+export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
   const [state, setState] = createStore({
     space: defaultState.space,
     spaces: defaultState.spaces,
@@ -48,7 +50,7 @@ export const KeyringProvider: ParentComponent = props => {
   const getAgent = async (): Promise<Agent<RSASigner>> => {
     let a = agent()
     if (a == null) {
-      a = await createAgent()
+      a = await createAgent({ serviceURL: props.serviceURL })
       setAgent(a)
       setState('agent', a.issuer)
       setState('space', getCurrentSpace(a))

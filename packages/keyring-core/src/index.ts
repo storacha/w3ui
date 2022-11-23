@@ -99,6 +99,10 @@ export interface KeyringContextActions {
   getProofs: (caps: Capability[]) => Promise<Proof[]>
 }
 
+export interface ServiceConfig {
+  serviceURL?: URL
+}
+
 export function getCurrentSpace (agent: Agent<any>): Space | undefined {
   const did = agent.currentSpace()
   if (!did) return
@@ -114,11 +118,14 @@ export function getSpaces (agent: Agent<any>): Space[] {
   return spaces
 }
 
+export interface CreateAgentOptions extends ServiceConfig {}
+
 /**
  * Create an agent for managing identity. It uses RSA keys that are stored in
  * IndexedDB as unextractable `CryptoKey`s.
  */
-export async function createAgent (options: { url?: URL } = {}): Promise<Agent<RSASigner>> {
-  const store = await StoreIndexedDB.create(DB_NAME, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
+export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent<RSASigner>> {
+  const dbStoreName = `${DB_STORE_NAME}${options.serviceURL ? '@' + options.serviceURL.host : ''}`
+  const store = await StoreIndexedDB.create(DB_NAME, { dbVersion: 1, dbStoreName })
   return await Agent.create({ store, ...options })
 }
