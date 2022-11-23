@@ -24,10 +24,7 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/uploads-list-core",
   "dependencies": {
-    "@ipld/dag-ucan": "^2.0.1",
     "@ucanto/interface": "^3.0.0",
-    "@ucanto/principal": "^3.0.0",
-    "@web3-storage/access": "^4.0.2",
-    "multiformats": "^10.0.2"
+    "@web3-storage/upload-client": "^2.1.0"
   }
 }

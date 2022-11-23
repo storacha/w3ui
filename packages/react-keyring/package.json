@@ -29,7 +29,7 @@
   "devDependencies": {
     "@ucanto/interface": "^3.0.0",
     "@ucanto/principal": "^3.0.0",
-    "@web3-storage/access": "^6.0.1"
+    "@web3-storage/access": "^6.1.0"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"

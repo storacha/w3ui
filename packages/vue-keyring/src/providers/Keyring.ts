@@ -6,8 +6,6 @@ import type { RSASigner } from '@ucanto/principal/rsa'
 
 export { KeyringContextState, KeyringContextActions }
 
-export interface KeyringContextValue extends KeyringContextState, KeyringContextActions {}
-
 /**
  * Injection keys for keyring provider context.
  */
@@ -73,7 +71,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
       if (state.space.registered()) return // nothing to do
 
       const controller = new AbortController()
-      setRegisterAbortController(controller)
+      registerAbortController = controller
 
       try {
         await agent.registerSpace(email, { signal: controller.signal })

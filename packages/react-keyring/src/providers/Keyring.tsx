@@ -6,21 +6,28 @@ import type { RSASigner } from '@ucanto/principal/rsa'
 
 export { KeyringContextState, KeyringContextActions }
 
-export interface KeyringContextValue extends KeyringContextState, KeyringContextActions {}
+export type KeyringContextValue = [
+  state: KeyringContextState,
+  actions: KeyringContextActions
+]
 
-export const KeyringContext = createContext<KeyringContextValue>({
-  space: undefined,
-  spaces: [],
-  agent: undefined,
-  loadAgent: async () => {},
-  unloadAgent: async () => {},
-  resetAgent: async () => {},
-  createSpace: async () => {},
-  setCurrentSpace: async () => {},
-  registerSpace: async () => {},
-  cancelRegisterSpace: () => {},
-  getProofs: async () => []
-})
+export const KeyringContext = createContext<KeyringContextValue>([
+  {
+    space: undefined,
+    spaces: [],
+    agent: undefined
+  },
+  {
+    loadAgent: async () => {},
+    unloadAgent: async () => {},
+    resetAgent: async () => {},
+    createSpace: async () => {},
+    setCurrentSpace: async () => {},
+    registerSpace: async () => {},
+    cancelRegisterSpace: () => {},
+    getProofs: async () => []
+  }
+])
 
 export interface KeyringProviderProps extends ServiceConfig {
   children?: ReactNode
@@ -108,10 +115,12 @@ export function KeyringProvider ({ children, serviceURL }: KeyringProviderProps)
     return agent.proofs(caps)
   }
 
-  const value = {
+  const state = {
     space,
     spaces,
-    agent: issuer,
+    agent: issuer
+  }
+  const actions = {
     loadAgent,
     unloadAgent,
     resetAgent,
@@ -123,7 +132,7 @@ export function KeyringProvider ({ children, serviceURL }: KeyringProviderProps)
   }
 
   return (
-    <KeyringContext.Provider value={value}>
+    <KeyringContext.Provider value={[state, actions]}>
       {children}
     </KeyringContext.Provider>
   )

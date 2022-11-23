@@ -1,78 +1,37 @@
-import { connect } from '@ucanto/client'
-import { Signer, DID, ServiceMethod } from '@ucanto/interface'
-import { parse } from '@ipld/dag-ucan/did'
-import * as CAR from '@ucanto/transport/car'
-import * as CBOR from '@ucanto/transport/cbor'
-import * as HTTP from '@ucanto/transport/http'
-import { list as uploadList } from '@web3-storage/access/capabilities/upload'
-import { UploadList } from '@web3-storage/access/capabilities/types'
-import { CID } from 'multiformats/cid'
+import { ListResponse, UploadListResult, Service } from '@web3-storage/upload-client/types'
+import { ConnectionView, Principal } from '@ucanto/interface'
 
-// Production
-const serviceURL = new URL('https://8609r1772a.execute-api.us-east-1.amazonaws.com')
-const serviceDID = parse('did:key:z6MkrZ1r5XBFZjBU34qyD8fueMbMRkKw17BZaq2ivKFjnz2z')
+export { list } from '@web3-storage/upload-client/upload'
 
-interface Service { upload: { list: ServiceMethod<UploadList, ServiceListPage, never> } }
+export { ListResponse, UploadListResult, Service }
 
-interface ServiceListPage {
-  count: number
-  page: number
-  pageSize: number
-  results?: ServiceListResult[]
+export interface ServiceConfig {
+  servicePrincipal?: Principal
+  connection?: ConnectionView<Service>
 }
 
-interface ServiceListResult {
-  carCID: CID
-  dataCID: CID
-  uploadedAt: number
+export interface UploadsListContextState {
+  /**
+   * True if the uploads list is currently being retrieved from the service.
+   */
+  loading: boolean
+  /**
+   * Set if an error occurred retrieving the uploads list.
+   */
+  error?: Error
+  /**
+   * The content of the uploads list.
+   */
+  data?: UploadListResult[]
 }
 
-export interface ListPage {
-  page: number
-  pageSize: number
-  results: ListResult[]
-}
-
-export interface ListResult {
-  dataCid: CID
-  carCids: CID[]
-  uploadedAt: Date
-}
-
-export interface Abortable {
-  signal?: AbortSignal
-}
-
-export async function listUploads (account: DID, signer: Signer, _: Abortable = {}): Promise<ListPage> {
-  const conn = connect<Service>({
-    id: serviceDID,
-    encoder: CAR,
-    decoder: CBOR,
-    channel: HTTP.open({
-      url: serviceURL,
-      method: 'POST'
-    })
-  })
-
-  const res = await uploadList.invoke({
-    issuer: signer,
-    audience: serviceDID,
-    with: account
-  }).execute(conn)
-
-  if (res.error != null) {
-    // @ts-expect-error ts not know cause
-    throw new Error('failed to get uploads list', { cause: res.error })
-  }
-
-  const results = res.results == null ? [] : res.results
-  return {
-    page: res.page,
-    pageSize: res.pageSize,
-    results: results.map(r => ({
-      dataCid: r.dataCID,
-      carCids: [r.carCID],
-      uploadedAt: new Date(r.uploadedAt)
-    }))
-  }
+export interface UploadsListContextActions {
+  /**
+   * Load the next page of results.
+   */
+  next: () => Promise<void>
+  /**
+   * Call to reload the uploads list (discarding the current page).
+   */
+  reload: () => Promise<void>
 }

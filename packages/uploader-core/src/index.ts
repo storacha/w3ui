@@ -3,7 +3,7 @@ import { CARMetadata, Service } from '@web3-storage/upload-client/types'
 import { ConnectionView, Principal } from '@ucanto/interface'
 export * from '@web3-storage/upload-client'
 
-export { CARMetadata, Link, Service }
+export { CARMetadata, Service }
 
 export interface UploaderContextState {
   storedDAGShards: CARMetadata[]

@@ -25,7 +25,7 @@ export interface UploaderProviderProps extends ServiceConfig {
  * Provider for actions and state to facilitate uploads to the service.
  */
 export function UploaderProvider ({ servicePrincipal, connection, children }: UploaderProviderProps): ReactNode {
-  const { space, agent, getProofs } = useKeyring()
+  const [{ space, agent }, { getProofs }] = useKeyring()
   const [storedDAGShards, setStoredDAGShards] = useState<UploaderContextState['storedDAGShards']>([])
 
   const state = { storedDAGShards }
