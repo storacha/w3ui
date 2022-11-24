@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, ReactNode } from 'react'
+import React, { useContext, createContext, useState } from 'react'
 import { UploadListResult, UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { list as uploadList } from '@web3-storage/access/capabilities/upload'
@@ -19,7 +19,7 @@ const UploadsListContext = createContext<UploadsListContextValue>([
 ])
 
 export interface UploadsListProviderProps extends ServiceConfig {
-  children?: ReactNode
+  children?: JSX.Element
   /**
    * Maximum number of items to return per page.
    */
@@ -29,7 +29,7 @@ export interface UploadsListProviderProps extends ServiceConfig {
 /**
  * Provider for a list of items uploaded to the current space.
  */
-export function UploadsListProvider ({ size, servicePrincipal, connection, children }: UploadsListProviderProps): ReactNode {
+export function UploadsListProvider ({ size, servicePrincipal, connection, children }: UploadsListProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [cursor, setCursor] = useState<string>()
   const [loading, setLoading] = useState(false)

@@ -1,7 +1,9 @@
-import { Agent } from '@web3-storage/access'
+import { Agent } from '@web3-storage/access/agent'
 import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
-import type { Capability, DID, Proof, Signer, Principal } from '@ucanto/interface'
+import type { Service } from '@web3-storage/access/types'
+import type { Capability, DID, Proof, Signer, ConnectionView, Principal } from '@ucanto/interface'
 import type { RSASigner } from '@ucanto/principal/rsa'
+import { serviceURL, connection } from './service'
 
 const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
@@ -100,7 +102,8 @@ export interface KeyringContextActions {
 }
 
 export interface ServiceConfig {
-  serviceURL?: URL
+  servicePrincipal?: Principal
+  connection?: ConnectionView<Service>
 }
 
 export function getCurrentSpace (agent: Agent<any>): Space | undefined {
@@ -125,7 +128,18 @@ export interface CreateAgentOptions extends ServiceConfig {}
  * IndexedDB as unextractable `CryptoKey`s.
  */
 export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent<RSASigner>> {
-  const dbStoreName = `${DB_STORE_NAME}${options.serviceURL ? '@' + options.serviceURL.host : ''}`
-  const store = await StoreIndexedDB.create(DB_NAME, { dbVersion: 1, dbStoreName })
-  return await Agent.create({ store, ...options })
+  const dbStoreName = `${DB_STORE_NAME}${options.servicePrincipal ? '@' + options.servicePrincipal.did() : ''}`
+  const store = new StoreIndexedDB(DB_NAME, { dbVersion: 1, dbStoreName })
+  await store.open()
+  if (!(await store.exists())) {
+    await store.init({})
+  }
+  return new Agent({
+    // @ts-expect-error assumed HTTP channel
+    url: options.connection ? options.connection.channel.url : serviceURL,
+    store,
+    data: await store.load(),
+    connection: options.connection ?? connection,
+    fetch: globalThis.fetch.bind(globalThis)
+  })
 }

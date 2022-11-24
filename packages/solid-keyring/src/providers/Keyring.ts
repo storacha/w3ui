@@ -50,7 +50,7 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
   const getAgent = async (): Promise<Agent<RSASigner>> => {
     let a = agent()
     if (a == null) {
-      a = await createAgent({ serviceURL: props.serviceURL })
+      a = await createAgent({ servicePrincipal: props.servicePrincipal, connection: props.connection })
       setAgent(a)
       setState('agent', a.issuer)
       setState('space', getCurrentSpace(a))
@@ -75,9 +75,6 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
 
   const registerSpace = async (email: string): Promise<void> => {
     const agent = await getAgent()
-    if (!state.space) throw new Error('create a space before registering')
-    if (state.space.registered()) return // nothing to do
-
     const controller = new AbortController()
     setRegisterAbortController(controller)
 

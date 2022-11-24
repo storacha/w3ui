@@ -1,6 +1,6 @@
 import { Link, Version } from 'multiformats'
 import type { CARMetadata, Service } from '@web3-storage/upload-client/types'
-import { ConnectionView, Principal } from '@ucanto/interface'
+import type { ConnectionView, Principal } from '@ucanto/interface'
 
 export { uploadFile, uploadDirectory } from '@web3-storage/upload-client'
 

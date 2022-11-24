@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react'
+import React, { createContext, useState, useContext } from 'react'
 import { createAgent, Space, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Capability, DID, Proof, Signer } from '@ucanto/interface'
@@ -30,13 +30,13 @@ export const KeyringContext = createContext<KeyringContextValue>([
 ])
 
 export interface KeyringProviderProps extends ServiceConfig {
-  children?: ReactNode
+  children?: JSX.Element
 }
 
 /**
  * Key management provider.
  */
-export function KeyringProvider ({ children, serviceURL }: KeyringProviderProps): ReactNode {
+export function KeyringProvider ({ children, servicePrincipal, connection }: KeyringProviderProps): JSX.Element {
   const [agent, setAgent] = useState<Agent<RSASigner>>()
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
@@ -45,7 +45,7 @@ export function KeyringProvider ({ children, serviceURL }: KeyringProviderProps)
 
   const getAgent = async (): Promise<Agent<RSASigner>> => {
     if (agent == null) {
-      const a = await createAgent({ serviceURL })
+      const a = await createAgent({ servicePrincipal, connection })
       setAgent(a)
       setIssuer(a.issuer)
       setSpace(getCurrentSpace(a))
@@ -70,9 +70,6 @@ export function KeyringProvider ({ children, serviceURL }: KeyringProviderProps)
 
   const registerSpace = async (email: string): Promise<void> => {
     const agent = await getAgent()
-    if (!space) throw new Error('create a space before registering')
-    if (space.registered()) return // nothing to do
-
     const controller = new AbortController()
     setRegisterAbortController(controller)
 

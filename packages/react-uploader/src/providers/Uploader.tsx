@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, ReactNode } from 'react'
+import React, { useContext, createContext, useState } from 'react'
 import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata, ServiceConfig } from '@w3ui/uploader-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { add as storeAdd } from '@web3-storage/access/capabilities/store'
@@ -18,13 +18,13 @@ const UploaderContext = createContext<UploaderContextValue>([
 ])
 
 export interface UploaderProviderProps extends ServiceConfig {
-  children?: ReactNode
+  children?: JSX.Element
 }
 
 /**
  * Provider for actions and state to facilitate uploads to the service.
  */
-export function UploaderProvider ({ servicePrincipal, connection, children }: UploaderProviderProps): ReactNode {
+export function UploaderProvider ({ servicePrincipal, connection, children }: UploaderProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [storedDAGShards, setStoredDAGShards] = useState<UploaderContextState['storedDAGShards']>([])
 

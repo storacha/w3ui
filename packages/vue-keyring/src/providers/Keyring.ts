@@ -29,7 +29,7 @@ export interface KeyringProviderProps extends ServiceConfig {}
  * Provider for authentication with the service.
  */
 export const KeyringProvider = defineComponent<KeyringProviderProps>({
-  setup ({ serviceURL }) {
+  setup ({ servicePrincipal, connection }) {
     const state = shallowReactive<KeyringContextState>({
       agent: undefined,
       space: undefined,
@@ -44,7 +44,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
 
     const getAgent = async (): Promise<Agent<RSASigner>> => {
       if (agent == null) {
-        agent = await createAgent({ serviceURL })
+        agent = await createAgent({ servicePrincipal, connection })
         state.agent = agent.issuer
         state.space = getCurrentSpace(agent)
         state.spaces = getSpaces(agent)
@@ -67,9 +67,6 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
 
     provide(KeyringProviderInjectionKey.registerSpace, async (email: string): Promise<void> => {
       const agent = await getAgent()
-      if (!state.space) throw new Error('create a space before registering')
-      if (state.space.registered()) return // nothing to do
-
       const controller = new AbortController()
       registerAbortController = controller
 
