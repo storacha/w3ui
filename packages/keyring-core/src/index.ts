@@ -128,8 +128,8 @@ export interface CreateAgentOptions extends ServiceConfig {}
  * IndexedDB as unextractable `CryptoKey`s.
  */
 export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent<RSASigner>> {
-  const dbStoreName = `${DB_STORE_NAME}${options.servicePrincipal ? '@' + options.servicePrincipal.did() : ''}`
-  const store = await StoreIndexedDB.open(DB_NAME, { dbVersion: 1, dbStoreName })
+  const dbName = `${DB_NAME}${options.servicePrincipal ? '@' + options.servicePrincipal.did() : ''}`
+  const store = await StoreIndexedDB.open(dbName, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
   return new Agent({
     // @ts-expect-error assumed HTTP channel
     url: options.connection ? options.connection.channel.url : serviceURL,
