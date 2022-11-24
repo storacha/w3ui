@@ -1,10 +1,12 @@
 import { createResource, InitializedResourceReturn, ResourceOptions, ResourceReturn, ResourceSource } from 'solid-js'
 import type { Space } from '@w3ui/keyring-core'
-import { list, ServiceConfig, UploadListResult } from '@w3ui/uploads-list-core'
-import type { Capability, DID, Principal, Proof, Signer } from '@ucanto/interface'
+import { list, ServiceConfig, ListResponse, UploadListResult } from '@w3ui/uploads-list-core'
+import type { Capability, Proof, Signer } from '@ucanto/interface'
 import { list as uploadList } from '@web3-storage/access/capabilities/upload'
 
 interface UploadsListSource extends ServiceConfig {
+  cursor?: string
+  size?: number
   space: Space,
   agent: Signer,
   getProofs: (caps: Capability[]) => Promise<Proof[]>
@@ -15,19 +17,17 @@ interface UploadsListSource extends ServiceConfig {
  * see the docs for [`createResource`](https://www.solidjs.com/docs/latest/api#createresource)
  * for parameter and return type descriptions.
  */
-export function createUploadsListResource (source: ResourceSource<UploadsListSource>, options?: ResourceOptions<UploadListResult[], UploadsListSource>): ResourceReturn<UploadListResult[]> | InitializedResourceReturn<UploadListResult[]> {
-  // TODO: WIRE IN CURSOR AND SIZE
-  return createResource<UploadListResult[], UploadsListSource>(
+export function createUploadsListResource (source: ResourceSource<UploadsListSource>, options?: ResourceOptions<ListResponse<UploadListResult>, UploadsListSource>): ResourceReturn<ListResponse<UploadListResult>> | InitializedResourceReturn<ListResponse<UploadListResult>> {
+  return createResource<ListResponse<UploadListResult>, UploadsListSource>(
     source,
-    async ({ space, agent, servicePrincipal, connection, getProofs }) => {
+    async ({ cursor, size, space, agent, servicePrincipal, connection, getProofs }) => {
       const conf = {
         issuer: agent,
         with: space.did(),
         audience: servicePrincipal,
         proofs: await getProofs([{ can: uploadList.can, with: space.did() }])
       }
-      const page = await list(conf, { connection })
-      return page.results ?? []
+      return await list(conf, { cursor, size, connection })
     },
     options
   )

@@ -1,9 +1,9 @@
-import { ListResponse, UploadListResult, Service } from '@web3-storage/upload-client/types'
+import type { ListResponse, UploadListResult, Service } from '@web3-storage/upload-client/types'
 import { ConnectionView, Principal } from '@ucanto/interface'
 
 export { list } from '@web3-storage/upload-client/upload'
 
-export { ListResponse, UploadListResult, Service }
+export type { ListResponse, UploadListResult, Service }
 
 export interface ServiceConfig {
   servicePrincipal?: Principal

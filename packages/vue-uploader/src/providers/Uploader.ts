@@ -23,6 +23,7 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
     const space = inject(KeyringProviderInjectionKey.space)
     const agent = inject(KeyringProviderInjectionKey.agent)
     const getProofs = inject(KeyringProviderInjectionKey.getProofs)
+
     const state = shallowReactive<UploaderContextState>({
       storedDAGShards: []
     })

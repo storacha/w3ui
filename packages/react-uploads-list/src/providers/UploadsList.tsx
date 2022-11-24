@@ -75,7 +75,10 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
   const state = { data, loading, error }
   const actions = {
     next: async (): Promise<void> => { await loadPage(cursor) },
-    reload: loadPage
+    reload: async (): Promise<void> => {
+      setCursor(undefined)
+      await loadPage()
+    }
   }
 
   return (
