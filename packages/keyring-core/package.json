@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/keyring-core",
   "dependencies": {
-    "@web3-storage/access": "^7.0.0"
+    "@web3-storage/access": "^7.0.1"
   }
 }

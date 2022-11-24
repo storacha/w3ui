@@ -5,7 +5,7 @@ import logo from './logo.png'
 
 function App () {
   return (
-    <KeyringProvider servicePrincipal={accessServicePrincipal} connection={accessServiceConnection}>
+    <KeyringProvider>
       <div className='vh-100 flex flex-column justify-center items-center sans-serif light-silver'>
         <header>
           <img src={logo} width='250' alt='logo' />

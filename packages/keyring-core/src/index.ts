@@ -129,11 +129,7 @@ export interface CreateAgentOptions extends ServiceConfig {}
  */
 export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent<RSASigner>> {
   const dbStoreName = `${DB_STORE_NAME}${options.servicePrincipal ? '@' + options.servicePrincipal.did() : ''}`
-  const store = new StoreIndexedDB(DB_NAME, { dbVersion: 1, dbStoreName })
-  await store.open()
-  if (!(await store.exists())) {
-    await store.init({})
-  }
+  const store = await StoreIndexedDB.open(DB_NAME, { dbVersion: 1, dbStoreName })
   return new Agent({
     // @ts-expect-error assumed HTTP channel
     url: options.connection ? options.connection.channel.url : serviceURL,
