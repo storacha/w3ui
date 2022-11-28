@@ -24,7 +24,7 @@ export const AuthContext = createContext<KeyringContextValue>([
     loadAgent: async () => {},
     unloadAgent: async () => {},
     resetAgent: async () => {},
-    createSpace: async () => {},
+    createSpace: async () => { throw new Error('missing keyring context provider') },
     setCurrentSpace: async () => {},
     registerSpace: async () => {},
     cancelRegisterSpace: () => {},
@@ -66,11 +66,12 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
     }
   }
 
-  const createSpace = async (name?: string): Promise<void> => {
+  const createSpace = async (name?: string): Promise<DID> => {
     const agent = await getAgent()
     const { did } = await agent.createSpace(name)
     await agent.setCurrentSpace(did)
     setState('space', getCurrentSpace(agent))
+    return did
   }
 
   const registerSpace = async (email: string): Promise<void> => {

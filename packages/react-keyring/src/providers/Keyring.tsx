@@ -21,7 +21,7 @@ export const KeyringContext = createContext<KeyringContextValue>([
     loadAgent: async () => {},
     unloadAgent: async () => {},
     resetAgent: async () => {},
-    createSpace: async () => {},
+    createSpace: async () => { throw new Error('missing keyring context provider') },
     setCurrentSpace: async () => {},
     registerSpace: async () => {},
     cancelRegisterSpace: () => {},
@@ -61,11 +61,12 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
     }
   }
 
-  const createSpace = async (name?: string): Promise<void> => {
+  const createSpace = async (name?: string): Promise<DID> => {
     const agent = await getAgent()
     const { did } = await agent.createSpace(name)
     await agent.setCurrentSpace(did)
     setSpace(getCurrentSpace(agent))
+    return did
   }
 
   const registerSpace = async (email: string): Promise<void> => {

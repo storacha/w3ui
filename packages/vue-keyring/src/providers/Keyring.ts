@@ -58,11 +58,12 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
       }
     })
 
-    provide(KeyringProviderInjectionKey.createSpace, async (name?: string): Promise<void> => {
+    provide(KeyringProviderInjectionKey.createSpace, async (name?: string): Promise<DID> => {
       const agent = await getAgent()
       const { did } = await agent.createSpace(name)
       await agent.setCurrentSpace(did)
       state.space = getCurrentSpace(agent)
+      return did
     })
 
     provide(KeyringProviderInjectionKey.registerSpace, async (email: string): Promise<void> => {

@@ -21,7 +21,7 @@ export class Space implements Principal {
    * The given space name, or the space DID if not set.
    */
   name () {
-    return String(this.#meta.name) ?? this.#did
+    return this.#meta.name ? String(this.#meta.name) : this.#did
   }
 
   /**
@@ -79,7 +79,7 @@ export interface KeyringContextActions {
   /**
    * Create a new space with the passed name and set it as the current space.
    */
-  createSpace: (name?: string) => Promise<void>
+  createSpace: (name?: string) => Promise<DID>
   /**
    * Use a specific space.
    */
