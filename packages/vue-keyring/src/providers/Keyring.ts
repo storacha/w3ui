@@ -1,5 +1,5 @@
 import { defineComponent, provide, computed, InjectionKey, Ref, shallowReactive, PropType } from 'vue'
-import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
+import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Service } from '@web3-storage/access/types'
 import type { Capability, DID, Proof, ConnectionView, Principal  } from '@ucanto/interface'
