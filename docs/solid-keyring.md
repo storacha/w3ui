@@ -14,87 +14,44 @@ import * as SolidKeyring from '@w3ui/solid-keyring'
 
 ## Exports
 
-* [`AuthProvider`](#authprovider)
-* [`useAuth`](#useauth)
+* [`KeyringProvider`](#keyringprovider)
+* [`useKeyring`](#usekeyring)
 
 ---
 
-### `AuthProvider`
+### `KeyringProvider`
 
-Provider for authentication with the service.
+Provider for managing agent creation, key management, and space registration with the service.
 
 Example:
 
 ```jsx
-import { AuthProvider } from '@w3ui/solid-keyring'
+import { KeyringProvider } from '@w3ui/solid-keyring'
 
 function App () {
   return (
-    <AuthProvider>
+    <KeyringProvider>
       {/* Application pages/components */}
-    </AuthProvider>
+    </KeyringProvider>
   )
 }
 ```
 
-### `useAuth`
+You can optionally target a non-production instance of the access service by setting the `servicePrincipal` and `connection` props on `KeyringProvider`. The `servicePrincipal` should be set to the service's DID, and `connection` should be a ucanto `ConnectionView` to the service instance.
+
+### `useKeyring`
 
 ```ts
-const [state, actions] = useAuth()
+const [state, actions] = useKeyring()
 ```
 
-Hook to allow use of the [`AuthProvider`](#authprovider) value. The value returned is an `AuthContextValue`:
+Hook to allow use of the [`AuthProvider`](#authprovider) value. The value returned is a `KeyringContextValue`:
 
 ```ts
-interface AuthContextState {
-  /**
-   * The current user account.
-   */
-  readonly account?: DID
-  /**
-   * The current user agent (this device).
-   */
-  readonly agent?: DID
-  /**
-   * Signing authority from the agent that is able to issue UCAN invocations.
-   */
-  readonly issuer?: Signer
-  /**
-   * Authentication status of the current identity.
-   */
-  readonly status: AuthStatus
-}
-
-type AuthContextValue = [
-  state: AuthContextState,
-  actions: {
-    /**
-     * Load the user agent and all stored data from secure storage.
-     */
-    loadAgent: () => Promise<void>
-    /**
-     * Unload the user agent and all stored data from secure storage. Note: this
-     * does not remove data, use `resetAgent` if that is desired.
-     */
-    unloadAgent: () => Promise<void>
-    /**
-     * Unload the current account and agent from memory and remove from secure
-     * storage. Note: this removes all data and is unrecoverable.
-     */
-    resetAgent: () => Promise<void>
-    /**
-     * Use a specific account.
-     */
-    selectAccount: (did: DID) => Promise<void>
-    /**
-     * Register a new account, verify the email address and store in secure
-     * storage. Use cancelRegisterAccount to abort.
-     */
-    registerAccount: (email: string) => Promise<void>
-    /**
-     * Abort an ongoing account registration.
-     */
-    cancelRegisterAccount: () => void
-  }
+export type KeyringContextValue = [
+  state: KeyringContextState,
+  actions: KeyringContextActions
 ]
 ```
+
+See [keyring-core.md](./keyring-core.md) for the definitions for [`KeyringContextState`](./keyring-core.md#keyringcontextstate) and [`KeyringContextActions`](./keyring-core.md#keyringcontextactions).
