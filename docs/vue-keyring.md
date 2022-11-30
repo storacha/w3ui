@@ -43,7 +43,7 @@ export default {
 Once mounted, the `KeyringProvider` provides the following injection keys:
 
 ```ts
-export const KeyringProviderInjectionKey = {
+type KeyringProviderInjectionKey = {
   space: InjectionKey<Ref<KeyringContextState['space']>>,
   spaces: InjectionKey<Ref<KeyringContextState['spaces']>>,
   agent: InjectionKey<Ref<KeyringContextState['agent']>>,

@@ -46,7 +46,7 @@ export default {
 Once mounted, the `UploaderProvider` provides the following injection keys:
 
 ```ts
-export const UploaderProviderInjectionKey = {
+type UploaderProviderInjectionKey = {
   uploadFile: InjectionKey<UploaderContextActions['uploadFile']>,
   uploadDirectory: InjectionKey<UploaderContextActions['uploadDirectory']>,
   storedDAGShards: InjectionKey<Ref<UploaderContextState['storedDAGShards']>>
