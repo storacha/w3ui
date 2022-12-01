@@ -7,8 +7,7 @@ export const Uploader = ({
   children,
   Uploading = DefaultUploading,
   Errored = DefaultErrored,
-  Done = DefaultDone,
-  ...props
+  Done = DefaultDone
 }) => {
   const [{ storedDAGShards }, uploader] = useUploader()
   const [file, setFile] = useState(null)
@@ -30,21 +29,14 @@ export const Uploader = ({
     }
   }
   return (
-    <UploaderContext.Provider value={{ storedDAGShards, file, setFile, dataCid, status, error }}>
+    <UploaderContext.Provider value={{ storedDAGShards, file, setFile, dataCid, status, error, handleUploadSubmit }}>
       {(status === 'uploading') ? (
         <Uploading file={file} storedDAGShards={storedDAGShards} />
       ) : (
         (status === 'done') ? (
           error ? <Errored error={error} /> : <Done file={file} dataCid={dataCid} storedDAGShards={storedDAGShards} />
         ) : (
-          <form onSubmit={handleUploadSubmit} {...props}>
-            <div className=''>
-              <label htmlFor='w3ui-uploader-file-input'>File:</label>
-              <input id='w3ui-uploader-file-input' type='file' onChange={e => setFile(e.target.files[0])} required />
-            </div>
-            <button type='submit'>Upload</button>
-          </form>
-
+          children
         )
       )}
     </UploaderContext.Provider>
