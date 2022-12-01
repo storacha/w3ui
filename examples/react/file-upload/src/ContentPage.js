@@ -3,7 +3,7 @@ import { useUploader } from '@w3ui/react-uploader'
 import { withIdentity } from './components/Authenticator'
 import './spinner.css'
 
-export function ContentPage () {
+export function ContentPage() {
   const [{ uploadedCarChunks }, uploader] = useUploader()
   const [file, setFile] = useState(null)
   const [dataCid, setDataCid] = useState('')
@@ -35,13 +35,15 @@ export function ContentPage () {
   }
 
   return (
-    <form onSubmit={handleUploadSubmit}>
-      <div className='db mb3'>
-        <label htmlFor='file' className='db mb2'>File:</label>
-        <input id='file' className='db pa2 w-100 ba br2' type='file' onChange={e => setFile(e.target.files[0])} required />
-      </div>
-      <button type='submit' className='ph3 pv2'>Upload</button>
-    </form>
+    <div className="w3ui-uploader-wrapper">
+      <form onSubmit={handleUploadSubmit}>
+        <div className='w3ui-uploader db mb3'>
+          <label htmlFor='file' className='w3ui-uploader__label db mb2'>File:</label>
+          <input id='file' className='w3ui-uploader__input db pa2 w-100 ba br2' type='file' onChange={e => setFile(e.target.files[0])} required />
+        </div>
+        <button type='submit' className='w3ui-button ph3 pv2'>Upload</button>
+      </form>
+    </div>
   )
 }
 

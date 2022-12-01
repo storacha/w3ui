@@ -3,8 +3,9 @@ import { AuthProvider, useAuth } from '@w3ui/react-keyring'
 import { UploaderProvider } from '@w3ui/react-uploader'
 import ContentPage from './ContentPage'
 import logo from './logo.png'
+import './style.css'
 
-function App () {
+function App() {
   return (
     <AuthProvider>
       <UploaderProvider>
@@ -23,7 +24,7 @@ function App () {
   )
 }
 
-function IdentityLoader ({ children }) {
+function IdentityLoader({ children }) {
   const { loadDefaultIdentity } = useAuth()
   // eslint-disable-next-line
   useEffect(() => { loadDefaultIdentity() }, []) // try load default identity - once.
