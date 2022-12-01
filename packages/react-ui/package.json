@@ -1,0 +1,39 @@
+{
+  "name": "@w3ui/react-ui",
+  "version": "1.0.1",
+  "description": "React w3ui UI components.",
+  "module": "build/esm/index.js",
+  "main": "build/cjs/index.js",
+  "browser": "build/umd/index.production.js",
+  "types": "build/types/react-ui/src/index.d.ts",
+  "scripts": {
+    "compile": "../../node_modules/.bin/tsc -p tsconfig.json --noEmit --emitDeclarationOnly false"
+  },
+  "files": [
+    "build/*",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/web3-storage/w3ui.git"
+  },
+  "author": "Alan Shaw",
+  "license": "Apache-2.0 OR MIT",
+  "bugs": {
+    "url": "https://github.com/web3-storage/w3ui/issues"
+  },
+  "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/react-ui",
+  "dependencies": {
+    "@w3ui/react-keyring": "^1.0.2",
+    "@w3ui/react-uploads-list": "^1.0.2",
+    "@w3ui/react-uploader": "^1.0.2"
+  },
+  "devDependencies": {
+    "@ucanto/interface": "^3.0.0",
+    "@ucanto/principal": "^3.0.0",
+    "@web3-storage/access": "^7.0.1"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  }
+}
