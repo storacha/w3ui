@@ -1,8 +1,7 @@
-import { defineComponent, provide, computed, InjectionKey, Ref, shallowReactive, PropType } from 'vue'
-import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions } from '@w3ui/keyring-core'
+import { defineComponent, provide, computed, InjectionKey, Ref, shallowReactive } from 'vue'
+import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
-import type { Service } from '@web3-storage/access/types'
-import type { Capability, DID, Proof, ConnectionView, Principal  } from '@ucanto/interface'
+import type { Capability, DID, Proof } from '@ucanto/interface'
 import type { RSASigner } from '@ucanto/principal/rsa'
 
 export { KeyringContextState, KeyringContextActions }
@@ -24,16 +23,13 @@ export const KeyringProviderInjectionKey = {
   getProofs: Symbol('w3ui keyring getProofs') as InjectionKey<KeyringContextActions['getProofs']>
 }
 
+export interface KeyringProviderProps extends ServiceConfig {}
+
 /**
  * Provider for authentication with the service.
  */
-export const KeyringProvider = defineComponent({
-  props: {
-    servicePrincipal: { type: Object as PropType<Principal> },
-    connection: { type: Object as PropType<ConnectionView<Service>> }
-  },
-
-  setup({ servicePrincipal, connection }) {
+export const KeyringProvider = defineComponent<KeyringProviderProps>({
+  setup ({ servicePrincipal, connection }) {
     const state = shallowReactive<KeyringContextState>({
       agent: undefined,
       space: undefined,
