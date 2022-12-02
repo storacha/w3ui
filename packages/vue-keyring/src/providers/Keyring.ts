@@ -3,7 +3,6 @@ import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringCo
 import type { Agent } from '@web3-storage/access'
 import type { Service } from '@web3-storage/access/types'
 import type { Capability, DID, Proof, ConnectionView, Principal  } from '@ucanto/interface'
-
 import type { RSASigner } from '@ucanto/principal/rsa'
 
 export { KeyringContextState, KeyringContextActions }
