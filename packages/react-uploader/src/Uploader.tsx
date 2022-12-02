@@ -1,6 +1,7 @@
 import React, { useContext, createContext, useState } from 'react'
-import { useUploader, CARMetadata } from '@w3ui/react-uploader'
 import { Link, Version } from 'multiformats'
+import { CARMetadata } from '@w3ui/uploader-core'
+import { useUploader } from './providers/Uploader'
 
 export type UploaderContextValue = {
   storedDAGShards?: CARMetadata[],
@@ -14,7 +15,7 @@ export type UploaderContextValue = {
 }
 
 export const UploaderContext = createContext<UploaderContextValue>({
-  setFile: () => {}
+  setFile: () => { }
 })
 
 export type UploaderProps = {
@@ -59,7 +60,7 @@ Uploader.Input = (props: any) => {
   )
 }
 
-Uploader.Form = ({ children, ...props }: {children: React.ReactNode} & any) => {
+Uploader.Form = ({ children, ...props }: { children: React.ReactNode } & any) => {
   const { handleUploadSubmit } = useContext(UploaderContext)
   return (
     <form onSubmit={handleUploadSubmit} {...props}>

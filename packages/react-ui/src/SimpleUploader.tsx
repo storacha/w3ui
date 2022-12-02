@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { CARMetadata } from '@w3ui/uploader-core'
+import Uploader, { UploaderContext } from '@w3ui/react-uploader';
 import { Link, Version } from 'multiformats'
 
-import Uploader, { UploaderContext } from './Uploader';
 
 export const Uploading = ({ file, storedDAGShards }: { file?: File, storedDAGShards?: CARMetadata[] }) => (
   <div className="uploading">
