@@ -44,49 +44,65 @@ Once mounted, the `AuthProvider` provides the following injection keys:
 
 ```ts
 type AuthProviderInjectionKey = {
-  identity: InjectionKey<Ref<AuthContextState['identity']>>
+  account: InjectionKey<Ref<AuthContextState['account']>>
+  agent: InjectionKey<Ref<AuthContextState['agent']>>
+  issuer: InjectionKey<Ref<AuthContextState['issuer']>>
   status: InjectionKey<Ref<AuthContextState['status']>>
-  loadDefaultIdentity: InjectionKey<AuthContextActions['loadDefaultIdentity']>
-  cancelRegisterAndStoreIdentity: InjectionKey<AuthContextActions['cancelRegisterAndStoreIdentity']>
-  registerAndStoreIdentity: InjectionKey<AuthContextActions['registerAndStoreIdentity']>
-  unloadIdentity: InjectionKey<AuthContextActions['unloadIdentity']>
-  unloadAndRemoveIdentity: InjectionKey<AuthContextActions['unloadAndRemoveIdentity']>
+  loadAgent: InjectionKey<AuthContextActions['loadAgent']>
+  unloadAgent: InjectionKey<AuthContextActions['unloadAgent']>
+  resetAgent: InjectionKey<AuthContextActions['resetAgent']>
+  selectAccount: InjectionKey<AuthContextActions['selectAccount']>
+  registerAccount: InjectionKey<AuthContextActions['registerAccount']>
+  cancelRegisterAccount: InjectionKey<AuthContextActions['cancelRegisterAccount']>
 }
 
-interface AuthContextState {
+export interface AuthContextState {
   /**
-   * The current identity
+   * The current user account.
    */
-  identity?: Identity
+  account?: DID
+  /**
+   * The current user agent (this device).
+   */
+  agent?: DID
+  /**
+   * Signing authority from the agent that is able to issue UCAN invocations.
+   */
+  issuer?: Signer
   /**
    * Authentication status of the current identity.
    */
   status: AuthStatus
 }
 
-interface AuthContextActions {
+export interface AuthContextActions {
   /**
-   * Load the default identity from secure storage. If the identity is not
-   * verified, the registration flow will be automatically resumed.
+   * Load the user agent and all stored data from secure storage.
    */
-  loadDefaultIdentity: () => Promise<void>
+  loadAgent: () => Promise<void>
   /**
-   * Unload the current identity from memory.
+   * Unload the user agent and all stored data from secure storage. Note: this
+   * does not remove data, use `resetAgent` if that is desired.
    */
-  unloadIdentity: () => Promise<void>
+  unloadAgent: () => Promise<void>
   /**
-   * Unload the current identity from memory and remove from secure storage.
+   * Unload the current account and agent from memory and remove from secure
+   * storage. Note: this removes all data and is unrecoverable.
    */
-  unloadAndRemoveIdentity: () => Promise<void>
+  resetAgent: () => Promise<void>
   /**
-   * Register a new identity, verify the email address and store in secure
-   * storage. Use cancelRegisterAndStoreIdentity to abort.
+   * Use a specific account.
    */
-  registerAndStoreIdentity: (email: string) => Promise<void>
+  selectAccount: (did: DID) => Promise<void>
   /**
-   * Abort an ongoing identity registration.
+   * Register a new account, verify the email address and store in secure
+   * storage. Use cancelRegisterAccount to abort.
    */
-  cancelRegisterAndStoreIdentity: () => void
+  registerAccount: (email: string) => Promise<void>
+  /**
+   * Abort an ongoing account registration.
+   */
+  cancelRegisterAccount: () => void
 }
 ```
 

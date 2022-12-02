@@ -21,7 +21,7 @@ import * as SolidUploadsList from '@w3ui/solid-uploads-list'
 ### `createUploadsListResource`
 
 ```ts
-function createUploadsListResource (source: ResourceSource<Identity>, options?: ResourceOptions<ListPage, Identity>): ResourceReturn<ListPage>
+function createUploadsListResource (source: ResourceSource<UploadsListSource>, options?: ResourceOptions<ListPage, UploadsListSource>): ResourceReturn<ListPage>
 ```
 
 Create a solid resource configured to fetch data from the service. Please see the docs for [`createResource`](https://www.solidjs.com/docs/latest/api#createresource) for parameter and return type descriptions.
@@ -42,7 +42,7 @@ function App () {
 
 function List () {
   const [auth] = useAuth()
-  const [data] = createUploadsListResource(() => auth.identity)
+  const [data] = createUploadsListResource(() => auth)
   return (
     <table className='mb3'>
       {data() && data().results.map(({ dataCid }) => (

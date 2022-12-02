@@ -1,170 +1,141 @@
-import { Principal, SigningPrincipal } from '@ucanto/principal'
-import type { Delegation, SigningPrincipal as ISigningPrincipal } from '@ucanto/interface'
-import * as Access from '@web3-storage/access'
-// @ts-expect-error
-import { IdentityRegister } from '@web3-storage/access/capabilities/types'
-import { base64pad } from 'multiformats/bases/base64'
+import { Agent } from '@web3-storage/access/agent'
+import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
+import type { Service } from '@web3-storage/access/types'
+import type { Capability, DID, Proof, Signer, ConnectionView, Principal } from '@ucanto/interface'
+import type { RSASigner } from '@ucanto/principal/rsa'
+import { serviceURL, connection } from './service'
 
-// Production
-const accessApiUrl = new URL('https://access-api.web3.storage')
-const accessDid = Principal.parse('did:key:z6MkkHafoFWxxWVNpNXocFdU6PL2RVLyTEgS1qTnD3bRP7V9')
-// Staging
-// const accessApiUrl = new URL('https://access-api-staging.web3.storage')
-// const accessDid = Authority.parse('did:key:z6MknemWKfRSfnprfijbQ2mn67KrnV44SWSuct3WLDanX2Ji')
+const DB_NAME = 'w3ui'
+const DB_STORE_NAME = 'keyring'
 
-export interface Identity {
-  email: string
-  verified: boolean
-  signingPrincipal: ISigningPrincipal
-}
+export class Space implements Principal {
+  #did: DID
+  #meta: Record<string, any>
 
-/**
- * An identity that has NOT been verified by the service e.g. email verification.
- */
-export interface UnverifiedIdentity extends Identity {
-  verified: false
-}
-
-/**
- * An identity that has been verified by the service e.g. email verification.
- */
-export interface VerifiedIdentity extends Identity {
-  verified: true
-}
-
-export enum AuthStatus {
-  /**
-   * Identity loaded.
-   */
-  SignedIn,
-  /**
-   * Not authorized.
-   */
-  SignedOut,
-  /**
-   * Email verification email has been sent.
-   */
-  EmailVerification
-}
-
-export interface WaitIdentityVerificationOptions {
-  /**
-   * An AbortSignal that can be used to cancel the registration/email validation.
-   */
-  signal?: AbortSignal
-}
-
-/**
- * Create a brand new identity.
- */
-export async function createIdentity ({ email }: { email: string }): Promise<UnverifiedIdentity> {
-  if (email == null || email === '') {
-    throw new Error('missing email address')
+  constructor (did: DID, meta: Record<string, any> = {}) {
+    this.#did = did
+    this.#meta = meta
   }
 
-  const signingPrincipal = await SigningPrincipal.generate()
+  /**
+   * The given space name, or the space DID if not set.
+   */
+  name () {
+    return this.#meta.name ? String(this.#meta.name) : this.#did
+  }
 
-  return { email, verified: false, signingPrincipal }
+  /**
+   * The DID of the space.
+   */
+  did () {
+    return this.#did
+  }
+
+  /**
+   * Whether the space has been registered with the service.
+   */
+  registered () {
+    return Boolean(this.#meta.isRegistered)
+  }
+
+  /**
+   * User defined space metadata.
+   */
+  meta () {
+    return this.#meta
+  }
 }
 
-/**
- * Send verification email.
- */
-export async function sendVerificationEmail (identity: UnverifiedIdentity): Promise<void> {
-  if (identity.verified) {
-    throw new Error('already verified')
+export interface KeyringContextState {
+  /**
+   * The current space.
+   */
+  space?: Space
+  /**
+   * Spaces available to this agent.
+   */
+  spaces: Space[]
+  /**
+   * The current user agent (this device).
+   */
+  agent?: Signer
+}
+
+export interface KeyringContextActions {
+  /**
+   * Load the user agent and all stored data from secure storage.
+   */
+  loadAgent: () => Promise<void>
+  /**
+   * Unload the user agent and all stored data from secure storage. Note: this
+   * does not remove data, use `resetAgent` if that is desired.
+   */
+  unloadAgent: () => Promise<void>
+  /**
+   * Unload the current space and agent from memory and remove from secure
+   * storage. Note: this removes all data and is unrecoverable.
+   */
+  resetAgent: () => Promise<void>
+  /**
+   * Create a new space with the passed name and set it as the current space.
+   */
+  createSpace: (name?: string) => Promise<DID>
+  /**
+   * Use a specific space.
+   */
+  setCurrentSpace: (did: DID) => Promise<void>
+  /**
+   * Register the current space, verify the email address and store in secure
+   * storage. Use cancelRegisterSpace to abort. Automatically sets the
+   * newly registered space as the current space.
+   */
+  registerSpace: (email: string) => Promise<void>
+  /**
+   * Abort an ongoing account registration.
+   */
+  cancelRegisterSpace: () => void,
+  /**
+   * Get all the proofs matching the capabilities. Proofs are delegations with
+   * an audience matching the agent DID.
+   */
+  getProofs: (caps: Capability[]) => Promise<Proof[]>
+}
+
+export interface ServiceConfig {
+  servicePrincipal?: Principal
+  connection?: ConnectionView<Service>
+}
+
+export function getCurrentSpace (agent: Agent<any>): Space | undefined {
+  const did = agent.currentSpace()
+  if (!did) return
+  const meta = agent.data.spaces.get(did)
+  return new Space(did, meta)
+}
+
+export function getSpaces (agent: Agent<any>): Space[] {
+  const spaces: Space[] = []
+  for (const [did, meta] of agent.data.spaces.entries()) {
+    spaces.push(new Space(did, meta))
   }
-  await Access.validate({
-    audience: accessDid,
-    url: accessApiUrl,
-    issuer: identity.signingPrincipal,
-    caveats: { as: `mailto:${identity.email}` }
+  return spaces
+}
+
+export interface CreateAgentOptions extends ServiceConfig {}
+
+/**
+ * Create an agent for managing identity. It uses RSA keys that are stored in
+ * IndexedDB as unextractable `CryptoKey`s.
+ */
+export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent<RSASigner>> {
+  const dbName = `${DB_NAME}${options.servicePrincipal ? '@' + options.servicePrincipal.did() : ''}`
+  const store = await StoreIndexedDB.open(dbName, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
+  return new Agent({
+    // @ts-expect-error assumed HTTP channel
+    url: options.connection ? options.connection.channel.url : serviceURL,
+    store,
+    data: await store.load(),
+    connection: options.connection ?? connection,
+    fetch: globalThis.fetch.bind(globalThis)
   })
-}
-
-/**
- * Wait for the passed identity to be verified.
- */
-export async function waitIdentityVerification (identity: UnverifiedIdentity, options: WaitIdentityVerificationOptions = {}): Promise<{ identity: VerifiedIdentity, proof: Delegation<[IdentityRegister]> }> {
-  if (identity.verified) {
-    throw new Error('already verified')
-  }
-  const proof = await Access.pullRegisterDelegation({
-    issuer: identity.signingPrincipal,
-    url: accessApiUrl,
-    signal: options.signal
-  })
-
-  return {
-    identity: {
-      email: identity.email,
-      verified: true,
-      signingPrincipal: identity.signingPrincipal
-    },
-    proof
-  }
-}
-
-/**
- * Register a verified identity with the service.
- */
-export async function registerIdentity (identity: VerifiedIdentity, proof: Delegation<[IdentityRegister]>): Promise<void> {
-  if (!identity.verified) {
-    throw new Error('identity must be verified')
-  }
-  await Access.register({
-    audience: accessDid,
-    url: accessApiUrl,
-    issuer: identity.signingPrincipal,
-    proof
-  })
-}
-
-/**
- * Load an identity from secure storage.
- */
-export async function loadIdentity ({ email }: Pick<Identity, 'email'>): Promise<Identity | undefined> {
-  const item = localStorage.getItem(`__w3ui_id.v0.mailto:${email}`)
-  if (item == null) return
-  try {
-    const { email, verified, signingPrincipalBytes } = JSON.parse(item)
-    const signingPrincipal = SigningPrincipal.decode(base64pad.decode(signingPrincipalBytes))
-    return { email, verified, signingPrincipal }
-  } catch (err) {
-    console.warn('failed to load identity', err)
-  }
-}
-
-/**
- * Load the default identity from secure storage.
- */
-export async function loadDefaultIdentity (): Promise<Identity | undefined> {
-  const email = localStorage.getItem('__w3ui_id.v0.default.email')
-  if (email == null) return
-  return await loadIdentity({ email })
-}
-
-/**
- * Remove the passed identity from secure storage (if exists).
- */
-export async function removeIdentity (identity: Identity): Promise<void> {
-  localStorage.removeItem(`__w3ui_id.v0.mailto:${identity.email}`)
-  const defaultEmail = localStorage.getItem('__w3ui_id.v0.default.email')
-  if (identity.email === defaultEmail) {
-    localStorage.removeItem('__w3ui_id.v0.default.email')
-  }
-}
-
-/**
- * Store identity locally in secure storage and set the default.
- * TODO: CURRENTLY DOES NOT SAVE SECURELY - SAVES TO LOCALSTORAGE
- */
-export async function storeIdentity (identity: Identity): Promise<void> {
-  const { email, verified, signingPrincipal } = identity
-  const signingPrincipalBytes = base64pad.encode(signingPrincipal.bytes)
-  localStorage.setItem(
-    `__w3ui_id.v0.mailto:${email}`,
-    JSON.stringify({ email, verified, signingPrincipalBytes })
-  )
-  localStorage.setItem('__w3ui_id.v0.default.email', email)
 }

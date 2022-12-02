@@ -46,11 +46,16 @@ export default {
 Once mounted, the `UploaderProvider` provides the following injection keys:
 
 ```ts
-const UploaderProviderInjectionKey = {
-  uploadFile: InjectionKey<UploaderContextActions['uploadFile']>,
-  uploadDirectory: InjectionKey<UploaderContextActions['uploadDirectory']>,
-  uploadCarChunks: InjectionKey<UploaderContextActions['uploadCarChunks']>,
-  uploadedCarChunks: InjectionKey<Ref<UploaderContextState['uploadedCarChunks']>>
+type UploaderProviderInjectionKey = {
+  uploadFile: InjectionKey<UploaderContextActions['uploadFile']>
+  uploadDirectory: InjectionKey<UploaderContextActions['uploadDirectory']>
+  storeDAG: InjectionKey<UploaderContextActions['storeDAG']>
+  registerUpload: InjectionKey<UploaderContextActions['registerUpload']>
+  storedDAGShards: InjectionKey<Ref<UploaderContextState['storedDAGShards']>>
+}
+
+interface UploaderContextState {
+  storedDAGShards: CARMetadata[]
 }
 
 interface UploaderContextActions {
@@ -63,13 +68,14 @@ interface UploaderContextActions {
    */
   uploadDirectory: (files: File[]) => Promise<CID>
   /**
-   * Upload CAR bytes to the service.
+   * Store a DAG (encoded as a CAR file) to the service.
    */
-  uploadCarChunks: (chunks: AsyncIterable<CarData>) => Promise<void>
-}
-
-interface UploaderContextState {
-  uploadedCarChunks: CarChunkMeta[]
+  storeDAG: (data: Blob) => Promise<CID>
+  /**
+   * Register an "upload" with the service. Note: only required when using
+   * `storeDAG`.
+   */
+  registerUpload: (root: CID, shards: CID[]) => Promise<void>
 }
 ```
 

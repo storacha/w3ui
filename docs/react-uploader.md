@@ -52,7 +52,7 @@ type UploaderContextValue = [
 ]
 
 interface UploaderContextState {
-  uploadedCarChunks: CarChunkMeta[]
+  storedDAGShards: CARMetadata[]
 }
 
 interface UploaderContextActions {
@@ -65,9 +65,14 @@ interface UploaderContextActions {
    */
   uploadDirectory: (files: File[]) => Promise<CID>
   /**
-   * Upload CAR bytes to the service.
+   * Store a DAG (encoded as a CAR file) to the service.
    */
-  uploadCarChunks: (chunks: AsyncIterable<CarData>) => Promise<void>
+  storeDAG: (data: Blob) => Promise<CID>
+  /**
+   * Register an "upload" with the service. Note: only required when using
+   * `storeDAG`.
+   */
+  registerUpload: (root: CID, shards: CID[]) => Promise<void>
 }
 ```
 
