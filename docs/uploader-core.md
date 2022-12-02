@@ -14,76 +14,36 @@ import * as UploaderCore from '@w3ui/uploader-core'
 
 ## Exports
 
-* [`encodeCAR`](#encodecar)
-* [`encodeDirectory`](#encodedirectory)
-* [`encodeFile`](#encodefile)
-* [`registerUpload`](#registerupload)
-* [`storeDAG`](#storedag)
+**Interfaces**
+- [`UploaderContextState`](#uploadercontextstate)
+- [`UploaderContextActions`](#uploadercontextactions)
+
+**Functions**
+- [`uploadFile`](#uploadfile)
+- [`uploadDirectory`](#uploaddirectory)
 
 ---
 
-### `encodeCAR`
+### `UploaderContextState`
+
+Interface containing uploader state. Implementations are framework-specific and found in each framework's `-uploader` module (e.g. `@w3ui/react-uploader`).
 
 ```ts
-encodeCAR (blocks: Iterable<Block>, root?: CID): Promise<Blob & { version: 1, roots: CID[] }>
+export interface UploaderContextState {
+  storedDAGShards: CARMetadata[]
+}
 ```
 
-Encode a DAG as a CAR file.
+The [`CARMetadata` type](https://github.com/web3-storage/w3protocol/tree/main/packages/upload-client#carmetadata) is defined by the `@web3-storage/upload-client` package and re-exported by `@w3ui/uploader-core`.
 
-Example:
+### `UploaderContextActions`
 
-```js
-const { cid, blocks } = await encodeFile(new File(['data'], 'doc.txt'))
-const car = await encodeCAR(blocks, cid)
-```
+Interface containing upload actions. Implementations are framework-specific and found in each framework's `-uploader` module (e.g. `@w3ui/react-uploader`).
 
-### `encodeDirectory`
+### `uploadFile`
 
-```ts
-encodeDirectory (files: Iterable<File>): { cid: CID, blocks: Block[] }
-```
+Re-exported [`uploadFile` function](https://github.com/web3-storage/w3protocol/tree/main/packages/upload-client#uploadfile) from `@web3-storage/upload-client`.
 
-Create a UnixFS DAG from the passed file data. All files are added to a container directory, with paths in file names preserved.
+### `uploadDirectory`
 
-Example:
-
-```js
-const { cid, blocks } = encodeDirectory([
-  new File(['doc0'], 'doc0.txt'),
-  new File(['doc1'], 'dir/doc1.txt'),
-])
-// DAG structure will be:
-// bafybei.../doc0.txt
-// bafybei.../dir/doc1.txt
-```
-
-### `encodeFile`
-
-```ts
-encodeFile (file: Blob): { cid: CID, blocks: Block[] }
-```
-
-Create a UnixFS DAG from the passed file data.
-
-Example:
-
-```js
-const { cid, blocks } = await encodeFile(new File(['data'], 'doc.txt'))
-// Note: file name is not preserved - use encodeDirectory if required.
-```
-
-### `registerUpload`
-
-```ts
-registerUpload (account: DID, signer: Signer, root: CID, shards: CID[], options: { retries?: number, signal?: AbortSignal } = {}): Promise<void>
-```
-
-Register a set of stored CAR files as an "upload" in the system. A DAG can be split between multipe CAR files. Calling this function allows multiple stored CAR files to be considered as a single upload.
-
-### `storeDAG`
-
-```ts
-storeDAG (account: DID, signer: Signer, car: Blob, options: { retries?: number, signal?: AbortSignal } = {}): Promise<CID>
-```
-
-Store a CAR file to the service.
+Re-exported [`uploadDirectory` function](https://github.com/web3-storage/w3protocol/tree/main/packages/upload-client#uploaddirectory) from `@web3-storage/upload-client`.
