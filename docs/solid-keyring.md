@@ -45,7 +45,7 @@ You can optionally target a non-production instance of the access service by set
 const [state, actions] = useKeyring()
 ```
 
-Hook to allow use of the [`AuthProvider`](#authprovider) value. The value returned is a `KeyringContextValue`:
+Hook to allow use of the [`KeyringProvider`](#keyringprovider) value. The value returned is a `KeyringContextValue`:
 
 ```ts
 export type KeyringContextValue = [
