@@ -37,7 +37,7 @@ export const Done = ({ file, dataCid, storedDAGShards }: {file?: File, dataCid?:
 )
 
 
-const SimpleUploader = () => {
+export const SimpleUploader = () => {
   const { status, file, error, dataCid, storedDAGShards } = useContext(UploaderContext)
   return (
     <Uploader>
@@ -60,4 +60,3 @@ const SimpleUploader = () => {
   )
 }
 
-export default SimpleUploader
