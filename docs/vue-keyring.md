@@ -56,7 +56,6 @@ type KeyringProviderInjectionKey = {
   cancelRegisterSpace: InjectionKey<KeyringContextActions['cancelRegisterSpace']>,
   getProofs: InjectionKey<KeyringContextActions['getProofs']>
 }
-
 ```
 
 See [keyring-core.md](./keyring-core.md) for the definitions for [`KeyringContextState`](./keyring-core.md#keyringcontextstate) and [`KeyringContextActions`](./keyring-core.md#keyringcontextactions).
