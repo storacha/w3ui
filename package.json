@@ -37,6 +37,7 @@
     "packages/react-keyring",
     "packages/react-uploader",
     "packages/react-uploads-list",
+    "packages/react-ui",
     "packages/solid-keyring",
     "packages/solid-uploader",
     "packages/solid-uploads-list",
