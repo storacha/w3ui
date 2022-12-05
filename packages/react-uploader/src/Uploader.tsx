@@ -4,15 +4,38 @@ import { CARMetadata, UploaderContextState, UploaderContextActions } from '@w3ui
 import { useUploader } from './providers/Uploader'
 
 export type UploaderComponentContextState = UploaderContextState & {
+  /**
+   * A string indicating the status of this component - can be 'uploading', 'done' or ''.
+   */
   status?: string,
+  /**
+   * Error thrown by upload process.
+   */
   error?: any,
+  /**
+   * a File to be uploaded
+   */
   file?: File,
+  /**
+   * A callback that can be passed to an `onSubmit` handler to
+   * upload `file` to web3.storage via the w3up API
+   */
   handleUploadSubmit?: (e: Event) => void
+  /**
+   * The CID of a successful upload
+   */
   dataCid?: Link<unknown, number, number, Version>,
+  /**
+   * Shards of a DAG uploaded to web3.storage
+   */
   storedDAGShards?: CARMetadata[],
 }
 
 export type UploaderComponentContextActions = UploaderContextActions & {
+  /**
+   * Set a file to be uploaded to web3.storage. The file will be uploaded
+   * when `handleUploadSubmit` is called.
+   */
   setFile: React.Dispatch<React.SetStateAction<File | undefined>>
 }
 
@@ -22,7 +45,9 @@ export type UploaderComponentContextValue = [
 ]
 
 const UploaderComponentContext = createContext<UploaderComponentContextValue>([
-  { storedDAGShards: [] },
+  {
+    storedDAGShards: []
+  },
   {
     setFile: () => { throw new Error('missing set file function') },
     uploadFile: async () => { throw new Error('missing uploader context provider') },
@@ -34,6 +59,13 @@ export type HeadlessUploaderProps = {
   children?: JSX.Element,
 }
 
+/**
+ * Top level component of the headless Uploader.
+ *
+ * Designed to be used with Uploader.Form and Uploader.Input
+ * to easily create a custom component for uploading files to
+ * web3.storage.
+ */
 export const Uploader = ({
   children,
 }: HeadlessUploaderProps) => {
@@ -70,6 +102,12 @@ export const Uploader = ({
   )
 }
 
+/**
+ * Input component for the headless Uploader.
+ *
+ * A file `input` designed to work with `Uploader`. Any passed props will
+ * be passed along to the `input` component.
+ */
 Uploader.Input = (props: any) => {
   const [, { setFile }] = useContext(UploaderComponentContext)
   return (
@@ -77,6 +115,12 @@ Uploader.Input = (props: any) => {
   )
 }
 
+/**
+ * Form component for the headless Uploader.
+ *
+ * A `form` designed to work with `Uploader`. Any passed props will
+ * be passed along to the `form` component.
+ */
 Uploader.Form = ({ children, ...props }: { children: React.ReactNode } & any) => {
   const [{ handleUploadSubmit }] = useContext(UploaderComponentContext)
   return (
