@@ -1,4 +1,6 @@
 :root {
+  --w3ui-uploader-container-padding: 0;
+  --w3ui-uploader-container-background: transparent;
   --w3ui-uploader-padding: 2rem;
   --w3ui-uploader-background: rgba(255, 255, 255, 0.05);
   --w3ui-uploader-background-hover: rgba(255, 255, 255, 0.08);
@@ -8,20 +10,15 @@
   --w3ui-uploader-primary: salmon;
   --w3ui-uploader-primary-hover: rgb(250, 136, 124);
   --w3ui-overlay: rgba(29, 32, 39, 0.8);
-  --w3ui-gradient-stop-1: orange;
+  --w3ui-gradient-stop-1: orange; 
   --w3ui-gradient-stop-2: salmon;
+  --w3ui-button-color: #000;
 }
 
 .w3ui-uploader-wrapper {
-  /* padding: var(--w3ui-uploader-padding);
-  color: var(--w3ui-uploader-border);
+  padding: var(--w3ui-uploader-container-padding);
+  background-color: var(--w3ui-uploader-container-background);
   border-radius: var(--w3ui-uploader-border-radius);
-  border: 2px solid var(--w3ui-uploader-border-color); */
-  /* background-image: linear-gradient(
-    45deg,
-    var(--w3ui-gradient-stop-1),
-    var(--w3ui-gradient-stop-2)
-  ); */
 }
 
 .w3ui-uploader {
@@ -88,6 +85,8 @@
 .w3ui-button {
   width: 100%;
   background-color: var(--w3ui-uploader-primary);
+  background-image: linear-gradient(45deg, var(--w3ui-gradient-stop-1), var(--w3ui-gradient-stop-2));
+  color: var(--w3ui-button-color);
   border-radius: var(--w3ui-uploader-border-radius);
   outline: none;
   border: 0;
