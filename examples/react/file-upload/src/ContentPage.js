@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useUploader } from '@w3ui/react-uploader'
 import { withIdentity } from './components/Authenticator'
-import './spinner.css'
 
 export function ContentPage () {
   const [{ storedDAGShards }, uploader] = useUploader()
@@ -37,11 +36,11 @@ export function ContentPage () {
   return (
     <div className="w3ui-uploader-wrapper">
       <form onSubmit={handleUploadSubmit}>
-        <div className='w3ui-uploader db mb3'>
-          <label htmlFor='file' className='w3ui-uploader__label db mb2'>File:</label>
-          <input id='file' className='w3ui-uploader__input db pa2 w-100 ba br2' type='file' onChange={e => setFile(e.target.files[0])} required />
+        <div className='w3ui-uploader'>
+          <label htmlFor='file' className='w3ui-uploader__label'>File:</label>
+          <input id='file' className='w3ui-uploader__input' type='file' onChange={e => setFile(e.target.files[0])} required />
         </div>
-        <button type='submit' className='w3ui-button ph3 pv2'>Upload</button>
+        <button type='submit' className='w3ui-button'>Upload</button>
       </form>
     </div>
   )

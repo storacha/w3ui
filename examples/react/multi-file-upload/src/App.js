@@ -10,11 +10,11 @@ function App() {
     <AuthProvider>
       <UploaderProvider>
         <IdentityLoader>
-          <div className='vh-100 flex flex-column justify-center items-center sans-serif light-silver'>
+          <div className="w3ui-app">
             <header>
               <img src={logo} width='250' alt='logo' />
             </header>
-            <div className='w-90 w-50-ns mw6'>
+            <div>
               <ContentPage />
             </div>
           </div>

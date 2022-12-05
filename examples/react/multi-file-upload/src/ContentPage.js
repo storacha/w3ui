@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useUploader } from '@w3ui/react-uploader'
 import { withIdentity } from './components/Authenticator'
-import './spinner.css'
 
 export function ContentPage() {
   const [{ uploadedCarChunks }, uploader] = useUploader()
@@ -44,19 +43,19 @@ export function ContentPage() {
     <div className="w3ui-uploader-wrapper">
       <form onSubmit={handleUploadSubmit}>
         <div className='w3ui-uploader mb3'>
-          <label htmlFor='files' className='w3ui-uploader__label db mb2'>Files:</label>
+          <label htmlFor='files' className='w3ui-uploader__label'>Files:</label>
           {allowDirectory
-            ? <input id='file' className='w3ui-uploader__input db pa2 w-100 ba br2' type='file' webkitdirectory='true' onChange={e => setFiles(Array.from(e.target.files))} required />
-            : <input id='file' className='w3ui-uploader__input db pa2 w-100 ba br2' type='file' multiple onChange={e => setFiles(Array.from(e.target.files))} required />}
+            ? <input id='file' className='w3ui-uploader__input' type='file' webkitdirectory='true' onChange={e => setFiles(Array.from(e.target.files))} required />
+            : <input id='file' className='w3ui-uploader__input' type='file' multiple onChange={e => setFiles(Array.from(e.target.files))} required />}
         </div>
-        <div className='mb3'>
+        <div className='w3ui-uploader__checkbox'>
           <label>
             <input type='checkbox' value={allowDirectory} onChange={e => setAllowDirectory(e.target.checked)} /> Allow directory selection
           </label>
         </div>
         {files.length === 1
           ? (
-            <div className='mb3'>
+            <div className='w3ui-uploader__checkbox'>
               <label>
                 <input type='checkbox' value={wrapInDirectory} onChange={e => setWrapInDirectory(e.target.checked)} /> Wrap file in a directory
               </label>
@@ -71,7 +70,7 @@ export function ContentPage() {
         {files.length > 0 && (status === '' || status === 'uploading') && (
           <>
             <p>Files:</p>
-            <div class="w3ui-uploader-list">
+            <div className="w3ui-uploader-list">
               {files.map((file, idx) => {
                 return (
                   <div key={file.name} className="w3ui-uploader-list__item">
@@ -86,19 +85,19 @@ export function ContentPage() {
           </>
         )}
 
-        <button type='submit' disabled="" className='w3ui-button ph3 pv2'>Upload</button>
+        <button type='submit' disabled="" className='w3ui-button'>Upload</button>
       </form>
     </div>
   )
 }
 
 const Uploading = ({ files, dataCid, uploadedCarChunks }) => (
-  <div className='w3ui-uploader-uploading flex items-center'>
-    <div className='spinner mr3 flex-none' />
-    <div className='flex-auto'>
+  <div className='w3ui-uploader-uploading'>
+    <div className='w3ui-spinner' />
+    <div className=''>
       <p className='truncate'>Uploading DAG for {files.length > 1 ? `${files.length} files` : files[0].name}</p>
       {uploadedCarChunks.map(({ cid, size }) => (
-        <p key={cid.toString()} className='f7 truncate'>
+        <p key={cid.toString()} className='truncate'>
           {cid.toString()} ({size} bytes)
         </p>
       ))}
@@ -114,7 +113,7 @@ const Errored = ({ error }) => (
 )
 
 const Done = ({ files, dataCid, uploadedCarChunks, resetUploader }) => (
-  <div class="w3ui-uploader-complete">
+  <div className="w3ui-uploader-complete">
     <h3 className='near-white mt0'>Done!</h3>
     <p className='f6 code truncate'>{dataCid.toString()}</p>
     <p><a href={`https://w3s.link/ipfs/${dataCid}`} className='w3ui-link'>View {files.length > 1 ? 'files' : files[0].name} on IPFS Gateway.</a></p>
@@ -124,7 +123,7 @@ const Done = ({ files, dataCid, uploadedCarChunks, resetUploader }) => (
         {cid.toString()} ({size} bytes)
       </p>
     ))}
-    <button class="w3ui-uploader-complete__close" onClick={resetUploader}>
+    <button className="w3ui-uploader-complete__close" onClick={resetUploader}>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" height={20} width={20} ><g><g><line x1={9.12} y1={4.88} x2={4.88} y2={9.12} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" /><line x1={4.88} y1={4.88} x2={9.12} y2={9.12} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" /></g><circle cx={7} cy={7} r={6.5} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" /></g></svg>
     </button>
   </div>
