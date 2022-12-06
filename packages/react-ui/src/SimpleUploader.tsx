@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { CARMetadata } from '@w3ui/uploader-core'
-import Uploader, { UploaderContext } from '@w3ui/react-uploader';
+import { Uploader, useUploaderComponent } from '@w3ui/react-uploader';
 import { Link, Version } from 'multiformats'
 
 
@@ -38,7 +38,7 @@ export const Done = ({ file, dataCid, storedDAGShards }: {file?: File, dataCid?:
 
 
 export const SimpleUploader = () => {
-  const { status, file, error, dataCid, storedDAGShards } = useContext(UploaderContext)
+  const [{ status, file, error, dataCid, storedDAGShards }] = useUploaderComponent()
   return (
     <Uploader>
       {(status === 'uploading') ? (
