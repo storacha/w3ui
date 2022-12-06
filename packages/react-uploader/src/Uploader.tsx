@@ -55,7 +55,7 @@ const UploaderComponentContext = createContext<UploaderComponentContextValue>([
   }
 ])
 
-export type HeadlessUploaderProps = {
+export type UploaderComponentProps = {
   children?: JSX.Element,
 }
 
@@ -68,7 +68,7 @@ export type HeadlessUploaderProps = {
  */
 export const Uploader = ({
   children,
-}: HeadlessUploaderProps) => {
+}: UploaderComponentProps) => {
   const [uploaderState, uploaderActions] = useUploader()
   const [file, setFile] = useState<File>()
   const [dataCid, setDataCid] = useState<Link<unknown, number, number, Version>>()
