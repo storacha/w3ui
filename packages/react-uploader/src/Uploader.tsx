@@ -136,5 +136,3 @@ Uploader.Form = ({ children, ...props }: { children: React.ReactNode } & any) =>
 export function useUploaderComponent(): UploaderComponentContextValue {
   return useContext(UploaderComponentContext)
 }
-
-export default Uploader

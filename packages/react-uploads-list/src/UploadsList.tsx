@@ -72,5 +72,3 @@ export function useUploadsListComponent(): UploadsListComponentContextValue {
   return useContext(UploadsListComponentContext)
 }
 
-export default UploadsList
-
