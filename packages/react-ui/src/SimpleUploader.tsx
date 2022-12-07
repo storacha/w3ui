@@ -26,7 +26,7 @@ export const Done = ({ file, dataCid, storedDAGShards }: {file?: File, dataCid?:
   <div className="done">
     <h1 className="title">Done!</h1>
     <p className="cid">{dataCid?.toString()}</p>
-    <p className="view"><a href={`https://w3s.link/ipfs/${dataCid}`}>View {file?.name} on IPFS Gateway.</a></p>
+    <p className="view"><a href={`https://${dataCid}.ipfs.w3s.link/`}>View {file?.name} on IPFS Gateway.</a></p>
     <h5 className="chunks">Shards ({storedDAGShards?.length}):</h5>
     {storedDAGShards?.map(({ cid, size }) => (
       <p className="shard" key={cid.toString()}>

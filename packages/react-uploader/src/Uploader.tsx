@@ -5,9 +5,9 @@ import { useUploader } from './providers/Uploader'
 
 export type UploaderComponentContextState = UploaderContextState & {
   /**
-   * True if we are currently in the process of uploading a file.
+   * A string indicating the status of this component - can be 'uploading', 'done' or ''.
    */
-  uploading: boolean,
+  status?: string,
   /**
    * Error thrown by upload process.
    */
@@ -46,7 +46,6 @@ export type UploaderComponentContextValue = [
 
 const UploaderComponentContext = createContext<UploaderComponentContextValue>([
   {
-    uploading: false,
     storedDAGShards: []
   },
   {
@@ -56,7 +55,7 @@ const UploaderComponentContext = createContext<UploaderComponentContextValue>([
   }
 ])
 
-export type HeadlessUploaderProps = {
+export type UploaderComponentProps = {
   children?: JSX.Element,
 }
 
@@ -69,7 +68,7 @@ export type HeadlessUploaderProps = {
  */
 export const Uploader = ({
   children,
-}: HeadlessUploaderProps) => {
+}: UploaderComponentProps) => {
   const [uploaderState, uploaderActions] = useUploader()
   const [file, setFile] = useState<File>()
   const [dataCid, setDataCid] = useState<Link<unknown, number, number, Version>>()
