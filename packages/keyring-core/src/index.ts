@@ -2,8 +2,7 @@ import { Agent } from '@web3-storage/access/agent'
 import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
 import type { Service } from '@web3-storage/access/types'
 import type { Capability, DID, Proof, Signer, ConnectionView, Principal } from '@ucanto/interface'
-import type { RSASigner } from '@ucanto/principal/rsa'
-import { serviceURL, connection } from './service'
+import * as RSASigner from '@ucanto/principal/rsa'
 
 const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
@@ -106,16 +105,16 @@ export interface ServiceConfig {
   connection?: ConnectionView<Service>
 }
 
-export function getCurrentSpace (agent: Agent<any>): Space | undefined {
+export function getCurrentSpace (agent: Agent): Space | undefined {
   const did = agent.currentSpace()
   if (!did) return
-  const meta = agent.data.spaces.get(did)
+  const meta = agent.spaces.get(did)
   return new Space(did, meta)
 }
 
-export function getSpaces (agent: Agent<any>): Space[] {
+export function getSpaces (agent: Agent): Space[] {
   const spaces: Space[] = []
-  for (const [did, meta] of agent.data.spaces.entries()) {
+  for (const [did, meta] of agent.spaces.entries()) {
     spaces.push(new Space(did, meta))
   }
   return spaces
@@ -127,15 +126,11 @@ export interface CreateAgentOptions extends ServiceConfig {}
  * Create an agent for managing identity. It uses RSA keys that are stored in
  * IndexedDB as unextractable `CryptoKey`s.
  */
-export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent<RSASigner>> {
+export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent> {
   const dbName = `${DB_NAME}${options.servicePrincipal ? '@' + options.servicePrincipal.did() : ''}`
-  const store = await StoreIndexedDB.open(dbName, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
-  return new Agent({
-    // @ts-expect-error assumed HTTP channel
-    url: options.connection ? options.connection.channel.url : serviceURL,
-    store,
-    data: await store.load(),
-    connection: options.connection ?? connection,
-    fetch: globalThis.fetch.bind(globalThis)
-  })
+  const store = new StoreIndexedDB(dbName, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
+  const raw = await store.load()
+  if (raw) return Object.assign(Agent.from(raw, { ...options, store }), { store })
+  const principal = await RSASigner.generate()
+  return Object.assign(await Agent.create({ principal }, { ...options, store }), { store })
 }

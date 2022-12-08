@@ -2,7 +2,6 @@ import { defineComponent, provide, computed, InjectionKey, Ref, shallowReactive 
 import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Capability, DID, Proof } from '@ucanto/interface'
-import type { RSASigner } from '@ucanto/principal/rsa'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -35,14 +34,14 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
       space: undefined,
       spaces: []
     })
-    let agent: Agent<RSASigner>|undefined
+    let agent: Agent|undefined
     let registerAbortController: AbortController
 
     provide(KeyringProviderInjectionKey.agent, computed(() => state.agent))
     provide(KeyringProviderInjectionKey.space, computed(() => state.space))
     provide(KeyringProviderInjectionKey.spaces, computed(() => state.spaces))
 
-    const getAgent = async (): Promise<Agent<RSASigner>> => {
+    const getAgent = async (): Promise<Agent> => {
       if (agent == null) {
         agent = await createAgent({ servicePrincipal, connection })
         state.agent = agent.issuer
@@ -104,6 +103,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
 
     provide(KeyringProviderInjectionKey.resetAgent, async (): Promise<void> => {
       const agent = await getAgent()
+      // @ts-expect-error
       await Promise.all([agent.store.reset(), unloadAgent()])
     })
 

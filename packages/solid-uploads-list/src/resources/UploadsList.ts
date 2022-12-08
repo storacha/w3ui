@@ -2,7 +2,7 @@ import { createResource, InitializedResourceReturn, ResourceOptions, ResourceRet
 import type { Space } from '@w3ui/keyring-core'
 import { list, ServiceConfig, ListResponse, UploadListResult } from '@w3ui/uploads-list-core'
 import type { Capability, Proof, Signer } from '@ucanto/interface'
-import { list as uploadList } from '@web3-storage/access/capabilities/upload'
+import { list as uploadList } from '@web3-storage/capabilities/upload'
 
 interface UploadsListSource extends ServiceConfig {
   cursor?: string

@@ -1,7 +1,7 @@
 import React, { useContext, createContext, useState } from 'react'
 import { UploadListResult, UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
 import { useKeyring } from '@w3ui/react-keyring'
-import { list as uploadList } from '@web3-storage/access/capabilities/upload'
+import { list as uploadList } from '@web3-storage/capabilities/upload'
 
 export type UploadsListContextValue = [
   state: UploadsListContextState,

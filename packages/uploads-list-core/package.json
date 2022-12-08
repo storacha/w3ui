@@ -25,6 +25,6 @@
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/uploads-list-core",
   "dependencies": {
     "@ucanto/interface": "^3.0.0",
-    "@web3-storage/upload-client": "^2.1.0"
+    "@web3-storage/upload-client": "^3.0.0"
   }
 }

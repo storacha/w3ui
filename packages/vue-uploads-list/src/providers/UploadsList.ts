@@ -1,7 +1,7 @@
 import { defineComponent, provide, InjectionKey, inject, shallowReactive, Ref, computed, watch } from 'vue'
 import { KeyringProviderInjectionKey } from '@w3ui/vue-keyring'
 import { UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
-import { list as uploadList } from '@web3-storage/access/capabilities/upload'
+import { list as uploadList } from '@web3-storage/capabilities/upload'
 
 /**
  * Injection keys for uploads list context.

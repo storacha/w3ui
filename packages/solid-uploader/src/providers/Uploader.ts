@@ -2,8 +2,8 @@ import { createContext, useContext, createComponent, ParentComponent } from 'sol
 import { createStore } from 'solid-js/store'
 import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata, ServiceConfig } from '@w3ui/uploader-core'
 import { useKeyring } from '@w3ui/solid-keyring'
-import { add as storeAdd } from '@web3-storage/access/capabilities/store'
-import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
+import { add as storeAdd } from '@web3-storage/capabilities/store'
+import { add as uploadAdd } from '@web3-storage/capabilities/upload'
 
 export type UploaderContextValue = [
   state: UploaderContextState,
