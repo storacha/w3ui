@@ -1,10 +1,8 @@
 import React from 'react'
-import { SimpleUploader } from '@w3ui/react-ui'
+import { SimpleUploader, W3Upload } from '@w3ui/react-ui'
 import { Uploader, UploaderProvider, useUploader } from '@w3ui/react-uploader'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
-import { withIdentity } from './components/Authenticator'
 
 function NoUIUploadComponent() {
   const [{ storedDAGShards }, uploader] = useUploader()
@@ -32,15 +30,18 @@ function NoUIComponent() {
 
 function HeadlessUIComponent() {
   return (
-    <Uploader>
-      <Uploader.Form>
-        <div>
-          <label htmlFor='file'>File:</label>
-          <Uploader.Input id="file" />
-        </div>
-        <button type='submit'>Upload</button>
-      </Uploader.Form>
-    </Uploader>
+    <UploaderProvider>
+      <Uploader>
+        <Uploader.Form>
+          <div>
+            <label htmlFor='file'>File:</label>
+            <Uploader.Input id="file" />
+          </div>
+          <button type='submit'>Upload</button>
+        </Uploader.Form>
+      </Uploader>
+    </UploaderProvider>
+
   )
 }
 
@@ -54,7 +55,7 @@ function CustomizableUIComponent() {
 
 function DropinUIComponent() {
   return (
-    <div>TODO</div>
+    <W3Upload />
   )
 }
 
@@ -150,18 +151,14 @@ function CustomizableUIComponent() {
         {`
 function DropinUIComponent() {
   return (
-    <>
-      <UploaderAndUploadList />
-      <PlaylistUploaderAndPlayer />
-    </>
+    <W3Upload />
   )
 }
 `}
       </SyntaxHighlighter>
       <DropinUIComponent />
-
     </>
   )
 }
 
-export default withIdentity(ContentPage)
+export default ContentPage
