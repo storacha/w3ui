@@ -19,28 +19,28 @@ export class Space implements Principal {
   /**
    * The given space name.
    */
-  name () {
-    return this.#meta.name
+  name (): string|undefined {
+    return this.#meta.name != null ? String(this.#meta.name) : undefined
   }
 
   /**
    * The DID of the space.
    */
-  did () {
+  did (): DID {
     return this.#did
   }
 
   /**
    * Whether the space has been registered with the service.
    */
-  registered () {
+  registered (): boolean {
     return Boolean(this.#meta.isRegistered)
   }
 
   /**
    * User defined space metadata.
    */
-  meta () {
+  meta (): Record<string, any> {
     return this.#meta
   }
 }
@@ -92,7 +92,7 @@ export interface KeyringContextActions {
   /**
    * Abort an ongoing account registration.
    */
-  cancelRegisterSpace: () => void,
+  cancelRegisterSpace: () => void
   /**
    * Get all the proofs matching the capabilities. Proofs are delegations with
    * an audience matching the agent DID.
@@ -107,7 +107,7 @@ export interface ServiceConfig {
 
 export function getCurrentSpace (agent: Agent): Space | undefined {
   const did = agent.currentSpace()
-  if (!did) return
+  if (did == null) return
   const meta = agent.spaces.get(did)
   return new Space(did, meta)
 }
@@ -127,10 +127,10 @@ export interface CreateAgentOptions extends ServiceConfig {}
  * IndexedDB as unextractable `CryptoKey`s.
  */
 export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent> {
-  const dbName = `${DB_NAME}${options.servicePrincipal ? '@' + options.servicePrincipal.did() : ''}`
+  const dbName = `${DB_NAME}${(options.servicePrincipal != null) ? '@' + options.servicePrincipal.did() : ''}`
   const store = new StoreIndexedDB(dbName, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
   const raw = await store.load()
-  if (raw) return Object.assign(Agent.from(raw, { ...options, store }), { store })
+  if (raw != null) return Object.assign(Agent.from(raw, { ...options, store }), { store })
   const principal = await RSASigner.generate()
   return Object.assign(await Agent.create({ principal }, { ...options, store }), { store })
 }

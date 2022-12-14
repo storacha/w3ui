@@ -47,12 +47,12 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
       if (space?.value == null) return
       if (agent?.value == null) return
       if (getProofs == null) throw new Error('missing getProofs')
-  
+
       controller.abort()
       const newController = new AbortController()
       controller = newController
       state.loading = true
-  
+
       try {
         const conf = {
           issuer: agent.value,
@@ -88,7 +88,7 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
       await loadPage(cursor)
     })
 
-    watch([space, agent], () => loadPage())
+    watch([space, agent], async () => await loadPage())
 
     return state
   },

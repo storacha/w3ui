@@ -7,8 +7,8 @@ import { list as uploadList } from '@web3-storage/capabilities/upload'
 interface UploadsListSource extends ServiceConfig {
   cursor?: string
   size?: number
-  space: Space,
-  agent: Signer,
+  space: Space
+  agent: Signer
   getProofs: (caps: Capability[]) => Promise<Proof[]>
 }
 

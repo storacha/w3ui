@@ -2,7 +2,7 @@ import { createContext, useContext, createSignal, createComponent, ParentCompone
 import { createStore } from 'solid-js/store'
 import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
-import type { Capability, DID } from '@ucanto/interface'
+import type { Delegation, Capability, DID } from '@ucanto/interface'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -113,7 +113,7 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
     await Promise.all([agent.store.reset(), unloadAgent()])
   }
 
-  const getProofs = async (caps: Capability[]) => {
+  const getProofs = async (caps: Capability[]): Promise<Delegation[]> => {
     const agent = await getAgent()
     return agent.proofs(caps)
   }
