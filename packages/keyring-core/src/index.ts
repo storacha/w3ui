@@ -8,8 +8,8 @@ const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
 
 export class Space implements Principal {
-  private _did: DID
-  private _meta: Record<string, any>
+  private readonly _did: DID
+  private readonly _meta: Record<string, any>
 
   constructor (did: DID, meta: Record<string, any> = {}) {
     this._did = did
