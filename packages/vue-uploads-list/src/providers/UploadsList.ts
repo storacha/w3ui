@@ -36,7 +36,7 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
       data: undefined
     })
 
-    let cursor: string|undefined
+    let cursor: string | undefined
     let controller = new AbortController()
 
     provide(UploadsListProviderInjectionKey.loading, computed(() => state.loading))

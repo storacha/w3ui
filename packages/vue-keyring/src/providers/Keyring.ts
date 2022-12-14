@@ -34,7 +34,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
       space: undefined,
       spaces: []
     })
-    let agent: Agent|undefined
+    let agent: Agent | undefined
     let registerAbortController: AbortController
 
     provide(KeyringProviderInjectionKey.agent, computed(() => state.agent))

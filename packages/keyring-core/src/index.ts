@@ -19,7 +19,7 @@ export class Space implements Principal {
   /**
    * The given space name.
    */
-  name (): string|undefined {
+  name (): string | undefined {
     return this.#meta.name == null ? String(this.#meta.name) : undefined
   }
 
