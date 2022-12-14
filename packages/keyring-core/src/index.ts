@@ -8,40 +8,40 @@ const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
 
 export class Space implements Principal {
-  #did: DID
-  #meta: Record<string, any>
+  private _did: DID
+  private _meta: Record<string, any>
 
   constructor (did: DID, meta: Record<string, any> = {}) {
-    this.#did = did
-    this.#meta = meta
+    this._did = did
+    this._meta = meta
   }
 
   /**
    * The given space name.
    */
   name (): string|undefined {
-    return this.#meta.name != null ? String(this.#meta.name) : undefined
+    return this._meta.name != null ? String(this._meta.name) : undefined
   }
 
   /**
    * The DID of the space.
    */
   did (): DID {
-    return this.#did
+    return this._did
   }
 
   /**
    * Whether the space has been registered with the service.
    */
   registered (): boolean {
-    return Boolean(this.#meta.isRegistered)
+    return Boolean(this._meta.isRegistered)
   }
 
   /**
    * User defined space metadata.
    */
   meta (): Record<string, any> {
-    return this.#meta
+    return this._meta
   }
 }
 
