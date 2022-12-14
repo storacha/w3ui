@@ -30,8 +30,8 @@
     "solid-js": "^1.5.0"
   },
   "devDependencies": {
-    "@ucanto/interface": "^3.0.1",
-    "@ucanto/principal": "^3.0.1",
-    "@web3-storage/access": "^8.0.2"
+    "@ucanto/interface": "^4.0.2",
+    "@ucanto/principal": "^4.0.2",
+    "@web3-storage/access": "^9.1.0"
   }
 }
