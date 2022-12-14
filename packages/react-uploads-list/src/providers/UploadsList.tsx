@@ -64,7 +64,6 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
     } catch (err: any) {
       if (err.name !== 'AbortError') {
         console.error(err)
-        // @ts-expect-error ts not know about cause
         setError(new Error('failed to fetch uploads list', { cause: err }))
       }
     } finally {
