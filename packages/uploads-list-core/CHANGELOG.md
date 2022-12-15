@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.0.1](https://github.com/web3-storage/w3ui/compare/uploads-list-core-v2.0.0...uploads-list-core-v2.0.1) (2022-12-15)
+
+
+### Bug Fixes
+
+* lockfile ([54285d9](https://github.com/web3-storage/w3ui/commit/54285d9baaf5368dfea3aa9476b124c43d56aecc))
+
+## [2.0.0](https://github.com/web3-storage/w3ui/compare/uploads-list-core-v1.0.3...uploads-list-core-v2.0.0) (2022-12-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* core and framework components have changed considerably. Please read the updated doucmentation.
+
+### Features
+
+* consume access and upload client ([#159](https://github.com/web3-storage/w3ui/issues/159)) ([e36d842](https://github.com/web3-storage/w3ui/commit/e36d842b1695032355ab29646c3dce6a33880517))
+
 ## [1.0.3](https://github.com/web3-storage/w3ui/compare/uploads-list-core-v1.0.2...uploads-list-core-v1.0.3) (2022-10-27)
 
 
