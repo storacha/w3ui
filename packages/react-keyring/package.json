@@ -31,11 +31,6 @@
     "@ucanto/principal": "^4.0.3",
     "@web3-storage/access": "^9.2.0"
   },
-  "devDependencies": {
-    "@ucanto/interface": "^3.0.0",
-    "@ucanto/principal": "^3.0.0",
-    "@web3-storage/access": "^7.0.2"
-  },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   }

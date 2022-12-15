@@ -28,11 +28,6 @@
     "@w3ui/react-uploads-list": "^1.1.2",
     "@w3ui/react-uploader": "^2.1.2"
   },
-  "devDependencies": {
-    "@ucanto/interface": "^3.0.0",
-    "@ucanto/principal": "^3.0.0",
-    "@web3-storage/access": "^7.0.1"
-  },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   }
