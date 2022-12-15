@@ -6,7 +6,7 @@ import './spinner.css'
 
 export function ContentPage () {
   const [keyringState, keyringActions] = useKeyring()
-  const [data, { refetch }] = createUploadsListResource(() => ({...keyringState, ...keyringActions}), { initialValue: { results: [] } })
+  const [data, { refetch }] = createUploadsListResource(() => ({ ...keyringState, ...keyringActions }), { initialValue: { results: [] } })
 
   return (
     <div className='w-90 mw9'>

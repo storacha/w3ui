@@ -2,7 +2,7 @@ import './assets/tachyons.min.css'
 
 import {
   createAgent,
-  getCurrentSpace,
+  getCurrentSpace
 } from '@w3ui/keyring-core'
 
 // FIXME: remove this once we no longer need to target staging
@@ -38,10 +38,10 @@ export class RegisterForm extends window.HTMLElement {
     this.formatTemplateContent = this.formatTemplateContent.bind(this)
   }
 
-  async getAgent() {
+  async getAgent () {
     if (this.agent == null) {
-      this.agent = await createAgent({ 
-        servicePrincipal: accessServicePrincipal, 
+      this.agent = await createAgent({
+        servicePrincipal: accessServicePrincipal,
         connection: accessServiceConnection
       })
     }
@@ -53,7 +53,6 @@ export class RegisterForm extends window.HTMLElement {
 
     const agent = await this.getAgent()
     console.log(`Agent DID: ${agent.did()}`)
-    
     const space = getCurrentSpace(agent)
     if (space?.registered()) {
       this.toggleConfirmation()
@@ -95,7 +94,6 @@ export class RegisterForm extends window.HTMLElement {
   async signOutHandler (e) {
     e.preventDefault()
     this.agent = null
-    
     window.location.reload()
   }
 
@@ -111,7 +109,6 @@ export class RegisterForm extends window.HTMLElement {
       const { did } = await agent.createSpace()
       await agent.setCurrentSpace(did)
       console.log(`Created new Space with DID: ${did}`)
-      
       const controller = new AbortController()
 
       try {
@@ -119,7 +116,7 @@ export class RegisterForm extends window.HTMLElement {
         const startEvent = window.CustomEvent(EVENTS.registrationStart, { bubbles: true })
         this.dispatchEvent(startEvent)
 
-        this.toggleVerification(true);
+        this.toggleVerification(true)
         await agent.registerSpace(email, { signal: controller.signal })
 
         // Fire sign in success event

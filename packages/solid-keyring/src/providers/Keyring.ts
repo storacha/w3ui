@@ -2,8 +2,7 @@ import { createContext, useContext, createSignal, createComponent, ParentCompone
 import { createStore } from 'solid-js/store'
 import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
-import type { Capability, DID } from '@ucanto/interface'
-import type { RSASigner } from '@ucanto/principal/rsa'
+import type { Delegation, Capability, DID } from '@ucanto/interface'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -44,10 +43,10 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
     agent: defaultState.agent
   })
 
-  const [agent, setAgent] = createSignal<Agent<RSASigner>>()
+  const [agent, setAgent] = createSignal<Agent>()
   const [registerAbortController, setRegisterAbortController] = createSignal<AbortController>()
 
-  const getAgent = async (): Promise<Agent<RSASigner>> => {
+  const getAgent = async (): Promise<Agent> => {
     let a = agent()
     if (a == null) {
       a = await createAgent({ servicePrincipal: props.servicePrincipal, connection: props.connection })
@@ -110,10 +109,11 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
 
   const resetAgent = async (): Promise<void> => {
     const agent = await getAgent()
+    // @ts-expect-error
     await Promise.all([agent.store.reset(), unloadAgent()])
   }
 
-  const getProofs = async (caps: Capability[]) => {
+  const getProofs = async (caps: Capability[]): Promise<Delegation[]> => {
     const agent = await getAgent()
     return agent.proofs(caps)
   }

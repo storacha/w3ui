@@ -142,7 +142,7 @@ Returns user-defined metadata attached to the space.
 ### `createAgent`
 
 ```ts
-createAgent (options: CreateAgentOptions = {}): Promise<Agent<RSASigner>> 
+createAgent (options: CreateAgentOptions = {}): Promise<Agent>
 ```
 
 Create the user agent and load account information from secure storage.
@@ -159,7 +159,7 @@ If `servicePrincipal` or `connection` are not provided, defaults to the producti
 ### `getCurrentSpace`
 
 ```ts
-getCurrentSpace(agent: Agent<any>): Space | undefined
+getCurrentSpace(agent: Agent): Space | undefined
 ```
 
 Returns the given `agent`'s current space, or `undefined` if the agent has no current space set.
@@ -167,7 +167,7 @@ Returns the given `agent`'s current space, or `undefined` if the agent has no cu
 ### `getSpaces`
 
 ```ts
-getSpaces(agent: Agent<any>): Space[]
+getSpaces(agent: Agent): Space[]
 ```
 
 Returns an array of all spaces that the agent has access to.

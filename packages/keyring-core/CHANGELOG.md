@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.0.1](https://github.com/web3-storage/w3ui/compare/keyring-core-v2.0.0...keyring-core-v2.0.1) (2022-12-15)
+
+
+### Bug Fixes
+
+* lockfile ([88f1a89](https://github.com/web3-storage/w3ui/commit/88f1a89213a24e8737d17917789a15173406fb21))
+
+## [2.0.0](https://github.com/web3-storage/w3ui/compare/keyring-core-v1.0.2...keyring-core-v2.0.0) (2022-12-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* core and framework components have changed considerably. Please read the updated doucmentation.
+
+### Features
+
+* consume access and upload client ([#159](https://github.com/web3-storage/w3ui/issues/159)) ([e36d842](https://github.com/web3-storage/w3ui/commit/e36d842b1695032355ab29646c3dce6a33880517))
+
 ## [1.0.2](https://github.com/web3-storage/w3ui/compare/keyring-core-v1.0.1...keyring-core-v1.0.2) (2022-10-27)
 
 

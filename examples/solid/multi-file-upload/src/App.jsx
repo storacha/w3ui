@@ -1,5 +1,5 @@
 import logo from './logo.png'
-import { KeyringProvider } from '@w3ui/solid-keyring'
+import { KeyringProvider, useKeyring } from '@w3ui/solid-keyring'
 import { UploaderProvider } from '@w3ui/solid-uploader'
 import ContentPage from './ContentPage'
 

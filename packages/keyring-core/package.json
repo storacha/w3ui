@@ -1,6 +1,6 @@
 {
   "name": "@w3ui/keyring-core",
-  "version": "1.0.2",
+  "version": "2.0.1",
   "description": "w3ui keyring core.",
   "module": "build/esm/index.js",
   "main": "build/cjs/index.js",
@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/keyring-core",
   "dependencies": {
-    "@web3-storage/access": "^7.0.2"
+    "@web3-storage/access": "^9.2.0"
   }
 }
