@@ -24,12 +24,9 @@ export const SimpleUploadsList = (): JSX.Element => {
               </tr>
             </thead>
             <tbody>
-              {data?.map(({ dataCID, carCID, uploaderDID, uploadedAt }) => (
-                <tr key={dataCID}>
-                  <td>{uploaderDID}</td>
-                  <td>{carCID}</td>
-                  <td>{dataCID}</td>
-                  <td>{uploadedAt.toLocaleString()}</td>
+              {data?.map(({ root }) => (
+                <tr key={root.toString()}>
+                  <td>{root.toString()}</td>
                 </tr>
               ))}
             </tbody>

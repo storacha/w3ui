@@ -24,9 +24,10 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/react-ui",
   "dependencies": {
-    "@w3ui/react-keyring": "^1.0.1",
-    "@w3ui/react-uploads-list": "^1.1.2",
-    "@w3ui/react-uploader": "^2.1.2"
+    "@w3ui/react-keyring": "^2.0.1",
+    "@w3ui/react-uploader": "^3.0.1",
+    "@w3ui/react-uploads-list": "^2.0.1",
+    "multiformats": "^10.0.2"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"

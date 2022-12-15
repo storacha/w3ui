@@ -22,13 +22,13 @@ export const Errored = ({ error }: { error: any }): JSX.Element => (
 )
 
 interface DoneProps {
-  file: File
-  dataCid: Link<unknown, number, number, Version>
-  storedDAGShards: CARMetadata[]
+  file?: File
+  dataCid?: Link<unknown, number, number, Version>
+  storedDAGShards?: CARMetadata[]
 }
 
 export const Done = ({ file, dataCid, storedDAGShards }: DoneProps): JSX.Element => {
-  const cid = dataCid.toString() as string
+  const cid = dataCid?.toString() ?? ''
   return (
     <div className='done'>
       <h1 className='title'>Done!</h1>
