@@ -30,45 +30,46 @@ export type UploadsListComponentChildrenProps = [
   actions: UploadsListComponentContextActions
 ]
 
-export type UploadsListComponentProps = {
-  children?: ({ }: UploadsListComponentChildrenProps) => React.ReactNode,
+export interface UploadsListComponentProps {
+  children?: (props: UploadsListComponentChildrenProps) => React.ReactNode
 }
 
-export const UploadsList = ({ children }: UploadsListComponentProps) => {
+export const UploadsList = ({ children }: UploadsListComponentProps): JSX.Element => {
   const [state, actions] = useUploadsList()
   const contextValue = useMemo<UploadsListComponentChildrenProps>(
     () => ([state, actions]),
     [state, actions])
   return (
     <UploadsListComponentContext.Provider value={contextValue}>
-      {(typeof children === 'function') ? (
-        children(contextValue)
-      ) : (
-        children
-      )}
+      {(typeof children === 'function')
+        ? (
+            children(contextValue)
+          )
+        : (
+            children
+          )}
     </UploadsListComponentContext.Provider>
   )
 }
 
 UploadsList.NextButton = (props: any) => {
   const [, { next }] = useContext(UploadsListComponentContext)
-  const onClick = useCallback(function onClick(e: React.MouseEvent) {
+  const onClick = useCallback(function onClick (e: React.MouseEvent) {
     e.preventDefault()
-    next()
+    void next()
   }, [next])
   return <button onClick={onClick} {...props} />
 }
 
 UploadsList.ReloadButton = (props: any) => {
   const [, { reload }] = useContext(UploadsListComponentContext)
-  const onClick = useCallback(function onClick(e: React.MouseEvent) {
+  const onClick = useCallback(function onClick (e: React.MouseEvent) {
     e.preventDefault()
-    reload()
+    void reload()
   }, [reload])
   return <button onClick={onClick} {...props} />
 }
 
-export function useUploadsListComponent(): UploadsListComponentContextValue {
+export function useUploadsListComponent (): UploadsListComponentContextValue {
   return useContext(UploadsListComponentContext)
 }
-

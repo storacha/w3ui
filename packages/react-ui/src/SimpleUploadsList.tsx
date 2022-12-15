@@ -1,16 +1,16 @@
 import React from 'react'
-import { UploadsList } from '@w3ui/react-uploads-list';
+import { UploadsList } from '@w3ui/react-uploads-list'
 
-export const SimpleUploadsList = () => {
+export const SimpleUploadsList = (): JSX.Element => {
   return (
     <UploadsList>
       {([{ data }]) => (
         <div className='w3-uploads-list'>
           <nav>
-            <UploadsList.NextButton className="next">
+            <UploadsList.NextButton className='next'>
               Next
             </UploadsList.NextButton>
-            <UploadsList.ReloadButton className="reload">
+            <UploadsList.ReloadButton className='reload'>
               Reload
             </UploadsList.ReloadButton>
           </nav>
@@ -39,4 +39,3 @@ export const SimpleUploadsList = () => {
     </UploadsList>
   )
 }
-

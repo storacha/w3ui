@@ -4,9 +4,9 @@ import React, {
 import { useKeyring, KeyringContextState, KeyringContextActions } from '@w3ui/react-keyring'
 
 export type AuthenticatorContextState = KeyringContextState & {
-  email?: string,
-  submitted: boolean,
-  handleRegisterSubmit?: (e: React.FormEvent<HTMLFormElement>) => void
+  email?: string
+  submitted: boolean
+  handleRegisterSubmit?: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
 }
 
 export type AuthenticatorContextActions = KeyringContextActions & {
@@ -21,7 +21,7 @@ export type AuthenticatorContextValue = [
 export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
   {
     spaces: [],
-    submitted: false,
+    submitted: false
   },
   {
     setEmail: () => { throw new Error('missing set email function') },
@@ -36,7 +36,7 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
   }
 ])
 
-export function Authenticator(props: any) {
+export function Authenticator (props: any): JSX.Element {
   const [state, actions] = useKeyring()
   const { createSpace, registerSpace } = actions
   const [email, setEmail] = useState('')
@@ -64,27 +64,27 @@ export function Authenticator(props: any) {
   )
 }
 
-Authenticator.Form = function Form(props: any) {
+Authenticator.Form = function Form (props: any) {
   const [{ handleRegisterSubmit }] = useAuthenticator()
   return (
     <form onSubmit={handleRegisterSubmit} {...props} />
   )
 }
 
-Authenticator.EmailInput = function EmailInput(props: any) {
+Authenticator.EmailInput = function EmailInput (props: any) {
   const [{ email }, { setEmail }] = useAuthenticator()
   return (
     <input type='email' value={email} onChange={e => setEmail(e.target.value)} {...props} />
   )
 }
 
-Authenticator.CancelButton = function CancelButton(props: any) {
+Authenticator.CancelButton = function CancelButton (props: any) {
   const [, { cancelRegisterSpace }] = useAuthenticator()
   return (
     <button onClick={() => { cancelRegisterSpace() }} {...props} />
   )
 }
 
-export function useAuthenticator() {
+export function useAuthenticator (): AuthenticatorContextValue {
   return useContext(AuthenticatorContext)
 }
