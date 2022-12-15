@@ -142,7 +142,7 @@ Returns user-defined metadata attached to the space.
 ### `createAgent`
 
 ```ts
-createAgent (options: CreateAgentOptions = {}): Promise<Agent>
+createAgent (options: CreateAgentOptions = {}): Promise<Agent> 
 ```
 
 Create the user agent and load account information from secure storage.
