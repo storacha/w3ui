@@ -1,14 +1,30 @@
 import { defineComponent, provide, computed, InjectionKey, Ref, shallowReactive } from 'vue'
-import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
+import { createAgent, getCurrentSpace, getSpaces } from '@w3ui/keyring-core'
+import type { KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
+
 import type { Agent } from '@web3-storage/access'
 import type { Capability, DID, Proof } from '@ucanto/interface'
 
 export { KeyringContextState, KeyringContextActions }
 
+interface KeyringProviderInjectionKeyType {
+  space: InjectionKey<Ref<KeyringContextState['space']>>
+  spaces: InjectionKey<Ref<KeyringContextState['spaces']>>
+  agent: InjectionKey<Ref<KeyringContextState['agent']>>
+  loadAgent: InjectionKey<KeyringContextActions['loadAgent']>
+  unloadAgent: InjectionKey<KeyringContextActions['unloadAgent']>
+  resetAgent: InjectionKey<KeyringContextActions['resetAgent']>
+  createSpace: InjectionKey<KeyringContextActions['createSpace']>
+  setCurrentSpace: InjectionKey<KeyringContextActions['setCurrentSpace']>
+  registerSpace: InjectionKey<KeyringContextActions['registerSpace']>
+  cancelRegisterSpace: InjectionKey<KeyringContextActions['cancelRegisterSpace']>
+  getProofs: InjectionKey<KeyringContextActions['getProofs']>
+}
+
 /**
  * Injection keys for keyring provider context.
  */
-export const KeyringProviderInjectionKey = {
+export const KeyringProviderInjectionKey: KeyringProviderInjectionKeyType = {
   space: Symbol('w3ui keyring space') as InjectionKey<Ref<KeyringContextState['space']>>,
   spaces: Symbol('w3ui keyring spaces') as InjectionKey<Ref<KeyringContextState['spaces']>>,
   agent: Symbol('w3ui keyring agent') as InjectionKey<Ref<KeyringContextState['agent']>>,
