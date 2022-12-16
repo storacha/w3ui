@@ -67,12 +67,10 @@ export class ListFiles extends window.HTMLElement {
     const item = this.listItemTemplate$?.content.cloneNode(true)
     const columns = item.querySelectorAll('td')
     const gatewayLinkEl = document.createElement('a')
-    gatewayLinkEl.href = `https://w3s.link/ipfs/${file.dataCid}`
+    gatewayLinkEl.href = `https://w3s.link/ipfs/${file.root}`
     gatewayLinkEl.textContent = file.dataCid
     gatewayLinkEl.classList.add(...['white', 'link'])
     columns[0].appendChild(gatewayLinkEl)
-    columns[1].textContent = file.carCids[0]
-    columns[2].textContent = new Date(file.uploadedAt).toLocaleString()
     return item
   }
 }

@@ -15,23 +15,19 @@ export function ContentPage () {
           <Errored error={data.error} />
         </Match>
         <Match when={data.state === 'ready'}>
-          {data().results.length
+          {data() && data().length
             ? (
               <div className='overflow-auto'>
                 <table className='w-100 mb3 collapse'>
                   <thead className='near-white tl'>
                     <tr>
                       <th className='pa3'>Data CID</th>
-                      <th className='pa3'>CAR CID</th>
-                      <th className='pa3'>Date</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {data().results.map(({ dataCid, carCids, uploadedAt }) => (
-                      <tr key={dataCid} className='stripe-light'>
-                        <td className='pa3'>{dataCid}</td>
-                        <td className='pa3'>{carCids[0]}</td>
-                        <td className='pa3'>{uploadedAt.toLocaleString()}</td>
+                    {data().map(({ root }) => (
+                      <tr key={root} className='stripe-light'>
+                        <td className='pa3'>{root}</td>
                       </tr>
                     ))}
                   </tbody>
