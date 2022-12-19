@@ -34,7 +34,7 @@ function HeadlessUIComponent () {
         <Uploader.Form>
           <div>
             <label htmlFor='file'>File:</label>
-            <Uploader.Input id="file" />
+            <Uploader.Input id='file' />
           </div>
           <button type='submit'>Upload</button>
         </Uploader.Form>

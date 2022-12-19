@@ -4,16 +4,16 @@ import { useUploader, UploaderContextValue, UploaderProvider } from '@w3ui/react
 import { useUploadsList, UploadsListContextValue, UploadsListProvider } from '@w3ui/react-uploads-list'
 import { useKeyring, KeyringContextValue, KeyringProvider } from '@w3ui/react-keyring'
 
-export type W3APIContextValue = {
-  keyring: KeyringContextValue,
-  uploader: UploaderContextValue,
+export interface W3APIContextValue {
+  keyring: KeyringContextValue
+  uploader: UploaderContextValue
   uploadsList: UploadsListContextValue
 }
 export interface UploaderProviderProps extends ServiceConfig {
   children?: JSX.Element
 }
 
-export function W3APIProvider({ children }: PropsWithChildren) {
+export function W3APIProvider ({ children }: PropsWithChildren): JSX.Element {
   return (
     <KeyringProvider>
       <UploaderProvider>
@@ -25,7 +25,7 @@ export function W3APIProvider({ children }: PropsWithChildren) {
   )
 }
 
-export function useW3API(): W3APIContextValue {
+export function useW3API (): W3APIContextValue {
   const keyring = useKeyring()
   const uploader = useUploader()
   const uploadsList = useUploadsList()

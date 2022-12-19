@@ -26,13 +26,13 @@ export interface UploaderProviderProps extends ServiceConfig {
 /**
  * Provider for actions and state to facilitate uploads to the service.
  */
-export function UploaderProvider({ servicePrincipal, connection, children }: UploaderProviderProps): JSX.Element {
+export function UploaderProvider ({ servicePrincipal, connection, children }: UploaderProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [storedDAGShards, setStoredDAGShards] = useState<UploaderContextState['storedDAGShards']>([])
 
   const state = { storedDAGShards }
   const actions: UploaderContextActions = {
-    async uploadFile(file: Blob) {
+    async uploadFile (file: Blob) {
       if (space == null) throw new Error('missing space')
       if (agent == null) throw new Error('missing agent')
 
@@ -57,7 +57,7 @@ export function UploaderProvider({ servicePrincipal, connection, children }: Upl
         connection
       })
     },
-    async uploadDirectory(files: File[]) {
+    async uploadDirectory (files: File[]) {
       if (space == null) throw new Error('missing space')
       if (agent == null) throw new Error('missing agent')
 
@@ -93,6 +93,6 @@ export function UploaderProvider({ servicePrincipal, connection, children }: Upl
 /**
  * Use the scoped uploader context state from a parent `UploaderProvider`.
  */
-export function useUploader(): UploaderContextValue {
+export function useUploader (): UploaderContextValue {
   return useContext(UploaderContext)
 }
