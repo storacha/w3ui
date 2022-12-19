@@ -41,11 +41,7 @@ export function AuthenticationEnsurer ({ children }: PropsWithChildren): JSX.Ele
   }
 }
 
-interface SimpleAuthenticatorProps {
-  children: JSX.Element
-}
-
-export function SimpleAuthenticator ({ children }: SimpleAuthenticatorProps): JSX.Element {
+export function SimpleAuthenticator ({ children }: PropsWithChildren): JSX.Children {
   return (
     <Authenticator>
       <AuthenticationEnsurer>

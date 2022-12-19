@@ -28,7 +28,7 @@ interface DoneProps {
 }
 
 export const Done = ({ file, dataCid, storedDAGShards }: DoneProps): JSX.Element => {
-  const cid = dataCid?.toString() ?? ''
+  const cid: string = dataCid?.toString() ?? ''
   return (
     <div className='done'>
       <h1 className='title'>Done!</h1>
