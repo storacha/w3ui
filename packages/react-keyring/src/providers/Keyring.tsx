@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext } from 'react'
 import { createAgent, Space, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Capability, DID, Proof, Signer } from '@ucanto/interface'
-import type { RSASigner } from '@ucanto/principal/rsa'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -39,13 +38,13 @@ export interface KeyringProviderProps extends ServiceConfig {
  * Key management provider.
  */
 export function KeyringProvider ({ children, servicePrincipal, connection }: KeyringProviderProps): JSX.Element {
-  const [agent, setAgent] = useState<Agent<RSASigner>>()
+  const [agent, setAgent] = useState<Agent>()
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
   const [issuer, setIssuer] = useState<Signer>()
   const [registerAbortController, setRegisterAbortController] = useState<AbortController>()
 
-  const getAgent = async (): Promise<Agent<RSASigner>> => {
+  const getAgent = async (): Promise<Agent> => {
     if (agent == null) {
       const a = await createAgent({ servicePrincipal, connection })
       setAgent(a)
@@ -107,6 +106,7 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
 
   const resetAgent = async (): Promise<void> => {
     const agent = await getAgent()
+    // @ts-expect-error
     await Promise.all([agent.store.reset(), unloadAgent()])
   }
 

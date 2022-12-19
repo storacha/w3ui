@@ -7,28 +7,28 @@ export type UploaderComponentContextState = UploaderContextState & {
   /**
    * A string indicating the status of this component - can be 'uploading', 'done' or ''.
    */
-  status?: string,
+  status?: string
   /**
    * Error thrown by upload process.
    */
-  error?: any,
+  error?: Error
   /**
    * a File to be uploaded
    */
-  file?: File,
+  file?: File
   /**
    * A callback that can be passed to an `onSubmit` handler to
    * upload `file` to web3.storage via the w3up API
    */
-  handleUploadSubmit?: (e: Event) => void
+  handleUploadSubmit?: (e: Event) => Promise<void>
   /**
    * The CID of a successful upload
    */
-  dataCid?: Link<unknown, number, number, Version>,
+  dataCid?: Link<unknown, number, number, Version>
   /**
    * Shards of a DAG uploaded to web3.storage
    */
-  storedDAGShards?: CARMetadata[],
+  storedDAGShards?: CARMetadata[]
 }
 
 export type UploaderComponentContextActions = UploaderContextActions & {
@@ -55,8 +55,8 @@ const UploaderComponentContext = createContext<UploaderComponentContextValue>([
   }
 ])
 
-export type UploaderComponentProps = {
-  children?: JSX.Element,
+export interface UploaderComponentProps {
+  children?: JSX.Element
 }
 
 /**
@@ -67,17 +67,17 @@ export type UploaderComponentProps = {
  * web3.storage.
  */
 export const Uploader = ({
-  children,
-}: UploaderComponentProps) => {
+  children
+}: UploaderComponentProps): JSX.Element => {
   const [uploaderState, uploaderActions] = useUploader()
   const [file, setFile] = useState<File>()
   const [dataCid, setDataCid] = useState<Link<unknown, number, number, Version>>()
   const [status, setStatus] = useState('')
   const [error, setError] = useState()
 
-  const handleUploadSubmit = async (e: Event) => {
+  const handleUploadSubmit = async (e: Event): Promise<void> => {
     e.preventDefault()
-    if (file) {
+    if (file != null) {
       try {
         setStatus('uploading')
         const cid = await uploaderActions.uploadFile(file)
@@ -108,7 +108,7 @@ export const Uploader = ({
  * A file `input` designed to work with `Uploader`. Any passed props will
  * be passed along to the `input` component.
  */
-Uploader.Input = (props: any) => {
+Uploader.Input = (props: any): JSX.Element => {
   const [, { setFile }] = useContext(UploaderComponentContext)
   return (
     <input type='file' onChange={e => setFile(e?.target?.files?.[0])} {...props} />
@@ -121,7 +121,7 @@ Uploader.Input = (props: any) => {
  * A `form` designed to work with `Uploader`. Any passed props will
  * be passed along to the `form` component.
  */
-Uploader.Form = ({ children, ...props }: { children: React.ReactNode } & any) => {
+Uploader.Form = ({ children, ...props }: { children: React.ReactNode } & any): JSX.Element => {
   const [{ handleUploadSubmit }] = useContext(UploaderComponentContext)
   return (
     <form onSubmit={handleUploadSubmit} {...props}>
@@ -133,6 +133,6 @@ Uploader.Form = ({ children, ...props }: { children: React.ReactNode } & any) =>
 /**
  * Use the scoped uploader context state from a parent `Uploader`.
  */
-export function useUploaderComponent(): UploaderComponentContextValue {
+export function useUploaderComponent (): UploaderComponentContextValue {
   return useContext(UploaderComponentContext)
 }

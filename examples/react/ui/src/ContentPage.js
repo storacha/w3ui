@@ -1,15 +1,15 @@
 import React from 'react'
 import { SimpleUploader, W3Upload } from '@w3ui/react-ui'
 import { Uploader, UploaderProvider, useUploader } from '@w3ui/react-uploader'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
-function NoUIUploadComponent() {
+function NoUIUploadComponent () {
   const [{ storedDAGShards }, uploader] = useUploader()
 
   return (
     <div>
-      <input type="file" onChange={e => uploader.uploadFile(e.target.files[0])} />
+      <input type='file' onChange={e => uploader.uploadFile(e.target.files[0])} />
       {storedDAGShards?.map(({ cid, size }) => (
         <p key={cid.toString()}>
           {cid.toString()} ({size} bytes)
@@ -19,7 +19,7 @@ function NoUIUploadComponent() {
   )
 }
 
-function NoUIComponent() {
+function NoUIComponent () {
   return (
     <UploaderProvider>
       <NoUIUploadComponent />
@@ -27,8 +27,7 @@ function NoUIComponent() {
   )
 }
 
-
-function HeadlessUIComponent() {
+function HeadlessUIComponent () {
   return (
     <UploaderProvider>
       <Uploader>
@@ -41,11 +40,10 @@ function HeadlessUIComponent() {
         </Uploader.Form>
       </Uploader>
     </UploaderProvider>
-
   )
 }
 
-function CustomizableUIComponent() {
+function CustomizableUIComponent () {
   return (
     <UploaderProvider>
       <SimpleUploader />
@@ -53,16 +51,16 @@ function CustomizableUIComponent() {
   )
 }
 
-function DropinUIComponent() {
+function DropinUIComponent () {
   return (
     <W3Upload />
   )
 }
 
-export function ContentPage() {
+export function ContentPage () {
   return (
     <>
-      <h1 className="title">w3ui UI Components</h1>
+      <h1 className='title'>w3ui UI Components</h1>
       <p>
         w3ui provides React components at four different levels of
         abstraction, each of which builds upon the last. In order they are:
@@ -71,7 +69,7 @@ export function ContentPage() {
       <p>
         Maximum flexibility, React Contexts and hooks only:
       </p>
-      <SyntaxHighlighter language="jsx" style={a11yDark}>
+      <SyntaxHighlighter language='jsx' style={a11yDark}>
         {`
 function NoUIUploadComponent() {
   const [{ storedDAGShards }, uploader] = useUploader()
@@ -102,10 +100,10 @@ function NoUIComponent() {
       <h3>2. Headless UI</h3>
       <p>
         A set of components designed to work together, modeled after HeadlessUI
-        components like <a href="https://headlessui.com/react/combobox">Combobox</a>.
+        components like <a href='https://headlessui.com/react/combobox'>Combobox</a>.
         These components don't make any markup or styling choices for you:
       </p>
-      <SyntaxHighlighter language="jsx" style={a11yDark}>
+      <SyntaxHighlighter language='jsx' style={a11yDark}>
         {`
 function HeadlessUIComponent() {
   return (
@@ -129,7 +127,7 @@ function HeadlessUIComponent() {
         Components that work out of the box, and let you customize some aspects of
         markup and most of the styling:
       </p>
-      <SyntaxHighlighter language="jsx" style={a11yDark}>
+      <SyntaxHighlighter language='jsx' style={a11yDark}>
         {`
 function CustomizableUIComponent() {
   return (
@@ -147,7 +145,7 @@ function CustomizableUIComponent() {
         Components designed to be dropped into a page with very little customization.
         Limited styling customization may be supported:
       </p>
-      <SyntaxHighlighter language="jsx" style={a11yDark}>
+      <SyntaxHighlighter language='jsx' style={a11yDark}>
         {`
 function DropinUIComponent() {
   return (

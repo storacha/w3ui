@@ -2,7 +2,7 @@ import logo from './logo.png'
 import ContentPage from './ContentPage'
 import { KeyringProvider } from '@w3ui/react-keyring'
 
-function App() {
+function App () {
   return (
     <main>
       <header style={{ textAlign: 'center', padding: 10 }}>

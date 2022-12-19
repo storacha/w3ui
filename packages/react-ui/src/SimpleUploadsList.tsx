@@ -1,16 +1,16 @@
 import React from 'react'
-import { UploadsList } from '@w3ui/react-uploads-list';
+import { UploadsList } from '@w3ui/react-uploads-list'
 
-export const SimpleUploadsList = () => {
+export const SimpleUploadsList = (): JSX.Element => {
   return (
     <UploadsList>
       {([{ data }]) => (
         <div className='w3-uploads-list'>
           <nav>
-            <UploadsList.NextButton className="next">
+            <UploadsList.NextButton className='next'>
               Next
             </UploadsList.NextButton>
-            <UploadsList.ReloadButton className="reload">
+            <UploadsList.ReloadButton className='reload'>
               Reload
             </UploadsList.ReloadButton>
           </nav>
@@ -24,12 +24,9 @@ export const SimpleUploadsList = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.map(({ dataCID, carCID, uploaderDID, uploadedAt }) => (
-                <tr key={dataCID}>
-                  <td>{uploaderDID}</td>
-                  <td>{carCID}</td>
-                  <td>{dataCID}</td>
-                  <td>{uploadedAt.toLocaleString()}</td>
+              {data?.map(({ root }) => (
+                <tr key={root.toString()}>
+                  <td>{root.toString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -39,4 +36,3 @@ export const SimpleUploadsList = () => {
     </UploadsList>
   )
 }
-

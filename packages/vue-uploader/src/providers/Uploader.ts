@@ -1,8 +1,8 @@
 import { defineComponent, provide, InjectionKey, inject, Ref, shallowReactive, computed } from 'vue'
 import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata, ServiceConfig } from '@w3ui/uploader-core'
 import { KeyringProviderInjectionKey } from '@w3ui/vue-keyring'
-import { add as storeAdd } from '@web3-storage/access/capabilities/store'
-import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
+import { add as storeAdd } from '@web3-storage/capabilities/store'
+import { add as uploadAdd } from '@web3-storage/capabilities/upload'
 
 /**
  * Injection keys for uploader context.

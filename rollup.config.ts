@@ -98,7 +98,7 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       outputFile: 'react-ui',
       entryFile: 'src/index.ts',
       globals: {
-        react: 'React',
+        react: 'React'
       }
     }),
     ...buildConfigs({
