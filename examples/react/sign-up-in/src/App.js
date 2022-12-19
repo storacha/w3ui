@@ -2,15 +2,16 @@ import React from 'react'
 import { KeyringProvider } from '@w3ui/react-keyring'
 import ContentPage from './ContentPage'
 import logo from './logo.png'
+import './style.css'
 
 function App () {
   return (
     <KeyringProvider>
-      <div className='vh-100 flex flex-column justify-center items-center sans-serif light-silver'>
+      <div className='w3ui-app'>
         <header>
           <img src={logo} width='250' alt='logo' />
         </header>
-        <div className='w-90 w-50-ns mw6'>
+        <div className='w3ui-signUpIn-container'>
           <ContentPage />
         </div>
       </div>
