@@ -15,7 +15,7 @@ export function ContentPage () {
           <Errored error={data.error} />
         </Match>
         <Match when={data.state === 'ready'}>
-          { data().results.length
+          {data().results.length
             ? (
               <div className='overflow-auto'>
                 <table className='w-100 mb3 collapse'>
