@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useKeyring } from '@w3ui/react-keyring'
+import { useW3API } from '@w3ui/react-ui'
 
 export default function Authenticator ({ children }) {
-  const [{ space }, { createSpace, registerSpace, cancelRegisterSpace, loadAgent }] = useKeyring()
+  const { keyring } = useW3API()
+  const [{ space }, { createSpace, registerSpace, cancelRegisterSpace, loadAgent }] = keyring
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
   
