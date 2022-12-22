@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { KeyringProvider, useKeyring } from '@w3ui/react-keyring'
+import React from 'react'
+import { KeyringProvider } from '@w3ui/react-keyring'
 import { UploadsListProvider } from '@w3ui/react-uploads-list'
 import ContentPage from './ContentPage'
 import logo from './logo.png'
