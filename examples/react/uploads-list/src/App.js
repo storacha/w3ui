@@ -7,25 +7,16 @@ import logo from './logo.png'
 function App () {
   return (
     <KeyringProvider>
-      <IdentityLoader>
-        <UploadsListProvider>
-          <div className='vh-100 flex flex-column justify-center items-center sans-serif light-silver'>
-            <header>
-              <img src={logo} width='250' alt='logo' />
-            </header>
-            <ContentPage />
-          </div>
-        </UploadsListProvider>
-      </IdentityLoader>
+      <UploadsListProvider>
+        <div className='vh-100 flex flex-column justify-center items-center sans-serif light-silver'>
+          <header>
+            <img src={logo} width='250' alt='logo' />
+          </header>
+          <ContentPage />
+        </div>
+      </UploadsListProvider>
     </KeyringProvider>
   )
-}
-
-function IdentityLoader ({ children }) {
-  const [, { loadAgent }] = useKeyring()
-  // eslint-disable-next-line
-  useEffect(() => { loadAgent() }, []) // try load default identity - once.
-  return children
 }
 
 export default App
