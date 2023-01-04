@@ -36,6 +36,14 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
   }
 ])
 
+/**
+ * Top level component of the headless Authenticator.
+ *
+ * Must be used inside a KeyringProvider.
+ *
+ * Designed to be used by Authenticator.Form, Authenticator.EmailInput
+ * and others to make it easy to implement authentication UI.
+ */
 export function Authenticator (props: any): JSX.Element {
   const [state, actions] = useKeyring()
   const { createSpace, registerSpace } = actions
@@ -64,6 +72,12 @@ export function Authenticator (props: any): JSX.Element {
   )
 }
 
+/**
+ * Form component for the headless Authenticator.
+ *
+ * A `form` designed to work with `Authenticator`. Any passed props will
+ * be passed along to the `form` component.
+ */
 Authenticator.Form = function Form (props: any) {
   const [{ handleRegisterSubmit }] = useAuthenticator()
   return (
@@ -71,6 +85,12 @@ Authenticator.Form = function Form (props: any) {
   )
 }
 
+/**
+ * Input component for the headless Uploader.
+ *
+ * An email `input` designed to work with `Authenticator.Form`. Any passed props will
+ * be passed along to the `input` component.
+ */
 Authenticator.EmailInput = function EmailInput (props: any) {
   const [{ email }, { setEmail }] = useAuthenticator()
   return (
@@ -78,6 +98,12 @@ Authenticator.EmailInput = function EmailInput (props: any) {
   )
 }
 
+/**
+ * A button that will cancel space registration.
+ *
+ * A `button` designed to work with `Authenticator.Form`. Any passed props will
+ * be passed along to the `button` component.
+ */
 Authenticator.CancelButton = function CancelButton (props: any) {
   const [, { cancelRegisterSpace }] = useAuthenticator()
   return (
@@ -85,6 +111,9 @@ Authenticator.CancelButton = function CancelButton (props: any) {
   )
 }
 
+/**
+ * Use the scoped authenticator context state from a parent `Authenticator`.
+ */
 export function useAuthenticator (): AuthenticatorContextValue {
   return useContext(AuthenticatorContext)
 }
