@@ -25,17 +25,17 @@ interface KeyringProviderInjectionKeyType {
  * Injection keys for keyring provider context.
  */
 export const KeyringProviderInjectionKey: KeyringProviderInjectionKeyType = {
-  space: Symbol('w3ui keyring space') as InjectionKey<Ref<KeyringContextState['space']>>,
-  spaces: Symbol('w3ui keyring spaces') as InjectionKey<Ref<KeyringContextState['spaces']>>,
-  agent: Symbol('w3ui keyring agent') as InjectionKey<Ref<KeyringContextState['agent']>>,
-  loadAgent: Symbol('w3ui keyring loadAgent') as InjectionKey<KeyringContextActions['loadAgent']>,
-  unloadAgent: Symbol('w3ui keyring unloadAgent') as InjectionKey<KeyringContextActions['unloadAgent']>,
-  resetAgent: Symbol('w3ui keyring resetAgent') as InjectionKey<KeyringContextActions['resetAgent']>,
-  createSpace: Symbol('w3ui keyring createSpace') as InjectionKey<KeyringContextActions['createSpace']>,
-  setCurrentSpace: Symbol('w3ui keyring setCurrentSpace') as InjectionKey<KeyringContextActions['setCurrentSpace']>,
-  registerSpace: Symbol('w3ui keyring registerSpace') as InjectionKey<KeyringContextActions['registerSpace']>,
-  cancelRegisterSpace: Symbol('w3ui keyring cancelRegisterSpace') as InjectionKey<KeyringContextActions['cancelRegisterSpace']>,
-  getProofs: Symbol('w3ui keyring getProofs') as InjectionKey<KeyringContextActions['getProofs']>
+  space: Symbol('w3ui keyring space'),
+  spaces: Symbol('w3ui keyring spaces'),
+  agent: Symbol('w3ui keyring agent'),
+  loadAgent: Symbol('w3ui keyring loadAgent'),
+  unloadAgent: Symbol('w3ui keyring unloadAgent'),
+  resetAgent: Symbol('w3ui keyring resetAgent'),
+  createSpace: Symbol('w3ui keyring createSpace'),
+  setCurrentSpace: Symbol('w3ui keyring setCurrentSpace'),
+  registerSpace: Symbol('w3ui keyring registerSpace'),
+  cancelRegisterSpace: Symbol('w3ui keyring cancelRegisterSpace'),
+  getProofs: Symbol('w3ui keyring getProofs')
 }
 
 export interface KeyringProviderProps extends ServiceConfig {}
