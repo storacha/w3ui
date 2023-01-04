@@ -352,10 +352,9 @@ importers:
       '@w3ui/keyring-core': workspace:^2.0.1
       '@web3-storage/access': ^9.2.0
     dependencies:
-      '@w3ui/keyring-core': link:../keyring-core
-    devDependencies:
       '@ucanto/interface': 4.0.3
       '@ucanto/principal': 4.0.3
+      '@w3ui/keyring-core': link:../keyring-core
       '@web3-storage/access': 9.2.0
 
   packages/solid-uploader:
