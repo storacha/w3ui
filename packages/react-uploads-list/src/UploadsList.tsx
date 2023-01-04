@@ -17,10 +17,20 @@ export type UploadsListComponentContextValue = [
 
 export const UploadsListComponentContext = createContext<UploadsListComponentContextValue>([
   {
+    /**
+     * A boolean indicating whether the uploads list
+     * is currently loading data from the server.
+     */
     loading: false
   },
   {
+    /**
+     * A function that will load the next page of results.
+     */
     next: async () => { },
+    /**
+     * A function that will reload the uploads list.
+     */
     reload: async () => { }
   }
 ])

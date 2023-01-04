@@ -4,12 +4,25 @@ import React, {
 import { useKeyring, KeyringContextState, KeyringContextActions } from '@w3ui/react-keyring'
 
 export type AuthenticatorContextState = KeyringContextState & {
+  /**
+   * email to be used to "log in"
+   */
   email?: string
+  /**
+   * has the authentication form been submitted?
+   */
   submitted: boolean
+  /**
+   * A callback that can be passed to an `onSubmit` handler to
+   * register a new space or log in using `email`
+   */
   handleRegisterSubmit?: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
 }
 
 export type AuthenticatorContextActions = KeyringContextActions & {
+  /**
+   * Set an email to be used to log in or register.
+   */
   setEmail: React.Dispatch<React.SetStateAction<string>>
 }
 
