@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@w3ui/react-keyring": "workspace",
-    "@w3ui/react-uploader": "workspace",
+    "@w3ui/react-keyring": "workspace:^",
+    "@w3ui/react-uploader": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
