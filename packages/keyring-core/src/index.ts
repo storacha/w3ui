@@ -127,7 +127,7 @@ export interface CreateAgentOptions extends ServiceConfig {}
  * IndexedDB as unextractable `CryptoKey`s.
  */
 export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent> {
-  const dbName = `${DB_NAME}${(options.servicePrincipal != null) ? '@' + options.servicePrincipal.did().toString() : ''}`
+  const dbName = `${DB_NAME}${(options.servicePrincipal != null) ? '@' + options.servicePrincipal.did() : ''}`
   const store = new StoreIndexedDB(dbName, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
   const raw = await store.load()
   if (raw != null) return Object.assign(Agent.from(raw, { ...options, store }), { store })
