@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/solid-keyring",
   "dependencies": {
-    "@w3ui/keyring-core": "workspace:^2.0.1",
+    "@w3ui/keyring-core": "workspace",
     "@ucanto/interface": "^4.0.3",
     "@ucanto/principal": "^4.0.3",
     "@web3-storage/access": "^9.2.0"
