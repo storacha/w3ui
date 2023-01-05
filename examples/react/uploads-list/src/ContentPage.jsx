@@ -7,7 +7,7 @@ export function ContentPage () {
   const [{ loading, error, data }, { next, reload }] = useUploadsList()
   useEffect(() => {
     next()
-  // we really only want to run this once so leave the deps list empty
+    // we really only want to run this once so leave the deps list empty
   }, [])
   if (error) {
     return <Errored error={error} />
@@ -27,13 +27,17 @@ export function ContentPage () {
               <tbody>
                 {data.map(({ root }) => (
                   <tr key={root.toString()} className='stripe-light'>
-                    <td className='pa3'>{root.toString()}</td>
+                    <td className='pa3'>
+                      <a href={`https://w3s.link/ipfs/${root.toString()}`} className="gray">
+                        {root.toString()}
+                      </a>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          )
+        )
         : <p className='tc'>No uploads</p>}
       <button type='button' onClick={reload} className='ph3 pv2 mr3'>Refresh</button>
       {loading ? <span className='spinner dib' /> : null}
