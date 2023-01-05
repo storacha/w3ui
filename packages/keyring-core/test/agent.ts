@@ -27,4 +27,3 @@ test('registerSpace fails if no current space is set', async (t) => {
   const agent = await createAgent()
   await t.throwsAsync(agent.registerSpace('foo@bar.net'))
 })
-
