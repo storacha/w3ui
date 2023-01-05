@@ -27,13 +27,13 @@ export class MockAccessService implements Service {
     })
   }
 
-  constructor({ voucher, space }: { voucher?: Partial<Service['voucher']>, space?: Partial<Service['space']>} = {}) {
-    for (const [method, impl] of Object.keys(voucher ?? {})) {
-      this.voucher[method] = impl
-    }
+  constructor({} = {}) {
+    // for (const [method, impl] of Object.keys(voucher ?? {})) {
+    //   this.voucher[method] = impl
+    // }
     
-    for (const [method, impl] of Object.keys(space ?? {})) {
-      this.space[method] = impl
-    }  
+    // for (const [method, impl] of Object.keys(space ?? {})) {
+    //   this.space[method] = impl
+    // }  
   }
 }
