@@ -1,4 +1,4 @@
-import { create, provide, Failure } from '@ucanto/server'
+import { create, provide, Failure, ConnectionView } from '@ucanto/server'
 import * as Client from '@ucanto/client'
 import { Service } from '@web3-storage/access/types'
 
@@ -34,20 +34,9 @@ export class MockAccessService implements Service {
       return []
     })
   }
-
-
-  constructor({} = {}) {
-    // for (const [method, impl] of Object.keys(voucher ?? {})) {
-    //   this.voucher[method] = impl
-    // }
-    
-    // for (const [method, impl] of Object.keys(space ?? {})) {
-    //   this.space[method] = impl
-    // }  
-  }
 }
 
-export async function mockAcccessConnection() {
+export async function mockAcccessConnection (): Promise<ConnectionView<Service>> {
   const service = new MockAccessService()
 
   const serverPrincipal = await EdSigner.generate()
@@ -55,13 +44,13 @@ export async function mockAcccessConnection() {
     id: serverPrincipal,
     service,
     encoder: Transport.CBOR,
-    decoder: Transport.CAR,
+    decoder: Transport.CAR
   })
   const client = Client.connect({
     id: serverPrincipal,
     channel: server,
     decoder: Transport.CBOR,
-    encoder: Transport.CAR,
+    encoder: Transport.CAR
   })
   return client
 }

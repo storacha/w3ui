@@ -1,5 +1,4 @@
 import test from 'ava'
-import type { ExecutionContext } from 'ava'
 import { JSDOM } from 'jsdom'
 import 'fake-indexeddb/auto'
 

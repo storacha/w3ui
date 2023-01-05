@@ -1,7 +1,7 @@
 export default {
   files: [
-    "test/**",
-    "!test/utils/"
+    'test/**',
+    '!test/utils/'
   ],
   extensions: {
     ts: 'module'
