@@ -27,7 +27,11 @@ export function ContentPage () {
               <tbody>
                 {data.map(({ root }) => (
                   <tr key={root.toString()} className='w3ui-table_tr'>
-                    <td className='w3ui-table_td'>{root.toString()}</td>
+                    <td className='w3ui-table_td'>
+                      <a href={`https://w3s.link/ipfs/${root.toString()}`} className='w3ui-link'>
+                        {root.toString()}
+                      </a>
+                    </td>
                   </tr>
                 ))}
               </tbody>

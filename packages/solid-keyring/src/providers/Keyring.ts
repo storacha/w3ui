@@ -1,8 +1,11 @@
-import { createContext, useContext, createSignal, createComponent, ParentComponent } from 'solid-js'
-import { createStore } from 'solid-js/store'
-import { createAgent, getCurrentSpace, getSpaces, KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
+import type { ParentComponent } from 'solid-js'
+import type { KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Delegation, Capability, DID } from '@ucanto/interface'
+
+import { createContext, useContext, createSignal, createComponent } from 'solid-js'
+import { createStore } from 'solid-js/store'
+import { createAgent, getCurrentSpace, getSpaces } from '@w3ui/keyring-core'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -20,18 +23,18 @@ const defaultState: KeyringContextState = {
 export const AuthContext = createContext<KeyringContextValue>([
   defaultState,
   {
-    loadAgent: async () => {},
-    unloadAgent: async () => {},
-    resetAgent: async () => {},
+    loadAgent: async () => { },
+    unloadAgent: async () => { },
+    resetAgent: async () => { },
     createSpace: async () => { throw new Error('missing keyring context provider') },
-    setCurrentSpace: async () => {},
-    registerSpace: async () => {},
-    cancelRegisterSpace: () => {},
+    setCurrentSpace: async () => { },
+    registerSpace: async () => { },
+    cancelRegisterSpace: () => { },
     getProofs: async () => []
   }
 ])
 
-export interface KeyringProviderProps extends ServiceConfig {}
+export interface KeyringProviderProps extends ServiceConfig { }
 
 /**
  * Key management provider.
