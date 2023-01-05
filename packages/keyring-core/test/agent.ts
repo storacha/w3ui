@@ -2,7 +2,7 @@ import test from 'ava'
 import { JSDOM } from 'jsdom'
 import 'fake-indexeddb/auto'
 
-import { createAgent } from '../src/index.js'
+import { createAgent } from '../src/index'
 
 test.before((t) => {
   const dom = new JSDOM('<!DOCTYPE html>')
