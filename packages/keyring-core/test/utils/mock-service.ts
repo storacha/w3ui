@@ -36,7 +36,7 @@ export class MockAccessService implements Service {
   }
 }
 
-export async function mockAcccessConnection (): Promise<ConnectionView<Service>> {
+export async function mockAccessConnection (): Promise<ConnectionView<Service>> {
   const service = new MockAccessService()
 
   const serverPrincipal = await EdSigner.generate()
