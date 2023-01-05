@@ -42,28 +42,28 @@ export function ContentPage () {
 
   return (
     <form onSubmit={handleUploadSubmit}>
-    <div className='mb3'>
-      <label htmlFor='files' className='db mb2'>Files:</label>
-      {allowDirectory
-        ? <input id='file' className='db pa2 w-100 ba br2' type='file' webkitdirectory='true' onChange={e => setFiles(Array.from(e.target.files))} required />
-        : <input id='file' className='db pa2 w-100 ba br2' type='file' multiple onChange={e => setFiles(Array.from(e.target.files))} required />}
-    </div>
-    <div className='mb3'>
-      <label>
-        <input type='checkbox' value={allowDirectory} onChange={e => setAllowDirectory(e.target.checked)} /> Allow directory selection
-      </label>
-    </div>
-    {files.length === 1
-      ? (
-        <div className='mb3'>
-          <label>
-            <input type='checkbox' value={wrapInDirectory} onChange={e => setWrapInDirectory(e.target.checked)} /> Wrap file in a directory
-          </label>
-        </div>
-        )
-      : null}
-    <button type='submit' className='ph3 pv2'>Upload</button>
-  </form>
+      <div className='mb3'>
+        <label htmlFor='files' className='db mb2'>Files:</label>
+        {allowDirectory
+          ? <input id='file' className='db pa2 w-100 ba br2' type='file' webkitdirectory='true' onChange={e => setFiles(Array.from(e.target.files))} required />
+          : <input id='file' className='db pa2 w-100 ba br2' type='file' multiple onChange={e => setFiles(Array.from(e.target.files))} required />}
+      </div>
+      <div className='mb3'>
+        <label>
+          <input type='checkbox' value={allowDirectory} onChange={e => setAllowDirectory(e.target.checked)} /> Allow directory selection
+        </label>
+      </div>
+      {files.length === 1
+        ? (
+          <div className='mb3'>
+            <label>
+              <input type='checkbox' value={wrapInDirectory} onChange={e => setWrapInDirectory(e.target.checked)} /> Wrap file in a directory
+            </label>
+          </div>
+          )
+        : null}
+      <button type='submit' className='ph3 pv2'>Upload</button>
+    </form>
   )
 }
 
@@ -71,7 +71,7 @@ const Uploading = ({ files, storedDAGShards }) => (
   <div className='flex items-center'>
     <div className='spinner mr3 flex-none' />
     <div className='flex-auto'>
-    <p className='truncate'>Uploading DAG for {files.length > 1 ? `${files.length} files` : files[0].name}</p>
+      <p className='truncate'>Uploading DAG for {files.length > 1 ? `${files.length} files` : files[0].name}</p>
       {storedDAGShards.map(({ cid, size }) => (
         <p key={cid.toString()} className='f7 truncate'>
           {cid.toString()} ({size} bytes)

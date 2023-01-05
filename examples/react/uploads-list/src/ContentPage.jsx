@@ -28,7 +28,7 @@ export function ContentPage () {
                 {data.map(({ root }) => (
                   <tr key={root.toString()} className='stripe-light'>
                     <td className='pa3'>
-                      <a href={`https://w3s.link/ipfs/${root.toString()}`} className="gray">
+                      <a href={`https://w3s.link/ipfs/${root.toString()}`} className='gray'>
                         {root.toString()}
                       </a>
                     </td>
@@ -37,7 +37,7 @@ export function ContentPage () {
               </tbody>
             </table>
           </div>
-        )
+          )
         : <p className='tc'>No uploads</p>}
       <button type='button' onClick={reload} className='ph3 pv2 mr3'>Refresh</button>
       {loading ? <span className='spinner dib' /> : null}
