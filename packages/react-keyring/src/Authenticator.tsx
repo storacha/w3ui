@@ -1,15 +1,28 @@
 import React, {
   useState, createContext, useContext, useCallback, useMemo
 } from 'react'
-import { useKeyring, KeyringContextState, KeyringContextActions } from '@w3ui/react-keyring'
+import { useKeyring, KeyringContextState, KeyringContextActions } from './providers/Keyring'
 
 export type AuthenticatorContextState = KeyringContextState & {
+  /**
+   * email to be used to "log in"
+   */
   email?: string
+  /**
+   * has the authentication form been submitted?
+   */
   submitted: boolean
+  /**
+   * A callback that can be passed to an `onSubmit` handler to
+   * register a new space or log in using `email`
+   */
   handleRegisterSubmit?: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
 }
 
 export type AuthenticatorContextActions = KeyringContextActions & {
+  /**
+   * Set an email to be used to log in or register.
+   */
   setEmail: React.Dispatch<React.SetStateAction<string>>
 }
 
@@ -36,6 +49,14 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
   }
 ])
 
+/**
+ * Top level component of the headless Authenticator.
+ *
+ * Must be used inside a KeyringProvider.
+ *
+ * Designed to be used by Authenticator.Form, Authenticator.EmailInput
+ * and others to make it easy to implement authentication UI.
+ */
 export function Authenticator (props: any): JSX.Element {
   const [state, actions] = useKeyring()
   const { createSpace, registerSpace } = actions
@@ -64,6 +85,12 @@ export function Authenticator (props: any): JSX.Element {
   )
 }
 
+/**
+ * Form component for the headless Authenticator.
+ *
+ * A `form` designed to work with `Authenticator`. Any passed props will
+ * be passed along to the `form` component.
+ */
 Authenticator.Form = function Form (props: any) {
   const [{ handleRegisterSubmit }] = useAuthenticator()
   return (
@@ -71,6 +98,12 @@ Authenticator.Form = function Form (props: any) {
   )
 }
 
+/**
+ * Input component for the headless Uploader.
+ *
+ * An email `input` designed to work with `Authenticator.Form`. Any passed props will
+ * be passed along to the `input` component.
+ */
 Authenticator.EmailInput = function EmailInput (props: any) {
   const [{ email }, { setEmail }] = useAuthenticator()
   return (
@@ -78,6 +111,12 @@ Authenticator.EmailInput = function EmailInput (props: any) {
   )
 }
 
+/**
+ * A button that will cancel space registration.
+ *
+ * A `button` designed to work with `Authenticator.Form`. Any passed props will
+ * be passed along to the `button` component.
+ */
 Authenticator.CancelButton = function CancelButton (props: any) {
   const [, { cancelRegisterSpace }] = useAuthenticator()
   return (
@@ -85,6 +124,9 @@ Authenticator.CancelButton = function CancelButton (props: any) {
   )
 }
 
+/**
+ * Use the scoped authenticator context state from a parent `Authenticator`.
+ */
 export function useAuthenticator (): AuthenticatorContextValue {
   return useContext(AuthenticatorContext)
 }
