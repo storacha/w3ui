@@ -1,7 +1,7 @@
 import React, {
   useState, createContext, useContext, useCallback, useMemo
 } from 'react'
-import { useKeyring, KeyringContextState, KeyringContextActions } from '@w3ui/react-keyring'
+import { useKeyring, KeyringContextState, KeyringContextActions } from './providers/Keyring'
 
 export type AuthenticatorContextState = KeyringContextState & {
   /**
