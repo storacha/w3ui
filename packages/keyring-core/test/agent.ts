@@ -1,14 +1,7 @@
 import test from 'ava'
+import type { ExecutionContext } from 'ava'
 import { JSDOM } from 'jsdom'
 import 'fake-indexeddb/auto'
-
-import { connect } from '@ucanto/client'
-import * as Server from '@ucanto/server'
-import * as Transport from '@ucanto/transport'
-import { generate } from '@ucanto/principal/ed25519'
-import { MockAccessService } from './utils/mock-service.js'
-import type { ConnectionView } from '@ucanto/interface'
-import type { Service as AccessService } from '@web3-storage/access/types'
 
 import { createAgent } from '../src/index.js'
 
@@ -18,22 +11,15 @@ test.before((t) => {
 })
 
 test('createAgent', async (t) => {
-  const service = new MockAccessService()
-  const servicePrincipal = await generate()
-  const server = Server.create({
-    id: servicePrincipal,
-    decoder: Transport.CAR,
-    encoder: Transport.CBOR,
-    service,
-  })
-  const connection: ConnectionView<AccessService> = connect({
-    id: servicePrincipal,
-    encoder: Transport.CAR,
-    decoder: Transport.CBOR,
-    channel: server,
-  })
-  const agent = await createAgent({
-    connection
-  })
+  const agent = await createAgent()
   t.truthy(agent)
+  t.true(agent.did().startsWith('did:key'))
+  t.is(agent.spaces.size, 0)
+})
+
+test('createSpace', async (t) => {
+  const agent = await createAgent()
+  const space = await agent.createSpace('test')
+  t.truthy(space)
+  t.true(space.did.startsWith('did:key:'))
 })
