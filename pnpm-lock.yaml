@@ -81,12 +81,14 @@ importers:
       '@types/react-dom': ^18.0.9
       '@vitejs/plugin-react': ^3.0.0
       '@w3ui/react-keyring': workspace:^
+      '@w3ui/react-ui': workspace:^
       '@w3ui/react-uploader': workspace:^
       react: ^18.2.0
       react-dom: ^18.2.0
       vite: ^4.0.0
     dependencies:
       '@w3ui/react-keyring': link:../../../packages/react-keyring
+      '@w3ui/react-ui': link:../../../packages/react-ui
       '@w3ui/react-uploader': link:../../../packages/react-uploader
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
