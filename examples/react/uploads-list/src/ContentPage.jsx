@@ -14,21 +14,21 @@ export function ContentPage () {
   }
 
   return (
-    <div className='w-90 mw9'>
+    <div className={`w3ui-uploadsList-container ${loading && 'w3ui-refreshing'}`}>
       {data && data.length
         ? (
-          <div className='overflow-auto'>
-            <table className='w-100 mb3 collapse'>
-              <thead className='near-white tl'>
+          <div className='w3ui-table-container'>
+            <table className='w3ui-table'>
+              <thead className='w3ui-table_thead'>
                 <tr>
-                  <th className='pa3'>Upload CID</th>
+                  <th className='w3ui-table_th'>Upload CID</th>
                 </tr>
               </thead>
               <tbody>
                 {data.map(({ root }) => (
-                  <tr key={root.toString()} className='stripe-light'>
-                    <td className='pa3'>
-                      <a href={`https://w3s.link/ipfs/${root.toString()}`} className='gray'>
+                  <tr key={root.toString()} className='w3ui-table_tr'>
+                    <td className='w3ui-table_td'>
+                      <a href={`https://w3s.link/ipfs/${root.toString()}`} className='w3ui-link'>
                         {root.toString()}
                       </a>
                     </td>
@@ -38,16 +38,17 @@ export function ContentPage () {
             </table>
           </div>
           )
-        : <p className='tc'>No uploads</p>}
-      <button type='button' onClick={reload} className='ph3 pv2 mr3'>Refresh</button>
-      {loading ? <span className='spinner dib' /> : null}
+        : <p className='w3ui-table-empty-message'>No uploads</p>}
+      <button type='button' onClick={reload} className='w3ui-button w3ui-refresh'>
+        {loading ? 'Refreshing...' : 'Refresh'}
+      </button>
     </div>
   )
 }
 
 const Errored = ({ error }) => (
-  <div>
-    <h1 className='near-white'>⚠️ Error: failed to list uploads: {error.message}</h1>
+  <div className='w3ui-uploadsList-container w3ui-error'>
+    <h1 className='w3ui-error-header'>⚠️ Error: {error.message}</h1>
     <p>Check the browser console for details.</p>
   </div>
 )

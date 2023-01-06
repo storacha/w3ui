@@ -11,11 +11,11 @@ export default function ContentPage () {
 
   if (space?.registered()) {
     return (
-      <div>
-        <h1 className='near-white'>Welcome!</h1>
-        <p>You are logged in!!</p>
+      <div className='w3ui-signUpIn__success'>
+        <h1 className='w3ui-h1'>Welcome!</h1>
+        <p className='w3ui-p'>You are logged in!!</p>
         <form onSubmit={e => { e.preventDefault(); unloadAgent() }}>
-          <button type='submit' className='ph3 pv2'>Sign Out</button>
+          <button type='submit' className='w3ui-button w3ui-submit'>Sign Out</button>
         </form>
       </div>
     )
@@ -23,11 +23,11 @@ export default function ContentPage () {
 
   if (submitted) {
     return (
-      <div>
-        <h1 className='near-white'>Verify your email address!</h1>
-        <p>Click the link in the email we sent to {email} to sign in.</p>
+      <div className='w3ui-signUpIn__verify'>
+        <h1 className='w3ui-h1'>Verify your email address!</h1>
+        <p className='w3ui-p'>Click the link in the email we sent to {email} to sign in.</p>
         <form onSubmit={e => { e.preventDefault(); cancelRegisterSpace() }}>
-          <button type='submit' className='ph3 pv2'>Cancel</button>
+          <button type='submit' className='w3ui-button w3ui-submit'>Cancel</button>
         </form>
       </div>
     )
@@ -47,12 +47,14 @@ export default function ContentPage () {
   }
 
   return (
-    <form onSubmit={handleRegisterSubmit}>
-      <div className='mb3'>
-        <label htmlFor='email' className='db mb2'>Email address:</label>
-        <input id='email' className='db pa2 w-100' type='email' value={email} onChange={e => setEmail(e.target.value)} required />
-      </div>
-      <button type='submit' className='ph3 pv2' disabled={submitted}>Register</button>
-    </form>
+    <div className='w3ui-signUpIn__login'>
+      <form onSubmit={handleRegisterSubmit} className='w3ui-signUpIn__form'>
+        <div className='w3ui-signUpIn__field'>
+          <label htmlFor='email' className='w3ui-signUpIn__label w3ui-label'>Email address:</label>
+          <input id='email' className='w3ui-signUpIn__input w3ui-input' type='email' value={email} onChange={e => setEmail(e.target.value)} required placeholder='youremail@address.com' />
+        </div>
+        <button type='submit' className='w3ui-button w3ui-submit' disabled={submitted}>Register</button>
+      </form>
+    </div>
   )
 }
