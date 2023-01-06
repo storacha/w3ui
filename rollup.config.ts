@@ -5,7 +5,6 @@ import size from 'rollup-plugin-size'
 import visualizer from 'rollup-plugin-visualizer'
 import replace from '@rollup/plugin-replace'
 import nodeResolve from '@rollup/plugin-node-resolve'
-import svelte from 'rollup-plugin-svelte'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import path from 'path'
@@ -30,7 +29,7 @@ const umdDevPlugin = (type: 'development' | 'production'): Plugin =>
 const babelPlugin = babel({
   babelHelpers: 'bundled',
   exclude: /node_modules/,
-  extensions: ['.ts', '.tsx']
+  extensions: ['.ts', '.tsx', '.js']
 })
 
 export default function rollup (options: RollupOptions): RollupOptions[] {
@@ -89,16 +88,6 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       globals: {
         react: 'React',
         '@w3ui/react-keyring': 'ReactKeyring'
-      }
-    }),
-    ...buildConfigs({
-      name: 'react-ui',
-      packageDir: 'packages/react-ui',
-      jsName: 'ReactUI',
-      outputFile: 'react-ui',
-      entryFile: 'src/index.ts',
-      globals: {
-        react: 'React',
       }
     }),
     ...buildConfigs({
@@ -210,7 +199,6 @@ function esm ({ input, packageDir, external, banner }: Options): RollupOptions {
       banner
     },
     plugins: [
-      svelte(),
       commonjs(),
       json(),
       babelPlugin,
@@ -233,7 +221,6 @@ function cjs ({ input, external, packageDir, banner }: Options): RollupOptions {
       banner
     },
     plugins: [
-      svelte(),
       commonjs(),
       json(),
       babelPlugin,
@@ -264,7 +251,6 @@ function umdDev ({
       banner
     },
     plugins: [
-      svelte(),
       commonjs(),
       json(),
       babelPlugin,
@@ -296,7 +282,6 @@ function umdProd ({
       banner
     },
     plugins: [
-      svelte(),
       commonjs(),
       json(),
       babelPlugin,

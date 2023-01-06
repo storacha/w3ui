@@ -1,21 +1,23 @@
 import React, { useContext, createContext, useState } from 'react'
 import { uploadFile, uploadDirectory, UploaderContextState, UploaderContextActions, CARMetadata, ServiceConfig } from '@w3ui/uploader-core'
 import { useKeyring } from '@w3ui/react-keyring'
-import { add as storeAdd } from '@web3-storage/access/capabilities/store'
-import { add as uploadAdd } from '@web3-storage/access/capabilities/upload'
+import { add as storeAdd } from '@web3-storage/capabilities/store'
+import { add as uploadAdd } from '@web3-storage/capabilities/upload'
 
 export type UploaderContextValue = [
   state: UploaderContextState,
   actions: UploaderContextActions
 ]
 
-const UploaderContext = createContext<UploaderContextValue>([
+export const uploaderContextDefaultValue: UploaderContextValue = [
   { storedDAGShards: [] },
   {
     uploadFile: async () => { throw new Error('missing uploader context provider') },
     uploadDirectory: async () => { throw new Error('missing uploader context provider') }
   }
-])
+]
+
+export const UploaderContext = createContext<UploaderContextValue>(uploaderContextDefaultValue)
 
 export interface UploaderProviderProps extends ServiceConfig {
   children?: JSX.Element

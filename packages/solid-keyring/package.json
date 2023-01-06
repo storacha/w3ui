@@ -1,11 +1,14 @@
 {
   "name": "@w3ui/solid-keyring",
-  "version": "1.0.1",
+  "version": "2.0.1",
   "description": "Solid adapter for w3ui keyring.",
-  "module": "build/esm/index.js",
-  "main": "build/cjs/index.js",
-  "browser": "build/umd/index.production.js",
-  "types": "build/types/solid-keyring/src/index.d.ts",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "module": "build/esm/index.js",
+    "main": "build/cjs/index.js",
+    "browser": "build/umd/index.production.js",
+    "types": "build/types/solid-keyring/src/index.d.ts"
+  },
   "scripts": {
     "compile": "../../node_modules/.bin/tsc -p tsconfig.json --noEmit --emitDeclarationOnly false"
   },
@@ -24,14 +27,14 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/solid-keyring",
   "dependencies": {
-    "@w3ui/keyring-core": "^1.0.2"
+    "@w3ui/keyring-core": "workspace:^",
+    "@ucanto/interface": "^4.0.3",
+    "@ucanto/principal": "^4.0.3",
+    "@web3-storage/access": "^9.2.0"
   },
   "peerDependencies": {
     "solid-js": "^1.5.0"
   },
   "devDependencies": {
-    "@ucanto/interface": "^3.0.1",
-    "@ucanto/principal": "^3.0.1",
-    "@web3-storage/access": "^7.0.2"
   }
 }

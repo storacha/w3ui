@@ -1,7 +1,7 @@
 import { defineComponent, provide, InjectionKey, inject, shallowReactive, Ref, computed, watch } from 'vue'
 import { KeyringProviderInjectionKey } from '@w3ui/vue-keyring'
 import { UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
-import { list as uploadList } from '@web3-storage/access/capabilities/upload'
+import { list as uploadList } from '@web3-storage/capabilities/upload'
 
 /**
  * Injection keys for uploads list context.
@@ -36,7 +36,7 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
       data: undefined
     })
 
-    let cursor: string|undefined
+    let cursor: string | undefined
     let controller = new AbortController()
 
     provide(UploadsListProviderInjectionKey.loading, computed(() => state.loading))
@@ -47,12 +47,12 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
       if (space?.value == null) return
       if (agent?.value == null) return
       if (getProofs == null) throw new Error('missing getProofs')
-  
+
       controller.abort()
       const newController = new AbortController()
       controller = newController
       state.loading = true
-  
+
       try {
         const conf = {
           issuer: agent.value,
@@ -88,7 +88,7 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
       await loadPage(cursor)
     })
 
-    watch([space, agent], () => loadPage())
+    watch([space, agent], async () => await loadPage())
 
     return state
   },

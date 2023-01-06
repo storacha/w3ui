@@ -1,14 +1,14 @@
 import React, { useContext, createContext, useState } from 'react'
 import { UploadListResult, UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
 import { useKeyring } from '@w3ui/react-keyring'
-import { list as uploadList } from '@web3-storage/access/capabilities/upload'
+import { list as uploadList } from '@web3-storage/capabilities/upload'
 
 export type UploadsListContextValue = [
   state: UploadsListContextState,
   actions: UploadsListContextActions
 ]
 
-const UploadsListContext = createContext<UploadsListContextValue>([
+export const uploadsListContextDefaultValue: UploadsListContextValue = [
   {
     loading: false
   },
@@ -16,7 +16,9 @@ const UploadsListContext = createContext<UploadsListContextValue>([
     next: async () => {},
     reload: async () => {}
   }
-])
+]
+
+export const UploadsListContext = createContext<UploadsListContextValue>(uploadsListContextDefaultValue)
 
 export interface UploadsListProviderProps extends ServiceConfig {
   children?: JSX.Element
@@ -64,7 +66,6 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
     } catch (err: any) {
       if (err.name !== 'AbortError') {
         console.error(err)
-        // @ts-expect-error ts not know about cause
         setError(new Error('failed to fetch uploads list', { cause: err }))
       }
     } finally {

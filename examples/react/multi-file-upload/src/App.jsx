@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
-import { AuthProvider, useAuth } from '@w3ui/react-keyring'
+import { KeyringProvider, useKeyring } from '@w3ui/react-keyring'
 import { UploaderProvider } from '@w3ui/react-uploader'
 import ContentPage from './ContentPage'
 import logo from './logo.png'
 import './style.css'
 
-function App() {
+function App () {
   return (
-    <AuthProvider>
+    <KeyringProvider>
       <UploaderProvider>
-        <IdentityLoader>
-          <div className="w3ui-app">
+        <AgentLoader>
+          <div className='w3ui-app'>
             <header>
               <img src={logo} width='250' alt='logo' />
             </header>
@@ -18,16 +18,16 @@ function App() {
               <ContentPage />
             </div>
           </div>
-        </IdentityLoader>
+        </AgentLoader>
       </UploaderProvider>
-    </AuthProvider>
+    </KeyringProvider>
   )
 }
 
-function IdentityLoader({ children }) {
-  const { loadDefaultIdentity } = useAuth()
+function AgentLoader ({ children }) {
+  const [, { loadAgent }] = useKeyring()
   // eslint-disable-next-line
-  useEffect(() => { loadDefaultIdentity() }, []) // try load default identity - once.
+  useEffect(() => { loadAgent() }, []) // load agent - once.
   return children
 }
 

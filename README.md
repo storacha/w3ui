@@ -5,10 +5,16 @@
 <h3 align="center">Headless, type-safe, UI components for the next generation Web3.Storage APIs.</h3>
 
 <p align="center">
-  <a href="https://github.com/web3-storage/w3ui/actions/workflows/test.yaml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/web3-storage/w3ui/Test?style=for-the-badge" /></a>
+  <a href="https://github.com/web3-storage/w3ui/actions/workflows/test.yaml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/web3-storage/w3ui/test.yaml?branch=main&style=for-the-badge" /></a>
   <a href="https://discord.com/channels/806902334369824788/864892166470893588"><img src="https://img.shields.io/badge/chat-discord?style=for-the-badge&logo=discord&label=discord&logoColor=ffffff&color=7389D8" /></a>
   <a href="https://github.com/web3-storage/w3ui/blob/main/LICENSE.md"><img alt="License: Apache-2.0 OR MIT" src="https://img.shields.io/badge/LICENSE-Apache--2.0%20OR%20MIT-yellow?style=for-the-badge" /></a>
 </p>
+
+> ### ⚠️❗ w3ui and the underlying APIs are currently BETA preview features
+> Please read the beta [Terms of Service](https://purrfect-tracker-45c.notion.site/w3up-beta-Terms-of-Service-39cb5c13439849beae327a2efec9164a) for more details.
+>
+> Open an issue on the repo or reach out to the #web3-storage channel on [IPFS Discord](https://docs.ipfs.tech/community/chat/#discord) if you have any 
+questions!
 
 ## Documentation
 
@@ -22,7 +28,7 @@
 
 * **Sign up / Sign in** [React](https://github.com/web3-storage/w3ui/tree/main/examples/react/sign-up-in) | [Solid](https://github.com/web3-storage/w3ui/tree/main/examples/solid/sign-up-in) | [Vue](https://github.com/web3-storage/w3ui/tree/main/examples/vue/sign-up-in) | [Vanilla](https://github.com/web3-storage/w3ui/tree/main/examples/vanilla/sign-up-in)
 
-    Demonstrates email autentication flow for the service, including private key creation and email validation.
+    Demonstrates email authentication flow for the service, including private key creation and email validation.
 
 * **Single File Upload** [React](https://github.com/web3-storage/w3ui/tree/main/examples/react/file-upload) | [Solid](https://github.com/web3-storage/w3ui/tree/main/examples/solid/file-upload) | [Vue](https://github.com/web3-storage/w3ui/tree/main/examples/vue/file-upload) | [Vanilla](https://github.com/web3-storage/w3ui/tree/main/examples/vanilla/file-upload)
 

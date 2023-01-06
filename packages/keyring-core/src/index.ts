@@ -2,8 +2,7 @@ import { Agent } from '@web3-storage/access/agent'
 import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
 import type { Service } from '@web3-storage/access/types'
 import type { Capability, DID, Proof, Signer, ConnectionView, Principal } from '@ucanto/interface'
-import type { RSASigner } from '@ucanto/principal/rsa'
-import { serviceURL, connection } from './service'
+import * as RSASigner from '@ucanto/principal/rsa'
 
 const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
@@ -18,30 +17,30 @@ export class Space implements Principal {
   }
 
   /**
-   * The given space name, or the space DID if not set.
+   * The given space name.
    */
-  name () {
-    return this.#meta.name ? String(this.#meta.name) : this.#did
+  name (): string | undefined {
+    return this.#meta.name == null ? String(this.#meta.name) : undefined
   }
 
   /**
    * The DID of the space.
    */
-  did () {
+  did (): DID {
     return this.#did
   }
 
   /**
    * Whether the space has been registered with the service.
    */
-  registered () {
+  registered (): boolean {
     return Boolean(this.#meta.isRegistered)
   }
 
   /**
    * User defined space metadata.
    */
-  meta () {
+  meta (): Record<string, any> {
     return this.#meta
   }
 }
@@ -93,7 +92,7 @@ export interface KeyringContextActions {
   /**
    * Abort an ongoing account registration.
    */
-  cancelRegisterSpace: () => void,
+  cancelRegisterSpace: () => void
   /**
    * Get all the proofs matching the capabilities. Proofs are delegations with
    * an audience matching the agent DID.
@@ -106,16 +105,16 @@ export interface ServiceConfig {
   connection?: ConnectionView<Service>
 }
 
-export function getCurrentSpace (agent: Agent<any>): Space | undefined {
+export function getCurrentSpace (agent: Agent): Space | undefined {
   const did = agent.currentSpace()
-  if (!did) return
-  const meta = agent.data.spaces.get(did)
+  if (did == null) return
+  const meta = agent.spaces.get(did)
   return new Space(did, meta)
 }
 
-export function getSpaces (agent: Agent<any>): Space[] {
+export function getSpaces (agent: Agent): Space[] {
   const spaces: Space[] = []
-  for (const [did, meta] of agent.data.spaces.entries()) {
+  for (const [did, meta] of agent.spaces.entries()) {
     spaces.push(new Space(did, meta))
   }
   return spaces
@@ -127,15 +126,11 @@ export interface CreateAgentOptions extends ServiceConfig {}
  * Create an agent for managing identity. It uses RSA keys that are stored in
  * IndexedDB as unextractable `CryptoKey`s.
  */
-export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent<RSASigner>> {
-  const dbName = `${DB_NAME}${options.servicePrincipal ? '@' + options.servicePrincipal.did() : ''}`
-  const store = await StoreIndexedDB.open(dbName, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
-  return new Agent({
-    // @ts-expect-error assumed HTTP channel
-    url: options.connection ? options.connection.channel.url : serviceURL,
-    store,
-    data: await store.load(),
-    connection: options.connection ?? connection,
-    fetch: globalThis.fetch.bind(globalThis)
-  })
+export async function createAgent (options: CreateAgentOptions = {}): Promise<Agent> {
+  const dbName = `${DB_NAME}${(options.servicePrincipal != null) ? '@' + options.servicePrincipal.did() : ''}`
+  const store = new StoreIndexedDB(dbName, { dbVersion: 1, dbStoreName: DB_STORE_NAME })
+  const raw = await store.load()
+  if (raw != null) return Object.assign(Agent.from(raw, { ...options, store }), { store })
+  const principal = await RSASigner.generate()
+  return Object.assign(await Agent.create({ principal }, { ...options, store }), { store })
 }

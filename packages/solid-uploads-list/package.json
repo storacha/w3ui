@@ -1,11 +1,14 @@
 {
   "name": "@w3ui/solid-uploads-list",
-  "version": "1.2.2",
+  "version": "2.0.1",
   "description": "Solid adapter for w3ui uploads list.",
-  "module": "build/esm/index.js",
-  "main": "build/cjs/index.js",
-  "browser": "build/umd/index.production.js",
-  "types": "build/types/solid-uploads-list/src/index.d.ts",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "module": "build/esm/index.js",
+    "main": "build/cjs/index.js",
+    "browser": "build/umd/index.production.js",
+    "types": "build/types/solid-uploads-list/src/index.d.ts"
+  },
   "scripts": {
     "compile": "../../node_modules/.bin/tsc -p tsconfig.json --noEmit --emitDeclarationOnly false"
   },
@@ -24,13 +27,14 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/solid-uploads-list",
   "dependencies": {
-    "@w3ui/uploads-list-core": "^1.0.3"
+    "@w3ui/solid-keyring": "workspace:^",
+    "@w3ui/uploads-list-core": "workspace:^",
+    "@web3-storage/capabilities": "^2.0.0"
   },
   "peerDependencies": {
-    "@w3ui/solid-keyring": "^1.0.1",
     "solid-js": "^1.5.0"
   },
   "devDependencies": {
-    "@ucanto/interface": "^3.0.0"
+    "@ucanto/interface": "^4.0.3"
   }
 }

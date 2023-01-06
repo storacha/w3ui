@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.0.1](https://github.com/web3-storage/w3ui/compare/uploader-core-v3.0.0...uploader-core-v3.0.1) (2022-12-15)
+
+
+### Bug Fixes
+
+* lockfile ([09120cb](https://github.com/web3-storage/w3ui/commit/09120cb93d550fc8e1f7df39cb7585fefc3f4dca))
+
+## [3.0.0](https://github.com/web3-storage/w3ui/compare/uploader-core-v2.0.2...uploader-core-v3.0.0) (2022-12-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* core and framework components have changed considerably. Please read the updated doucmentation.
+
+### Features
+
+* consume access and upload client ([#159](https://github.com/web3-storage/w3ui/issues/159)) ([e36d842](https://github.com/web3-storage/w3ui/commit/e36d842b1695032355ab29646c3dce6a33880517))
+
 ## [2.0.2](https://github.com/web3-storage/w3ui/compare/uploader-core-v2.0.1...uploader-core-v2.0.2) (2022-10-27)
 
 

@@ -1,7 +1,7 @@
 import { createSignal, Switch, Match } from 'solid-js'
 import { useKeyring } from '@w3ui/solid-keyring'
 
-export default function ContentPage() {
+export default function ContentPage () {
   const [keyring, { createSpace, registerSpace, cancelRegisterSpace, loadAgent, unloadAgent }] = useKeyring()
   const [email, setEmail] = createSignal('')
   const [submitted, setSubmitted] = createSignal(false)

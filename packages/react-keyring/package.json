@@ -1,11 +1,14 @@
 {
   "name": "@w3ui/react-keyring",
-  "version": "1.0.1",
+  "version": "2.0.1",
   "description": "React adapter for w3ui keyring.",
-  "module": "build/esm/index.js",
-  "main": "build/cjs/index.js",
-  "browser": "build/umd/index.production.js",
-  "types": "build/types/react-keyring/src/index.d.ts",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "module": "build/esm/index.js",
+    "main": "build/cjs/index.js",
+    "browser": "build/umd/index.production.js",
+    "types": "build/types/react-keyring/src/index.d.ts"
+  },
   "scripts": {
     "compile": "../../node_modules/.bin/tsc -p tsconfig.json --noEmit --emitDeclarationOnly false"
   },
@@ -24,12 +27,12 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/react-keyring",
   "dependencies": {
-    "@w3ui/keyring-core": "^1.0.2"
+    "@w3ui/keyring-core": "workspace:^"
   },
   "devDependencies": {
-    "@ucanto/interface": "^3.0.0",
-    "@ucanto/principal": "^3.0.0",
-    "@web3-storage/access": "^7.0.2"
+    "@ucanto/interface": "^4.0.3",
+    "@ucanto/principal": "^4.0.3",
+    "@web3-storage/access": "^9.2.0"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
