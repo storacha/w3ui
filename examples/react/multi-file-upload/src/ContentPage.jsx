@@ -68,7 +68,7 @@ export function ContentPage () {
   )
 }
 
-const Uploading = ({ files, dataCid, storedDAGShards }) => (
+const Uploading = ({ files, storedDAGShards }) => (
   <div className='flex items-center'>
     <div className='spinner mr3 flex-none' />
     <div className='flex-auto'>
