@@ -8,15 +8,15 @@ To run this example:
   git clone https://github.com/web3-storage/w3ui
   cd w3ui
   ```
-- Install dependencies and build:
+- Install dependencies:
 
   ```sh
-  npm install
+  pnpm install
   ```
 
 - Change to this example directory and run the example:
 
   ```sh
   cd examples/react/uploads-list
-  npm start
+  pnpm run dev
   ```
