@@ -165,7 +165,7 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       packageDir: 'packages/vitest-environment-w3ui',
       banner: createBanner('vitest-environment-w3ui'),
       globals: {},
-      external: ['crypto'],
+      external: ['crypto']
     })
   ]
 }
