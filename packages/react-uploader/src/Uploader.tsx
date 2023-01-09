@@ -3,11 +3,18 @@ import { Link, Version } from 'multiformats'
 import { CARMetadata, UploaderContextState, UploaderContextActions } from '@w3ui/uploader-core'
 import { useUploader } from './providers/Uploader'
 
+export enum Status {
+  Idle = 'idle',
+  Uploading = 'uploading',
+  Failed = 'failed',
+  Succeeded = 'succeeded'
+}
+
 export type UploaderComponentContextState = UploaderContextState & {
   /**
    * A string indicating the status of this component - can be 'uploading', 'done' or ''.
    */
-  status?: string
+  status: Status
   /**
    * Error thrown by upload process.
    */
@@ -46,6 +53,7 @@ export type UploaderComponentContextValue = [
 
 const UploaderComponentContext = createContext<UploaderComponentContextValue>([
   {
+    status: Status.Idle,
     storedDAGShards: []
   },
   {
@@ -72,20 +80,21 @@ export const Uploader = ({
   const [uploaderState, uploaderActions] = useUploader()
   const [file, setFile] = useState<File>()
   const [dataCID, setDataCID] = useState<Link<unknown, number, number, Version>>()
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState(Status.Idle)
   const [error, setError] = useState()
 
   const handleUploadSubmit = async (e: Event): Promise<void> => {
     e.preventDefault()
     if (file != null) {
       try {
-        setStatus('uploading')
+        setError(undefined)
+        setStatus(Status.Uploading)
         const cid = await uploaderActions.uploadFile(file)
         setDataCID(cid)
+        setStatus(Status.Succeeded)
       } catch (err: any) {
         setError(err)
-      } finally {
-        setStatus('done')
+        setStatus(Status.Failed)
       }
     }
   }
