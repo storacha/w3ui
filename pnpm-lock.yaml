@@ -311,14 +311,18 @@ importers:
 
   examples/vue/sign-up-in:
     specifiers:
+      '@playwright/test': ^1.29.2
       '@vitejs/plugin-vue': ^3.0.3
       '@w3ui/vue-keyring': workspace:^
+      playwright: ^1.29.2
       vite: ^3.0.9
       vue: ^3.2.38
     dependencies:
       '@w3ui/vue-keyring': link:../../../packages/vue-keyring
+      playwright: 1.29.2
       vue: 3.2.45
     devDependencies:
+      '@playwright/test': 1.29.2
       '@vitejs/plugin-vue': 3.2.0_vite@3.2.5+vue@3.2.45
       vite: 3.2.5
 
@@ -2188,6 +2192,15 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.14.0
+    dev: true
+
+  /@playwright/test/1.29.2:
+    resolution: {integrity: sha512-+3/GPwOgcoF0xLz/opTnahel1/y42PdcgZ4hs+BZGIUjtmEFSXGg+nFoaH3NSmuc7a6GSFwXDJ5L7VXpqzigNg==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dependencies:
+      '@types/node': 18.11.17
+      playwright-core: 1.29.2
     dev: true
 
   /@protobufjs/aspromise/1.1.2:
@@ -5926,6 +5939,20 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       find-up: 3.0.0
+
+  /playwright-core/1.29.2:
+    resolution: {integrity: sha512-94QXm4PMgFoHAhlCuoWyaBYKb92yOcGVHdQLoxQ7Wjlc7Flg4aC/jbFW7xMR52OfXMVkWicue4WXE7QEegbIRA==}
+    engines: {node: '>=14'}
+    hasBin: true
+
+  /playwright/1.29.2:
+    resolution: {integrity: sha512-hKBYJUtdmYzcjdhYDkP9WGtORwwZBBKAW8+Lz7sr0ZMxtJr04ASXVzH5eBWtDkdb0c3LLFsehfPBTRfvlfKJOA==}
+    engines: {node: '>=14'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      playwright-core: 1.29.2
+    dev: false
 
   /plur/5.1.0:
     resolution: {integrity: sha512-VP/72JeXqak2KiOzjgKtQen5y3IZHn+9GOuLDafPv0eXa47xq0At93XahYBs26MsifCQ4enGKwbjBTKgb9QJXg==}

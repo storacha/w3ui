@@ -1,4 +1,5 @@
 {
+  "buildCommand": false,
   "sandboxes": [
     "/examples/react/file-upload",
     "/examples/react/sign-up-in",
