@@ -92,7 +92,7 @@ UploadsList.NextButton = (props: any) => {
  */
 UploadsList.ReloadButton = (props: any) => {
   const [, { reload }] = useContext(UploadsListComponentContext)
-  const onClick = useCallback(function onClick (e: React.MouseEvent) {
+  const onClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     void reload()
   }, [reload])
