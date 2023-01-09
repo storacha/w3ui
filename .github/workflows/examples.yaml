@@ -4,12 +4,12 @@ on:
     branches:
       - main
     paths:
-      - "examples"
+      - "examples/**"
   pull_request:
     branches:
       - main
     paths:
-      - "examples"
+      - "examples/**"
 jobs:
   test:
     name: Browser test
