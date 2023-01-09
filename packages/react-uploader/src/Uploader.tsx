@@ -111,7 +111,7 @@ export const Uploader = ({
 Uploader.Input = (props: any): JSX.Element => {
   const [, { setFile }] = useContext(UploaderComponentContext)
   return (
-    <input type='file' onChange={e => setFile(e?.target?.files?.[0])} {...props} />
+    <input type='file' onChange={e => setFile(e.target.files?.[0])} {...props} />
   )
 }
 

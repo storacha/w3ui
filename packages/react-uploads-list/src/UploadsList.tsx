@@ -77,7 +77,7 @@ export const UploadsList = ({ children }: UploadsListComponentProps): JSX.Elemen
  */
 UploadsList.NextButton = (props: any) => {
   const [, { next }] = useContext(UploadsListComponentContext)
-  const onClick = useCallback(function onClick (e: React.MouseEvent) {
+  const onClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     void next()
   }, [next])
