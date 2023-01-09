@@ -81,7 +81,7 @@ UploadsList.NextButton = (props: any) => {
     e.preventDefault()
     void next()
   }, [next])
-  return <button onClick={onClick} {...props} />
+  return <button {...props} onClick={onClick} />
 }
 
 /**

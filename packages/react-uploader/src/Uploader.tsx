@@ -124,7 +124,7 @@ Uploader.Input = (props: any): JSX.Element => {
 Uploader.Form = ({ children, ...props }: { children: React.ReactNode } & any): JSX.Element => {
   const [{ handleUploadSubmit }] = useContext(UploaderComponentContext)
   return (
-    <form onSubmit={handleUploadSubmit} {...props}>
+    <form {...props} onSubmit={handleUploadSubmit}>
       {children}
     </form>
   )

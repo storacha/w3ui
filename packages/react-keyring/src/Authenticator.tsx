@@ -94,7 +94,7 @@ export function Authenticator (props: any): JSX.Element {
 Authenticator.Form = function Form (props: any) {
   const [{ handleRegisterSubmit }] = useAuthenticator()
   return (
-    <form onSubmit={handleRegisterSubmit} {...props} />
+    <form {...props} onSubmit={handleRegisterSubmit} />
   )
 }
 
