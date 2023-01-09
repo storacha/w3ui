@@ -24,11 +24,11 @@ export type UploaderComponentContextState = UploaderContextState & {
   /**
    * The CID of a successful upload
    */
-  dataCid?: Link<unknown, number, number, Version>
+  dataCID?: Link<unknown, number, number, Version>
   /**
    * Shards of a DAG uploaded to web3.storage
    */
-  storedDAGShards?: CARMetadata[]
+  storedDAGShards: CARMetadata[]
 }
 
 export type UploaderComponentContextActions = UploaderContextActions & {
@@ -71,7 +71,7 @@ export const Uploader = ({
 }: UploaderComponentProps): JSX.Element => {
   const [uploaderState, uploaderActions] = useUploader()
   const [file, setFile] = useState<File>()
-  const [dataCid, setDataCid] = useState<Link<unknown, number, number, Version>>()
+  const [dataCID, setDataCID] = useState<Link<unknown, number, number, Version>>()
   const [status, setStatus] = useState('')
   const [error, setError] = useState()
 
@@ -81,7 +81,7 @@ export const Uploader = ({
       try {
         setStatus('uploading')
         const cid = await uploaderActions.uploadFile(file)
-        setDataCid(cid)
+        setDataCID(cid)
       } catch (err: any) {
         setError(err)
       } finally {
@@ -91,9 +91,9 @@ export const Uploader = ({
   }
 
   const uploaderComponentContextValue = useMemo<UploaderComponentContextValue>(() => [
-    { ...uploaderState, file, dataCid, status, error, handleUploadSubmit },
+    { ...uploaderState, file, dataCID, status, error, handleUploadSubmit },
     { ...uploaderActions, setFile }
-  ], [uploaderState, file, dataCid, status, error, handleUploadSubmit, uploaderActions, setFile])
+  ], [uploaderState, file, dataCID, status, error, handleUploadSubmit, uploaderActions, setFile])
 
   return (
     <UploaderComponentContext.Provider value={uploaderComponentContextValue}>
