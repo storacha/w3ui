@@ -77,7 +77,7 @@ export function ContentPage () {
       </p>
       <SyntaxHighlighter language='jsx' style={a11yDark}>
         {`
-function NoUIUploadComponent() {
+function ${NoUIUploadComponent.toString()}() {
   const [{ storedDAGShards }, uploader] = useUploader()
 
   return (
@@ -92,7 +92,7 @@ function NoUIUploadComponent() {
   )
 }
 
-function NoUIComponent() {
+function ${NoUIComponent.toString()}() {
   return (
     <UploaderProvider>
       <NoUIUploadComponent />
@@ -111,7 +111,7 @@ function NoUIComponent() {
       </p>
       <SyntaxHighlighter language='jsx' style={a11yDark}>
         {`
-function HeadlessUIComponent() {
+function ${HeadlessUIComponent.toString()}() {
   return (
     <Uploader>
       <Uploader.Form>
@@ -135,7 +135,7 @@ function HeadlessUIComponent() {
       </p>
       <SyntaxHighlighter language='jsx' style={a11yDark}>
         {`
-function CustomizableUIComponent() {
+function ${CustomizableUIComponent.toString()}() {
   return (
     <UploaderProvider>
       <SimpleUploader />
@@ -153,7 +153,7 @@ function CustomizableUIComponent() {
       </p>
       <SyntaxHighlighter language='jsx' style={a11yDark}>
         {`
-function DropinUIComponent() {
+function ${DropinUIComponent.toString()}() {
   return (
     <W3Upload />
   )
