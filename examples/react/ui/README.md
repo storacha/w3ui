@@ -12,13 +12,12 @@ To run this example:
 - Install dependencies and build:
 
   ```sh
-  npm install
-  npm run build
+  pnpm install
   ```
 
 - Change to this example directory and run the example:
 
   ```sh
-  cd examples/react/template
-  npm start
+  cd examples/react/ui
+  pnpm start
   ```
