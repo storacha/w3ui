@@ -1,4 +1,4 @@
-import type { As, Component, RenderProp, Props, Options } from 'ariakit-react-utils'
+import type { As, Component, Props, Options, RenderProp } from 'ariakit-react-utils'
 import type { UploadsListContextState, UploadsListContextActions } from '@w3ui/uploads-list-core'
 
 import React, { Fragment, createContext, useContext, useMemo, useCallback } from 'react'
