@@ -1,4 +1,4 @@
-import type { As, Component, Props, Options } from 'ariakit-react-utils'
+import type { As, Component, Props, Options, RenderProp } from 'ariakit-react-utils'
 import type { UploadsListContextState, UploadsListContextActions } from '@w3ui/uploads-list-core'
 
 import React, { Fragment, createContext, useContext, useMemo, useCallback } from 'react'
@@ -38,8 +38,14 @@ export const UploadsListComponentContext = createContext<UploadsListComponentCon
   }
 ])
 
-export type UploadsListRootOptions<T extends As = typeof Fragment> = Options<T>
-export type UploadsListRootProps<T extends As = typeof Fragment> = Props<UploadsListRootOptions<T>>
+export type UploadsListRootOptions = Options<typeof Fragment>
+export type UploadsListRenderProps = Omit<Props<UploadsListRootOptions>, 'children'> & {
+  uploadsList?: UploadsListComponentContextValue
+}
+export type UploadsListRootProps = Omit<Props<UploadsListRootOptions>, 'children'> & {
+  uploadsList?: UploadsListComponentContextValue
+  children?: React.ReactNode | RenderProp<UploadsListRenderProps>
+}
 
 /**
  * Top level component of the headless UploadsList.
@@ -47,18 +53,27 @@ export type UploadsListRootProps<T extends As = typeof Fragment> = Props<Uploads
  * Designed to be used with UploadsList.NextButton,
  * Uploader.ReloadButton, et al to easily create a
  * custom component for listing uploads to a web3.storage space.
+ *
+ * Always renders as a Fragment and does not support the `as` property.
  */
-export const UploadsListRoot: Component<UploadsListRootProps> = createComponent(props => {
+export const UploadsListRoot = (props: UploadsListRootProps): JSX.Element => {
   const [state, actions] = useUploadsList()
   const contextValue = useMemo<UploadsListComponentContextValue>(
     () => ([state, actions]),
     [state, actions])
+  const { children, ...childlessProps } = props
+  let renderedChildren: React.ReactNode
+  if (Boolean(children) && (typeof children === 'function')) {
+    renderedChildren = children(childlessProps)
+  } else {
+    renderedChildren = children as React.ReactNode
+  }
   return (
     <UploadsListComponentContext.Provider value={contextValue}>
-      {createElement(Fragment, { ...props, uploadsList: contextValue })}
+      {renderedChildren}
     </UploadsListComponentContext.Provider>
   )
-})
+}
 
 export type NextButtonOptions<T extends As = 'button'> = Options<T>
 export type NextButtonProps<T extends As = 'button'> = Props<NextButtonOptions<T>>
