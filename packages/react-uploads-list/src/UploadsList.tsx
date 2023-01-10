@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useMemo, useCallback } from 'react'
-import { UploadsListContextState, UploadsListContextActions } from '@w3ui/uploads-list-core'
+import type { As, Component, Props, Options } from 'ariakit-react-utils'
+import type { UploadsListContextState, UploadsListContextActions } from '@w3ui/uploads-list-core'
+
+import React, { Fragment, createContext, useContext, useMemo, useCallback } from 'react'
+import { createComponent, createElement } from 'ariakit-react-utils'
 import { useUploadsList } from './providers/UploadsList'
 
 export type UploadsListComponentContextState = UploadsListContextState & {
@@ -12,7 +15,7 @@ export type UploadsListComponentContextActions = UploadsListContextActions & {
 
 export type UploadsListComponentContextValue = [
   state: UploadsListComponentContextState,
-  actions: UploadsListContextActions
+  actions: UploadsListComponentContextActions
 ]
 
 export const UploadsListComponentContext = createContext<UploadsListComponentContextValue>([
@@ -35,14 +38,8 @@ export const UploadsListComponentContext = createContext<UploadsListComponentCon
   }
 ])
 
-export type UploadsListComponentChildrenProps = [
-  state: UploadsListContextState,
-  actions: UploadsListComponentContextActions
-]
-
-export interface UploadsListComponentProps {
-  children?: (props: UploadsListComponentChildrenProps) => React.ReactNode
-}
+export type UploadsListRootOptions<T extends As = typeof Fragment> = Options<T>
+export type UploadsListRootProps<T extends As = typeof Fragment> = Props<UploadsListRootOptions<T>>
 
 /**
  * Top level component of the headless UploadsList.
@@ -51,23 +48,20 @@ export interface UploadsListComponentProps {
  * Uploader.ReloadButton, et al to easily create a
  * custom component for listing uploads to a web3.storage space.
  */
-export const UploadsList = ({ children }: UploadsListComponentProps): JSX.Element => {
+export const UploadsListRoot: Component<UploadsListRootProps> = createComponent(props => {
   const [state, actions] = useUploadsList()
-  const contextValue = useMemo<UploadsListComponentChildrenProps>(
+  const contextValue = useMemo<UploadsListComponentContextValue>(
     () => ([state, actions]),
     [state, actions])
   return (
     <UploadsListComponentContext.Provider value={contextValue}>
-      {(typeof children === 'function')
-        ? (
-            children(contextValue)
-          )
-        : (
-            children
-          )}
+      {createElement(Fragment, { ...props, uploadsList: contextValue })}
     </UploadsListComponentContext.Provider>
   )
-}
+})
+
+export type NextButtonOptions<T extends As = 'button'> = Options<T>
+export type NextButtonProps<T extends As = 'button'> = Props<NextButtonOptions<T>>
 
 /**
  * Button that loads the next page of results.
@@ -75,14 +69,17 @@ export const UploadsList = ({ children }: UploadsListComponentProps): JSX.Elemen
  * A 'button' designed to work with `UploadsList`. Any passed props will
  * be passed along to the `button` component.
  */
-UploadsList.NextButton = (props: any) => {
+export const NextButton: Component<NextButtonProps> = createComponent((props: any) => {
   const [, { next }] = useContext(UploadsListComponentContext)
   const onClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     void next()
   }, [next])
-  return <button {...props} onClick={onClick} />
-}
+  return createElement('button', { ...props, onClick })
+})
+
+export type ReloadButtonOptions<T extends As = 'button'> = Options<T>
+export type ReloadButtonProps<T extends As = 'button'> = Props<ReloadButtonOptions<T>>
 
 /**
  * Button that reloads an `UploadsList`.
@@ -90,14 +87,14 @@ UploadsList.NextButton = (props: any) => {
  * A 'button' designed to work with `UploadsList`. Any passed props will
  * be passed along to the `button` component.
  */
-UploadsList.ReloadButton = (props: any) => {
+export const ReloadButton: Component<ReloadButtonProps> = createComponent((props: any) => {
   const [, { reload }] = useContext(UploadsListComponentContext)
   const onClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     void reload()
   }, [reload])
-  return <button onClick={onClick} {...props} />
-}
+  return createElement('button', { ...props, onClick })
+})
 
 /**
  * Use the scoped uploads list context state from a parent `UploadsList`.
@@ -105,3 +102,5 @@ UploadsList.ReloadButton = (props: any) => {
 export function useUploadsListComponent (): UploadsListComponentContextValue {
   return useContext(UploadsListComponentContext)
 }
+
+export const UploadsList = Object.assign(UploadsListRoot, { NextButton, ReloadButton })

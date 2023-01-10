@@ -1,7 +1,8 @@
-import type { Options } from 'ariakit-react-utils'
-import React, { ChangeEvent, useContext, useMemo, useCallback, createContext, useState, Fragment } from 'react'
+import type { As, Component, Props, Options } from 'ariakit-react-utils'
+import type { ChangeEvent } from 'react'
 
-import { As, Props, createComponent, createElement } from 'ariakit-react-utils'
+import React, { useContext, useMemo, useCallback, createContext, useState, Fragment } from 'react'
+import { createComponent, createElement } from 'ariakit-react-utils'
 import { Link, Version } from 'multiformats'
 import { CARMetadata, UploaderContextState, UploaderContextActions } from '@w3ui/uploader-core'
 import { useUploader } from './providers/Uploader'
@@ -76,7 +77,7 @@ export type UploaderRootProps<T extends As = typeof Fragment> = Props<UploaderRo
  * to easily create a custom component for uploading files to
  * web3.storage.
  */
-const UploaderRoot = createComponent<UploaderRootProps>((props) => {
+export const UploaderRoot: Component<UploaderRootProps> = createComponent((props) => {
   const [uploaderState, uploaderActions] = useUploader()
   const [file, setFile] = useState<File>()
   const [dataCID, setDataCID] = useState<Link<unknown, number, number, Version>>()
@@ -120,7 +121,7 @@ export type InputProps<T extends As = 'input'> = Props<InputOptions<T>>
  * A file `input` designed to work with `Uploader`. Any passed props will
  * be passed along to the `input` component.
  */
-const Input = createComponent<InputProps>((props) => {
+export const Input: Component<InputProps> = createComponent((props) => {
   const [, { setFile }] = useContext(UploaderComponentContext)
   const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setFile(e?.target?.files?.[0])
@@ -137,7 +138,7 @@ export type FormProps<T extends As = 'form'> = Props<FormOptions<T>>
  * A `form` designed to work with `Uploader`. Any passed props will
  * be passed along to the `form` component.
  */
-const Form = createComponent<FormProps>((props) => {
+export const Form: Component<FormProps> = createComponent((props) => {
   const [{ handleUploadSubmit }] = useContext(UploaderComponentContext)
   return createElement('form', { ...props, onSubmit: handleUploadSubmit })
 })
