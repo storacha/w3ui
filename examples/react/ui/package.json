@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
@@ -12,6 +13,7 @@
     "@w3ui/react-keyring": "workspace:^",
     "@w3ui/react-ui": "workspace:^",
     "@w3ui/react-uploader": "workspace:^",
+    "@w3ui/react-uploads-list": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",

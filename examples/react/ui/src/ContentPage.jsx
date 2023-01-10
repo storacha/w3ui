@@ -1,6 +1,7 @@
 import React from 'react'
-import { SimpleUploader, W3Upload } from '@w3ui/react-ui'
+import { SimpleUploadsList, SimpleUploader, W3Upload } from '@w3ui/react-ui'
 import { Uploader, UploaderProvider, useUploader } from '@w3ui/react-uploader'
+import { UploadsListProvider } from '@w3ui/react-uploads-list'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
@@ -45,9 +46,14 @@ function HeadlessUIComponent () {
 
 function CustomizableUIComponent () {
   return (
-    <UploaderProvider>
-      <SimpleUploader />
-    </UploaderProvider>
+    <div>
+      <UploaderProvider>
+        <SimpleUploader />
+      </UploaderProvider>
+      <UploadsListProvider>
+        <SimpleUploadsList />
+      </UploadsListProvider>
+    </div>
   )
 }
 

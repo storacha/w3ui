@@ -1,6 +1,6 @@
 import React from 'react'
 import { CARMetadata } from '@w3ui/uploader-core'
-import { Uploader, useUploaderComponent } from '@w3ui/react-uploader'
+import { Status, Uploader, useUploaderComponent } from '@w3ui/react-uploader'
 import { Link, Version } from 'multiformats'
 
 export const Uploading = ({ file, storedDAGShards }: { file?: File, storedDAGShards?: CARMetadata[] }): JSX.Element => (
@@ -23,12 +23,12 @@ export const Errored = ({ error }: { error: any }): JSX.Element => (
 
 interface DoneProps {
   file?: File
-  dataCid?: Link<unknown, number, number, Version>
+  dataCID?: Link<unknown, number, number, Version>
   storedDAGShards?: CARMetadata[]
 }
 
-export const Done = ({ file, dataCid, storedDAGShards }: DoneProps): JSX.Element => {
-  const cid: string = dataCid?.toString() ?? ''
+export const Done = ({ file, dataCID, storedDAGShards }: DoneProps): JSX.Element => {
+  const cid: string = dataCID?.toString() ?? ''
   return (
     <div className='done'>
       <h1 className='title'>Done!</h1>
@@ -45,27 +45,31 @@ export const Done = ({ file, dataCid, storedDAGShards }: DoneProps): JSX.Element
 }
 
 export const SimpleUploader = (): JSX.Element => {
-  const [{ status, file, error, dataCid, storedDAGShards }] = useUploaderComponent()
+  const [{ status, file, error, dataCID, storedDAGShards }] = useUploaderComponent()
   return (
     <Uploader>
-      {(status === 'uploading')
+      {(status === Status.Uploading)
         ? (
           <Uploading file={file} storedDAGShards={storedDAGShards} />
           )
         : (
-            (status === 'done')
+            (status === Status.Succeeded)
               ? (
-                  (error != null) ? <Errored error={error} /> : <Done file={file} dataCid={dataCid} storedDAGShards={storedDAGShards} />
+                <Done file={file} dataCID={dataCID} storedDAGShards={storedDAGShards} />
                 )
-              : (
-                <Uploader.Form className=''>
-                  <div className='field'>
-                    <label htmlFor='w3ui-uploader-file'>File:</label>
-                    <Uploader.Input id='w3ui-uploader-file' />
-                  </div>
-                  <button type='submit'>Upload</button>
-                </Uploader.Form>
-                )
+              : (status === Status.Failed)
+                  ? (
+                    <Errored error={error} />
+                    )
+                  : (
+                    <Uploader.Form className=''>
+                      <div className='field'>
+                        <label htmlFor='w3ui-uploader-file'>File:</label>
+                        <Uploader.Input id='w3ui-uploader-file' />
+                      </div>
+                      <button type='submit'>Upload</button>
+                    </Uploader.Form>
+                    )
           )}
     </Uploader>
   )
