@@ -81,7 +81,7 @@ export function Authenticator (props: any): JSX.Element {
     { ...actions, setEmail }
   ], [state, actions, email, submitted, handleRegisterSubmit])
   return (
-    <AuthenticatorContext.Provider value={value} {...props} />
+    <AuthenticatorContext.Provider {...props} value={value} />
   )
 }
 
@@ -107,7 +107,7 @@ Authenticator.Form = function Form (props: any) {
 Authenticator.EmailInput = function EmailInput (props: any) {
   const [{ email }, { setEmail }] = useAuthenticator()
   return (
-    <input type='email' value={email} onChange={e => setEmail(e.target.value)} {...props} />
+    <input {...props} type='email' value={email} onChange={e => setEmail(e.target.value)} />
   )
 }
 
@@ -120,7 +120,7 @@ Authenticator.EmailInput = function EmailInput (props: any) {
 Authenticator.CancelButton = function CancelButton (props: any) {
   const [, { cancelRegisterSpace }] = useAuthenticator()
   return (
-    <button onClick={() => { cancelRegisterSpace() }} {...props} />
+    <button {...props} onClick={() => { cancelRegisterSpace() }} />
   )
 }
 
