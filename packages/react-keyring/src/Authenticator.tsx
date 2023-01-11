@@ -70,7 +70,7 @@ export function Authenticator (props: any): JSX.Element {
       await createSpace()
       await registerSpace(email)
     } catch (err: any) {
-      throw new Error('failed to register')
+      throw new Error('failed to register', { cause: err })
     } finally {
       setSubmitted(false)
     }
