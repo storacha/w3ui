@@ -75,7 +75,7 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> = createCompon
       await createSpace()
       await registerSpace(email)
     } catch (err: any) {
-      throw new Error('failed to register')
+      throw new Error('failed to register', { cause: err })
     } finally {
       setSubmitted(false)
     }
