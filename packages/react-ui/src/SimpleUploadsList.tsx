@@ -1,18 +1,18 @@
 import React from 'react'
-import { UploadsListRoot, NextButton, ReloadButton } from '@w3ui/react-uploads-list'
+import { UploadsList } from '@w3ui/react-uploads-list'
 
 export const SimpleUploadsList = (): JSX.Element => {
   return (
-    <UploadsListRoot>
+    <UploadsList>
       {(props) => (
         <div className='w3-uploads-list'>
           <nav>
-            <NextButton className='next'>
+            <UploadsList.NextButton className='next'>
               Next
-            </NextButton>
-            <ReloadButton className='reload'>
+            </UploadsList.NextButton>
+            <UploadsList.ReloadButton className='reload'>
               Reload
-            </ReloadButton>
+            </UploadsList.ReloadButton>
           </nav>
           <table>
             <thead>
@@ -33,6 +33,6 @@ export const SimpleUploadsList = (): JSX.Element => {
           </table>
         </div>
       )}
-    </UploadsListRoot>
+    </UploadsList>
   )
 }
