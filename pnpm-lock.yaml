@@ -205,18 +205,24 @@ importers:
   examples/react/w3console:
     specifiers:
       '@preact/preset-vite': ^2.4.0
+      '@types/blueimp-md5': ^2.18.0
+      '@w3ui/react-keyring': workspace:^
       '@w3ui/react-ui': workspace:^
       autoprefixer: ^10.4.13
+      blueimp-md5: ^2.19.0
       postcss: ^8.4.21
       preact: ^10.11.3
       tailwindcss: ^3.2.4
       typescript: ^4.9.3
       vite: ^4.0.0
     dependencies:
+      '@w3ui/react-keyring': link:../../../packages/react-keyring
       '@w3ui/react-ui': link:../../../packages/react-ui
+      blueimp-md5: 2.19.0
       preact: 10.11.3
     devDependencies:
       '@preact/preset-vite': 2.5.0_preact@10.11.3+vite@4.0.3
+      '@types/blueimp-md5': 2.18.0
       autoprefixer: 10.4.13_postcss@8.4.21
       postcss: 8.4.21
       tailwindcss: 3.2.4_postcss@8.4.21
@@ -4147,6 +4153,10 @@ packages:
       '@babel/types': 7.20.7
     dev: false
 
+  /@types/blueimp-md5/2.18.0:
+    resolution: {integrity: sha512-f4A+++lGZGJvVSgeyMkqA7BEf2BVQli6F+qEykKb49c5ieWQBkfpn6CP5c1IZr2Yi2Ofl6Fj+v0e1fN18Z8Cnw==}
+    dev: true
+
   /@types/body-parser/1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
@@ -5698,6 +5708,10 @@ packages:
 
   /bluebird/3.7.2:
     resolution: {integrity: sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==}
+    dev: false
+
+  /blueimp-md5/2.19.0:
+    resolution: {integrity: sha512-DRQrD6gJyy8FbiE4s+bDoXS9hiW3Vbx5uCdwvcCf3zLHL+Iv7LtGHLpr+GZV8rHG8tK766FGYBwRbu8pELTt+w==}
     dev: false
 
   /body-parser/1.20.1:
