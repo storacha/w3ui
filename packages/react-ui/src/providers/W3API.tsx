@@ -1,4 +1,4 @@
-import React, { useMemo, PropsWithChildren } from 'react'
+import React, { useMemo } from 'react'
 import { ServiceConfig } from '@w3ui/uploader-core'
 import { useUploader, UploaderContextValue, UploaderProvider } from '@w3ui/react-uploader'
 import { useUploadsList, UploadsListContextValue, UploadsListProvider } from '@w3ui/react-uploads-list'
@@ -13,7 +13,7 @@ export interface UploaderProviderProps extends ServiceConfig {
   children?: JSX.Element
 }
 
-export function W3APIProvider ({ children }: PropsWithChildren): JSX.Element {
+export function W3APIProvider ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element {
   return (
     <KeyringProvider>
       <UploaderProvider>

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { Authenticator, useAuthenticator } from '@w3ui/react-keyring'
 
 export function AuthenticationForm (): JSX.Element {
@@ -29,7 +29,7 @@ export function AuthenticationSubmitted (): JSX.Element {
   )
 }
 
-export function AuthenticationEnsurer ({ children }: PropsWithChildren): JSX.Element {
+export function AuthenticationEnsurer ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element {
   const [{ space, submitted }] = useAuthenticator()
   const registered = Boolean(space?.registered())
   if (registered) {
@@ -41,7 +41,7 @@ export function AuthenticationEnsurer ({ children }: PropsWithChildren): JSX.Ele
   }
 }
 
-export function SimpleAuthenticator ({ children }: PropsWithChildren): JSX.Element {
+export function SimpleAuthenticator ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element {
   return (
     <Authenticator>
       <AuthenticationEnsurer>
