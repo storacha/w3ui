@@ -64,7 +64,7 @@ export const UploadsListRoot = (props: UploadsListRootProps): JSX.Element => {
   const { children, ...childlessProps } = props
   let renderedChildren: React.ReactNode
   if (Boolean(children) && (typeof children === 'function')) {
-    renderedChildren = children(childlessProps)
+    renderedChildren = children({ ...childlessProps, uploadsList: contextValue })
   } else {
     renderedChildren = children as React.ReactNode
   }
