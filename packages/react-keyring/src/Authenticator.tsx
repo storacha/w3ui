@@ -1,5 +1,5 @@
 import React, {
-  useState, createContext, useContext, useCallback, useMemo
+  useState, createContext, useContext, useCallback, useMemo, useEffect
 } from 'react'
 import { useKeyring, KeyringContextState, KeyringContextActions } from './providers/Keyring'
 
@@ -49,6 +49,13 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
   }
 ])
 
+export const AgentLoader = ({ children }: { children: JSX.Element }): JSX.Element => {
+  const [, { loadAgent }] = useKeyring()
+  // eslint-disable-next-line
+  useEffect(() => { loadAgent() }, []) // load agent - once.
+  return children
+}
+
 /**
  * Top level component of the headless Authenticator.
  *
@@ -74,14 +81,16 @@ export function Authenticator (props: any): JSX.Element {
     } finally {
       setSubmitted(false)
     }
-  }, [setSubmitted, createSpace, registerSpace])
+  }, [email, setSubmitted, createSpace, registerSpace])
 
   const value = useMemo<AuthenticatorContextValue>(() => [
     { ...state, email, submitted, handleRegisterSubmit },
     { ...actions, setEmail }
   ], [state, actions, email, submitted, handleRegisterSubmit])
   return (
-    <AuthenticatorContext.Provider {...props} value={value} />
+    <AgentLoader>
+      <AuthenticatorContext.Provider {...props} value={value} />
+    </AgentLoader>
   )
 }
 
