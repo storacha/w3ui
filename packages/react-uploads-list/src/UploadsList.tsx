@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useCallback } from 'react'
+import React, { createContext, useContext, useMemo, useCallback, useEffect } from 'react'
 import { UploadsListContextState, UploadsListContextActions } from '@w3ui/uploads-list-core'
 import { useUploadsList } from './providers/UploadsList'
 
@@ -56,6 +56,10 @@ export const UploadsList = ({ children }: UploadsListComponentProps): JSX.Elemen
   const contextValue = useMemo<UploadsListComponentChildrenProps>(
     () => ([state, actions]),
     [state, actions])
+  useEffect(() => {
+    // load the first page of results asynchronously
+    void actions.next()
+  }, [])
   return (
     <UploadsListComponentContext.Provider value={contextValue}>
       {(typeof children === 'function')
