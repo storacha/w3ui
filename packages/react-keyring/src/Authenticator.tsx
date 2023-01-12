@@ -1,7 +1,7 @@
 import type { As, Component, Props, Options } from 'ariakit-react-utils'
 import type { ChangeEvent } from 'react'
 
-import React, { Fragment, useState, createContext, useContext, useCallback, useMemo } from 'react'
+import React, { Fragment, useState, createContext, useContext, useCallback, useMemo, useEffect } from 'react'
 import { createComponent, createElement } from 'ariakit-react-utils'
 import { useKeyring, KeyringContextState, KeyringContextActions } from './providers/Keyring'
 
@@ -51,6 +51,13 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
   }
 ])
 
+export const AgentLoader = ({ children }: { children: JSX.Element }): JSX.Element => {
+  const [, { loadAgent }] = useKeyring()
+  // eslint-disable-next-line
+  useEffect(() => { loadAgent() }, []) // load agent - once.
+  return children
+}
+
 export type AuthenticatorRootOptions<T extends As = typeof Fragment> = Options<T>
 export type AuthenticatorRootProps<T extends As = typeof Fragment> = Props<AuthenticatorRootOptions<T>>
 
@@ -79,16 +86,18 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> = createCompon
     } finally {
       setSubmitted(false)
     }
-  }, [setSubmitted, createSpace, registerSpace])
+  }, [email, setSubmitted, createSpace, registerSpace])
 
   const value = useMemo<AuthenticatorContextValue>(() => [
     { ...state, email, submitted, handleRegisterSubmit },
     { ...actions, setEmail }
   ], [state, actions, email, submitted, handleRegisterSubmit])
   return (
-    <AuthenticatorContext.Provider value={value}>
-      {createElement(Fragment, props)}
-    </AuthenticatorContext.Provider>
+    <AgentLoader>
+      <AuthenticatorContext.Provider value={value}>
+        {createElement(Fragment, props)}
+      </AuthenticatorContext.Provider>
+    </AgentLoader>
   )
 })
 
