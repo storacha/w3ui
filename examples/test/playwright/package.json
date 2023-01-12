@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "serve": "serve ../../",
-    "test": "playwright test --project=chromium",
-    "test:all": "playwright test"
+    "test": "playwright test",
+    "test:debug": "playwright test --project=chromium --headed"
   },
   "author": "olzilla",
   "license": "Apache-2.0 OR MIT",
