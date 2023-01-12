@@ -17,10 +17,7 @@ export const SimpleUploadsList = (): JSX.Element => {
           <table>
             <thead>
               <tr>
-                <th>Uploader DID</th>
-                <th>CAR CID</th>
-                <th>Data CID</th>
-                <th>Date</th>
+                <th>Root CID</th>
               </tr>
             </thead>
             <tbody>
