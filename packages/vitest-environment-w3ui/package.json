@@ -4,12 +4,8 @@
   "description": "A vitest environment that exposes Node's webcrypto API to the builtin JSDOM test environment",
   "main": "src/index.ts",
   "files": [
-    "src",
-    "build/*"
+    "src"
   ],
-  "publishConfig": {
-    "module": "build/esm/index.js"
-  },
   "keywords": [],
   "author": "Yusef Napora",
   "license": "Apache 2.0 OR MIT",
