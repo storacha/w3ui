@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@w3ui/react-ui": "workspace:^",
     "preact": "^10.11.3"
   },
   "devDependencies": {
