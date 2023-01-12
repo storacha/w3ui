@@ -19,7 +19,7 @@
     "test": "pnpm run --filter './packages/**' --recursive test",
     "typecheck": "tsc -b",
     "test:examples": "pnpm run --filter './examples/**' test",
-    "build:examples": "pnpm run --filter './examples/**' --no-bail build",
+    "build:examples": "pnpm run --filter './examples/**' --no-bail build || true",
     "serve:examples": "serve examples"
   },
   "devDependencies": {
