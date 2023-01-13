@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.0](https://github.com/web3-storage/w3ui/compare/react-uploader-v3.0.1...react-uploader-v3.1.0) (2023-01-13)
+
+
+### Features
+
+* "Headless" UI components ([#136](https://github.com/web3-storage/w3ui/issues/136)) ([46583e0](https://github.com/web3-storage/w3ui/commit/46583e08d49de1dc9dd57287fd5b9bac79a1e2e2))
+* support `as` prop in uploader component ([#236](https://github.com/web3-storage/w3ui/issues/236)) ([c802e99](https://github.com/web3-storage/w3ui/commit/c802e9909289a113bf646f22d25e5c6fbd1c1d3e)), closes [#235](https://github.com/web3-storage/w3ui/issues/235)
+
 ## [3.0.1](https://github.com/web3-storage/w3ui/compare/react-uploader-v3.0.0...react-uploader-v3.0.1) (2022-12-15)
 
 
