@@ -69,7 +69,9 @@ const UploaderBody = (): JSX.Element => {
               <span className='size'>{file.size}</span>
             </div>
           )}
-          <button type='submit' className='w3ui-button'>Upload</button>
+          <button type='submit' className='w3ui-button' disabled={file === undefined}>
+            Upload
+          </button>
         </Uploader.Form>
       )
   }

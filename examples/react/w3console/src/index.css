@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --w3ui-uploader-height: 160px;
+}
+
+.w3-uploads-list {
+  @apply mb-5;
+}
+
+.w3-uploads-list-data {
+  @apply overflow-auto rounded-md border border-gray-300 dark:border-gray-700;
+}
+
+.w3-uploads-list table {
+  @apply w-full border-collapse divide-y dark:divide-gray-700;
+}
+
+.w3-uploads-list thead {
+  @apply text-left bg-gray-400 dark:bg-gray-900 bg-opacity-50 text-sm;
+}
+
+.w3-uploads-list th {
+  @apply p-3;
+}
+
+.w3-uploads-list td {
+  @apply block truncate w-64 p-3;
+}
+
+.w3-uploads-list nav {
+  @apply flex flex-row space-x-4 my-4;
+}
+
+.w3ui-uploader__file {
+  @apply rounded w-full grid grid-cols-2 p-4 bg-gray-200 dark:bg-gray-900;
+}
+
+.w3ui-uploader__file .name {
+  @apply col-span-2 truncate;
+}
+
+.w3ui-uploader__file .type, .size {
+  @apply text-sm;
+}

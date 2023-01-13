@@ -9,11 +9,13 @@ function Space (): JSX.Element {
   const [, { reload }] = useUploadsList()
   return (
     <div className='flex flex-col'>
-      <div className='flex flex-row space-x-4'>
-        <div>
-          {Boolean(space) && <img src={`https://www.gravatar.com/avatar/${md5(space.did())}?d=identicon`} width='128' className='' />}
+      <div className='flex flex-row space-x-4 mb-4'>
+        <div className='shrink-0'>
+          {(space !== undefined) && (
+            <img src={`https://www.gravatar.com/avatar/${md5(space.did())}?d=identicon`} className='w-32' />
+          )}
         </div>
-        <SimpleUploader onUploadComplete={() => { reload() }} />
+        <SimpleUploader onUploadComplete={() => { void reload() }} />
       </div>
       <SimpleUploadsList />
     </div>
@@ -22,11 +24,11 @@ function Space (): JSX.Element {
 
 export function App (): JSX.Element {
   return (
-    <main className='bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white p-4 min-h-screen'>
+    <main className='bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 min-h-screen'>
       <W3APIProvider>
         <SimpleAuthenticator>
           <div className='flex flex-row space-x-4'>
-            <div className='flex flex-col w-1/3 bg-gray-200 dark:bg-gray-700 p-4 rounded-md'>
+            <div className='flex flex-col w-1/3 bg-gray-200 dark:bg-gray-800 p-4 rounded-md'>
               <div className='h-24'>
                 account global stats, etc
                 link to payment
@@ -39,7 +41,7 @@ export function App (): JSX.Element {
                 </ul>
               </div>
             </div>
-            <div className='w-2/3 bg-gray-200 dark:bg-gray-700 p-4 rounded-md'>
+            <div className='w-2/3 bg-gray-200 dark:bg-gray-800 p-4 rounded-md'>
               <Space />
             </div>
           </div>

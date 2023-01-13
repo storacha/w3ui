@@ -21,20 +21,22 @@ function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
   } else {
     return (
       <>
-        <table>
-          <thead>
-            <tr>
-              <th>Root CID</th>
-            </tr>
-          </thead>
-          <tbody>
-            {uploads.map(({ root }) => (
-              <tr key={root.toString()}>
-                <td>{root.toString()}</td>
+        <div className='w3-uploads-list-data'>
+          <table>
+            <thead>
+              <tr>
+                <th>Root CID</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {uploads.map(({ root }) => (
+                <tr key={root.toString()}>
+                  <td>{root.toString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <nav>
           <UploadsList.NextButton className='next w3ui-button'>
             Next
