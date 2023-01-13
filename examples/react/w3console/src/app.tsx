@@ -1,17 +1,19 @@
 import { SimpleAuthenticator, SimpleUploader, SimpleUploadsList, W3APIProvider } from '@w3ui/react-ui'
 import { useKeyring } from '@w3ui/react-keyring'
+import { useUploadsList } from '@w3ui/react-uploads-list'
 import md5 from 'blueimp-md5'
 import '@w3ui/react-ui/src/styles/uploader.css'
 
 function Space (): JSX.Element {
   const [{ space }] = useKeyring()
+  const [, { reload }] = useUploadsList()
   return (
     <div className='flex flex-col'>
       <div className='flex flex-row space-x-4'>
         <div>
           {Boolean(space) && <img src={`https://www.gravatar.com/avatar/${md5(space.did())}?d=identicon`} width='128' className='' />}
         </div>
-        <SimpleUploader />
+        <SimpleUploader onUploadComplete={() => { reload() }} />
       </div>
       <SimpleUploadsList />
     </div>

@@ -208,6 +208,7 @@ importers:
       '@types/blueimp-md5': ^2.18.0
       '@w3ui/react-keyring': workspace:^
       '@w3ui/react-ui': workspace:^
+      '@w3ui/react-uploads-list': workspace:^2.0.1
       autoprefixer: ^10.4.13
       blueimp-md5: ^2.19.0
       postcss: ^8.4.21
@@ -218,6 +219,7 @@ importers:
     dependencies:
       '@w3ui/react-keyring': link:../../../packages/react-keyring
       '@w3ui/react-ui': link:../../../packages/react-ui
+      '@w3ui/react-uploads-list': link:../../../packages/react-uploads-list
       blueimp-md5: 2.19.0
       preact: 10.11.3
     devDependencies:

@@ -1,3 +1,5 @@
+import type { OnUploadComplete } from '@w3ui/react-uploader'
+
 import React from 'react'
 import { CARMetadata } from '@w3ui/uploader-core'
 import { Status, Uploader, useUploaderComponent } from '@w3ui/react-uploader'
@@ -73,9 +75,13 @@ const UploaderBody = (): JSX.Element => {
   }
 }
 
-export const SimpleUploader = (): JSX.Element => {
+export interface SimpleUploaderProps {
+  onUploadComplete?: OnUploadComplete
+}
+
+export const SimpleUploader = ({ onUploadComplete }: SimpleUploaderProps): JSX.Element => {
   return (
-    <Uploader as='div' className='w3ui-uploader-wrapper'>
+    <Uploader as='div' className='w3ui-uploader-wrapper' onUploadComplete={onUploadComplete}>
       <UploaderBody />
     </Uploader>
   )

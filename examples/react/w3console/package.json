@@ -11,6 +11,7 @@
   "dependencies": {
     "@w3ui/react-keyring": "workspace:^",
     "@w3ui/react-ui": "workspace:^",
+    "@w3ui/react-uploads-list": "workspace:^2.0.1",
     "blueimp-md5": "^2.19.0",
     "preact": "^10.11.3"
   },
