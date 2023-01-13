@@ -10,7 +10,7 @@ export function AuthenticationForm (): JSX.Element {
         <label htmlFor='w3ui-simple-authenticator-email'>Email address:</label>
         <Authenticator.EmailInput id='w3ui-simple-authenticator-email' required />
       </div>
-      <button className='register' type='submit' disabled={submitted}>Register</button>
+      <button className='register w3ui-button' type='submit' disabled={submitted}>Register</button>
     </Authenticator.Form>
   )
 }
@@ -22,7 +22,7 @@ export function AuthenticationSubmitted (): JSX.Element {
     <div className='w3ui-simple-authenticator-verify-email'>
       <h1 className='message'>Verify your email address!</h1>
       <p className='detail'>Click the link in the email we sent to {email} to sign in.</p>
-      <Authenticator.CancelButton className='cancel'>
+      <Authenticator.CancelButton className='cancel w3ui-button'>
         Cancel
       </Authenticator.CancelButton>
     </div>
@@ -43,7 +43,7 @@ export function AuthenticationEnsurer ({ children }: { children: JSX.Element | J
 
 export function SimpleAuthenticator ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element {
   return (
-    <Authenticator>
+    <Authenticator as="div" className="w3ui-simple-authenticator">
       <AuthenticationEnsurer>
         {children}
       </AuthenticationEnsurer>

@@ -1,3 +1,5 @@
+import type { OnUploadComplete } from '@w3ui/react-uploader'
+
 import React from 'react'
 import { CARMetadata } from '@w3ui/uploader-core'
 import { Status, Uploader, useUploaderComponent } from '@w3ui/react-uploader'
@@ -44,33 +46,67 @@ export const Done = ({ file, dataCID, storedDAGShards }: DoneProps): JSX.Element
   )
 }
 
-export const SimpleUploader = (): JSX.Element => {
-  const [{ status, file, error, dataCID, storedDAGShards }] = useUploaderComponent()
+const UploaderForm = (): JSX.Element => {
+  const [{ file }] = useUploaderComponent()
   return (
-    <Uploader as='div' className='w3ui-uploader-wrapper'>
-      {(status === Status.Uploading)
-        ? (
-          <Uploading file={file} storedDAGShards={storedDAGShards} />
-          )
-        : (
-            (status === Status.Succeeded)
-              ? (
-                <Done file={file} dataCID={dataCID} storedDAGShards={storedDAGShards} />
-                )
-              : (status === Status.Failed)
-                  ? (
-                    <Errored error={error} />
-                    )
-                  : (
-                    <Uploader.Form>
-                      <div className='w3ui-uploader'>
-                        <label className='w3ui-uploader__label'>File:</label>
-                        <Uploader.Input className='w3ui-uploader__input' />
-                      </div>
-                      <button type='submit' className='w3ui-button'>Upload</button>
-                    </Uploader.Form>
-                    )
-          )}
+    <Uploader.Form>
+      <div className='w3ui-uploader'>
+        <label className='w3ui-uploader__label'>File:</label>
+        <Uploader.Input className='w3ui-uploader__input' />
+      </div>
+      {(file !== undefined) && (
+        <div className='w3ui-uploader__file'>
+          <span className='name'>{file.name}</span>
+          <span className='type'>{file.type}</span>
+          <span className='size'>{file.size}</span>
+        </div>
+      )}
+      <button type='submit' className='w3ui-button' disabled={file === undefined}>
+        Upload
+      </button>
+    </Uploader.Form>
+  )
+}
+
+const UploaderConsole = (): JSX.Element => {
+  const [{ status, file, error, dataCID, storedDAGShards }] = useUploaderComponent()
+  switch (status) {
+    case Status.Uploading:
+      return <Uploading file={file} storedDAGShards={storedDAGShards} />
+    case Status.Succeeded:
+      return <Done file={file} dataCID={dataCID} storedDAGShards={storedDAGShards} />
+    case Status.Failed:
+      return <Errored error={error} />
+    default:
+      return (
+        <></>
+      )
+  }
+}
+
+const UploaderBody = (): JSX.Element => {
+  const [{ status }] = useUploaderComponent()
+
+  return (
+    <>
+      <UploaderForm />
+      {(status !== Status.Idle) && (
+        <div className='w3ui-uploader-console'>
+          <UploaderConsole />
+        </div>
+      )}
+    </>
+  )
+}
+
+export interface SimpleUploaderProps {
+  onUploadComplete?: OnUploadComplete
+}
+
+export const SimpleUploader = ({ onUploadComplete }: SimpleUploaderProps): JSX.Element => {
+  return (
+    <Uploader as='div' className='w3ui-uploader-wrapper' onUploadComplete={onUploadComplete}>
+      <UploaderBody />
     </Uploader>
   )
 }
