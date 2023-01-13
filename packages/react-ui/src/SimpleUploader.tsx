@@ -44,33 +44,39 @@ export const Done = ({ file, dataCID, storedDAGShards }: DoneProps): JSX.Element
   )
 }
 
-export const SimpleUploader = (): JSX.Element => {
+const UploaderBody = (): JSX.Element => {
   const [{ status, file, error, dataCID, storedDAGShards }] = useUploaderComponent()
+  switch (status) {
+    case Status.Uploading:
+      return <Uploading file={file} storedDAGShards={storedDAGShards} />
+    case Status.Succeeded:
+      return <Done file={file} dataCID={dataCID} storedDAGShards={storedDAGShards} />
+    case Status.Failed:
+      return <Errored error={error} />
+    default:
+      return (
+        <Uploader.Form>
+          <div className='w3ui-uploader'>
+            <label className='w3ui-uploader__label'>File:</label>
+            <Uploader.Input className='w3ui-uploader__input' />
+          </div>
+          {(file !== undefined) && (
+            <div className='w3ui-uploader__file'>
+              <span className='name'>{file.name}</span>
+              <span className='type'>{file.type}</span>
+              <span className='size'>{file.size}</span>
+            </div>
+          )}
+          <button type='submit' className='w3ui-button'>Upload</button>
+        </Uploader.Form>
+      )
+  }
+}
+
+export const SimpleUploader = (): JSX.Element => {
   return (
     <Uploader as='div' className='w3ui-uploader-wrapper'>
-      {(status === Status.Uploading)
-        ? (
-          <Uploading file={file} storedDAGShards={storedDAGShards} />
-          )
-        : (
-            (status === Status.Succeeded)
-              ? (
-                <Done file={file} dataCID={dataCID} storedDAGShards={storedDAGShards} />
-                )
-              : (status === Status.Failed)
-                  ? (
-                    <Errored error={error} />
-                    )
-                  : (
-                    <Uploader.Form>
-                      <div className='w3ui-uploader'>
-                        <label className='w3ui-uploader__label'>File:</label>
-                        <Uploader.Input className='w3ui-uploader__input' />
-                      </div>
-                      <button type='submit' className='w3ui-button'>Upload</button>
-                    </Uploader.Form>
-                    )
-          )}
+      <UploaderBody />
     </Uploader>
   )
 }
