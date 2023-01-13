@@ -9,7 +9,7 @@ function Space (): JSX.Element {
   const [, { reload }] = useUploadsList()
   return (
     <div className='flex flex-col'>
-      <div className='flex flex-row space-x-4 mb-4'>
+      <div className='flex flex-row space-x-4 mb-4 justify-between'>
         <div className='shrink-0'>
           {(space !== undefined) && (
             <img src={`https://www.gravatar.com/avatar/${md5(space.did())}?d=identicon`} className='w-32' />

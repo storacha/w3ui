@@ -84,6 +84,21 @@ const UploaderConsole = (): JSX.Element => {
   }
 }
 
+const UploaderBody = (): JSX.Element => {
+  const [{ status }] = useUploaderComponent()
+
+  return (
+    <>
+      <UploaderForm />
+      {(status !== Status.Idle) && (
+        <div className='w3ui-uploader-console'>
+          <UploaderConsole />
+        </div>
+      )}
+    </>
+  )
+}
+
 export interface SimpleUploaderProps {
   onUploadComplete?: OnUploadComplete
 }
@@ -91,10 +106,7 @@ export interface SimpleUploaderProps {
 export const SimpleUploader = ({ onUploadComplete }: SimpleUploaderProps): JSX.Element => {
   return (
     <Uploader as='div' className='w3ui-uploader-wrapper' onUploadComplete={onUploadComplete}>
-      <UploaderForm />
-      <div className='w3ui-uploader-console'>
-        <UploaderConsole />
-      </div>
+      <UploaderBody />
     </Uploader>
   )
 }

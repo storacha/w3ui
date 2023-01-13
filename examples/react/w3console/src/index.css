@@ -35,7 +35,7 @@
 }
 
 .w3ui-uploader-wrapper {
-  @apply grow-0;
+  @apply grow;
 }
 
 .w3ui-uploader__file {
