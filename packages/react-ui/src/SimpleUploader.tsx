@@ -46,7 +46,29 @@ export const Done = ({ file, dataCID, storedDAGShards }: DoneProps): JSX.Element
   )
 }
 
-const UploaderBody = (): JSX.Element => {
+const UploaderForm = (): JSX.Element => {
+  const [{ file }] = useUploaderComponent()
+  return (
+    <Uploader.Form>
+      <div className='w3ui-uploader'>
+        <label className='w3ui-uploader__label'>File:</label>
+        <Uploader.Input className='w3ui-uploader__input' />
+      </div>
+      {(file !== undefined) && (
+        <div className='w3ui-uploader__file'>
+          <span className='name'>{file.name}</span>
+          <span className='type'>{file.type}</span>
+          <span className='size'>{file.size}</span>
+        </div>
+      )}
+      <button type='submit' className='w3ui-button' disabled={file === undefined}>
+        Upload
+      </button>
+    </Uploader.Form>
+  )
+}
+
+const UploaderConsole = (): JSX.Element => {
   const [{ status, file, error, dataCID, storedDAGShards }] = useUploaderComponent()
   switch (status) {
     case Status.Uploading:
@@ -57,22 +79,7 @@ const UploaderBody = (): JSX.Element => {
       return <Errored error={error} />
     default:
       return (
-        <Uploader.Form>
-          <div className='w3ui-uploader'>
-            <label className='w3ui-uploader__label'>File:</label>
-            <Uploader.Input className='w3ui-uploader__input' />
-          </div>
-          {(file !== undefined) && (
-            <div className='w3ui-uploader__file'>
-              <span className='name'>{file.name}</span>
-              <span className='type'>{file.type}</span>
-              <span className='size'>{file.size}</span>
-            </div>
-          )}
-          <button type='submit' className='w3ui-button' disabled={file === undefined}>
-            Upload
-          </button>
-        </Uploader.Form>
+        <></>
       )
   }
 }
@@ -84,7 +91,10 @@ export interface SimpleUploaderProps {
 export const SimpleUploader = ({ onUploadComplete }: SimpleUploaderProps): JSX.Element => {
   return (
     <Uploader as='div' className='w3ui-uploader-wrapper' onUploadComplete={onUploadComplete}>
-      <UploaderBody />
+      <UploaderForm />
+      <div className='w3ui-uploader-console'>
+        <UploaderConsole />
+      </div>
     </Uploader>
   )
 }

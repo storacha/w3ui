@@ -34,8 +34,12 @@
   @apply flex flex-row space-x-4 my-4;
 }
 
+.w3ui-uploader-wrapper {
+  @apply grow-0;
+}
+
 .w3ui-uploader__file {
-  @apply rounded w-full grid grid-cols-2 p-4 bg-gray-200 dark:bg-gray-900;
+  @apply rounded-md w-full grid grid-cols-2 p-4 bg-gray-200 dark:bg-gray-900;
 }
 
 .w3ui-uploader__file .name {
@@ -45,3 +49,8 @@
 .w3ui-uploader__file .type, .size {
   @apply text-sm;
 }
+
+.w3ui-uploader-console {
+  @apply rounded-md w-full bg-gray-200 dark:bg-gray-900 p-4 truncate;
+}
+
