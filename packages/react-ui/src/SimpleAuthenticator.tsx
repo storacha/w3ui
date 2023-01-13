@@ -43,7 +43,7 @@ export function AuthenticationEnsurer ({ children }: { children: JSX.Element | J
 
 export function SimpleAuthenticator ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element {
   return (
-    <Authenticator as="div" className="w3ui-simple-authenticator">
+    <Authenticator as='div' className='w3ui-simple-authenticator'>
       <AuthenticationEnsurer>
         {children}
       </AuthenticationEnsurer>
