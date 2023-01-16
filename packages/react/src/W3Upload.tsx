@@ -1,16 +1,16 @@
 import React from 'react'
 import { W3APIProvider } from './providers/W3API'
-import { SimpleAuthenticator } from './SimpleAuthenticator'
-import { SimpleUploader } from './SimpleUploader'
-import { SimpleUploadsList } from './SimpleUploadsList'
+import { Authenticator } from './Authenticator'
+import { Uploader } from './Uploader'
+import { UploadsList } from './UploadsList'
 
 export function W3Upload (): JSX.Element {
   return (
     <W3APIProvider>
-      <SimpleAuthenticator>
-        <SimpleUploader />
-        <SimpleUploadsList />
-      </SimpleAuthenticator>
+      <Authenticator>
+        <Uploader />
+        <UploadsList />
+      </Authenticator>
     </W3APIProvider>
   )
 }

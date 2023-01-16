@@ -1,6 +1,6 @@
 import type { UploadListResult } from '@w3ui/uploads-list-core'
 import React from 'react'
-import { UploadsList } from '@w3ui/react-uploads-list'
+import { UploadsList as UploadsListCore } from '@w3ui/react-uploads-list'
 
 function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
   if ((uploads === undefined) || (uploads.length === 0)) {
@@ -11,9 +11,9 @@ function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
             No uploads
           </div>
           <nav>
-            <UploadsList.ReloadButton className='reload w3ui-button'>
+            <UploadsListCore.ReloadButton className='reload w3ui-button'>
               Reload
-            </UploadsList.ReloadButton>
+            </UploadsListCore.ReloadButton>
           </nav>
         </div>
       </>
@@ -38,26 +38,26 @@ function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
           </table>
         </div>
         <nav>
-          <UploadsList.NextButton className='next w3ui-button'>
+          <UploadsListCore.NextButton className='next w3ui-button'>
             Next
-          </UploadsList.NextButton>
-          <UploadsList.ReloadButton className='reload w3ui-button'>
+          </UploadsListCore.NextButton>
+          <UploadsListCore.ReloadButton className='reload w3ui-button'>
             Reload
-          </UploadsList.ReloadButton>
+          </UploadsListCore.ReloadButton>
         </nav>
       </>
     )
   }
 }
 
-export const SimpleUploadsList = (): JSX.Element => {
+export const UploadsList = (): JSX.Element => {
   return (
-    <UploadsList>
+    <UploadsListCore>
       {(props) => (
         <div className='w3-uploads-list'>
           <Uploads uploads={props.uploadsList?.[0].data} />
         </div>
       )}
-    </UploadsList>
+    </UploadsListCore>
   )
 }

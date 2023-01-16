@@ -1,4 +1,4 @@
-# Example
+# W3UI React Playground
 
 To run this example:
 
@@ -18,6 +18,6 @@ To run this example:
 - Change to this example directory and run the example:
 
   ```sh
-  cd examples/react/ui
+  cd examples/react/playground
   pnpm start
   ```

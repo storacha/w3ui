@@ -21,3 +21,10 @@ main {
   display: flex;
   justify-content: center;
 }
+
+section::after {
+  display: block;
+  text-align: center;
+  padding: 64px 0;
+  content: '⁂';
+}

@@ -2,7 +2,7 @@ import type { OnUploadComplete } from '@w3ui/react-uploader'
 
 import React from 'react'
 import { CARMetadata } from '@w3ui/uploader-core'
-import { Status, Uploader, useUploaderComponent } from '@w3ui/react-uploader'
+import { Status, Uploader as UploaderCore, useUploaderComponent } from '@w3ui/react-uploader'
 import { Link, Version } from 'multiformats'
 
 export const Uploading = ({ file, storedDAGShards }: { file?: File, storedDAGShards?: CARMetadata[] }): JSX.Element => (
@@ -49,10 +49,10 @@ export const Done = ({ file, dataCID, storedDAGShards }: DoneProps): JSX.Element
 const UploaderForm = (): JSX.Element => {
   const [{ file }] = useUploaderComponent()
   return (
-    <Uploader.Form>
+    <UploaderCore.Form>
       <div className='w3ui-uploader'>
         <label className='w3ui-uploader__label'>File:</label>
-        <Uploader.Input className='w3ui-uploader__input' />
+        <UploaderCore.Input className='w3ui-uploader__input' />
       </div>
       {(file !== undefined) && (
         <div className='w3ui-uploader__file'>
@@ -64,7 +64,7 @@ const UploaderForm = (): JSX.Element => {
       <button type='submit' className='w3ui-button' disabled={file === undefined}>
         Upload
       </button>
-    </Uploader.Form>
+    </UploaderCore.Form>
   )
 }
 
@@ -103,10 +103,10 @@ export interface SimpleUploaderProps {
   onUploadComplete?: OnUploadComplete
 }
 
-export const SimpleUploader = ({ onUploadComplete }: SimpleUploaderProps): JSX.Element => {
+export const Uploader = ({ onUploadComplete }: SimpleUploaderProps): JSX.Element => {
   return (
-    <Uploader as='div' className='w3ui-uploader-wrapper' onUploadComplete={onUploadComplete}>
+    <UploaderCore as='div' className='w3ui-uploader-wrapper' onUploadComplete={onUploadComplete}>
       <UploaderBody />
-    </Uploader>
+    </UploaderCore>
   )
 }

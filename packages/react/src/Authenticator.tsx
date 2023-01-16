@@ -1,17 +1,17 @@
 import React from 'react'
-import { Authenticator, useAuthenticator } from '@w3ui/react-keyring'
+import { Authenticator as AuthCore, useAuthenticator } from '@w3ui/react-keyring'
 
 export function AuthenticationForm (): JSX.Element {
   const [{ submitted }] = useAuthenticator()
 
   return (
-    <Authenticator.Form className='w3ui-simple-authenticator-form'>
+    <AuthCore.Form className='w3ui-simple-authenticator-form'>
       <div className='email-field'>
         <label htmlFor='w3ui-simple-authenticator-email'>Email address:</label>
-        <Authenticator.EmailInput id='w3ui-simple-authenticator-email' required />
+        <AuthCore.EmailInput id='w3ui-simple-authenticator-email' required />
       </div>
       <button className='register w3ui-button' type='submit' disabled={submitted}>Register</button>
-    </Authenticator.Form>
+    </AuthCore.Form>
   )
 }
 
@@ -22,9 +22,9 @@ export function AuthenticationSubmitted (): JSX.Element {
     <div className='w3ui-simple-authenticator-verify-email'>
       <h1 className='message'>Verify your email address!</h1>
       <p className='detail'>Click the link in the email we sent to {email} to sign in.</p>
-      <Authenticator.CancelButton className='cancel w3ui-button'>
+      <AuthCore.CancelButton className='cancel w3ui-button'>
         Cancel
-      </Authenticator.CancelButton>
+      </AuthCore.CancelButton>
     </div>
   )
 }
@@ -41,13 +41,13 @@ export function AuthenticationEnsurer ({ children }: { children: JSX.Element | J
   }
 }
 
-export function SimpleAuthenticator ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element {
+export function Authenticator ({ children }: { children: JSX.Element | JSX.Element[] }): JSX.Element {
   return (
-    <Authenticator as='div' className='w3ui-simple-authenticator'>
+    <AuthCore as='div' className='w3ui-simple-authenticator'>
       <AuthenticationEnsurer>
         {children}
       </AuthenticationEnsurer>
-    </Authenticator>
+    </AuthCore>
   )
 }
 
@@ -56,8 +56,8 @@ export function SimpleAuthenticator ({ children }: { children: JSX.Element | JSX
  */
 export function withIdentity<C extends React.JSXElementConstructor<P>, P> (Component: C) {
   return (props: any) => (
-    <SimpleAuthenticator>
+    <Authenticator>
       <Component {...props} />
-    </SimpleAuthenticator>
+    </Authenticator>
   )
 }
