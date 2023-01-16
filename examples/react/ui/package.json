@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@w3ui/react-keyring": "workspace:^",
-    "@w3ui/react-ui": "workspace:^",
+    "@w3ui/react": "workspace:^",
     "@w3ui/react-uploader": "workspace:^",
     "@w3ui/react-uploads-list": "workspace:^",
     "react": "^18.2.0",

@@ -1,16 +1,16 @@
-# react-ui
+# W3UI React Components
 
-React w3ui UI components.
+Out of the box W3UIs for React
 
 ## Install
 
 ```sh
-npm install @w3ui/react-ui
+npm install @w3ui/react
 ```
 
 ## Usage
 
-[API Reference](https://github.com/web3-storage/w3ui/blob/main/docs/react-ui.md)
+[API Reference](https://github.com/web3-storage/w3ui/blob/main/docs/react.md)
 
 ## Contributing
 

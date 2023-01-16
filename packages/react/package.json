@@ -1,7 +1,7 @@
 {
-  "name": "@w3ui/react-ui",
+  "name": "@w3ui/react",
   "version": "1.0.0",
-  "description": "React w3ui UI components.",
+  "description": "W3UI React components",
   "main": "src/index.ts",
   "publishConfig": {
     "module": "build/esm/index.js",

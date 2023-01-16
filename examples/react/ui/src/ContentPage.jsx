@@ -1,6 +1,6 @@
 import React from 'react'
-import { SimpleUploadsList, SimpleUploader, W3Upload } from '@w3ui/react-ui'
-import '@w3ui/react-ui/src/styles/uploader.css'
+import { SimpleUploadsList, SimpleUploader, W3Upload } from '@w3ui/react'
+import '@w3ui/react/src/styles/uploader.css'
 import { Uploader, UploaderProvider, useUploader } from '@w3ui/react-uploader'
 import { UploadsListProvider } from '@w3ui/react-uploads-list'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
