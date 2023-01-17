@@ -9,12 +9,26 @@ import { useUploader } from './providers/Uploader'
 
 export enum Status {
   Idle = 'idle',
+  Uploading = 'uploading',
+  Failed = 'failed',
+  Succeeded = 'succeeded'
+}
+
+export type UploaderComponentContextState = UploaderContextState & {
+  /**
+   * A string indicating the status of this component - can be 'uploading', 'done' or ''.
+   */
+  status: Status
+  /**
    * Error thrown by upload process.
    */
+  error?: Error
   /**
    * a File to be uploaded
+   */
   file?: File
   /**
+   * A callback that can be passed to an `onSubmit` handler to
    * upload `file` to web3.storage via the w3up API
    */
   handleUploadSubmit?: (e: Event) => Promise<void>
