@@ -1,8 +1,8 @@
-import { SimpleAuthenticator, SimpleUploader, SimpleUploadsList, W3APIProvider } from '@w3ui/react-ui'
+import { Authenticator, Uploader, UploadsList, W3APIProvider } from '@w3ui/react'
 import { useKeyring } from '@w3ui/react-keyring'
 import { useUploadsList } from '@w3ui/react-uploads-list'
 import md5 from 'blueimp-md5'
-import '@w3ui/react-ui/src/styles/uploader.css'
+import '@w3ui/react/src/styles/uploader.css'
 
 function Space (): JSX.Element {
   const [{ space }] = useKeyring()
@@ -15,9 +15,9 @@ function Space (): JSX.Element {
             <img src={`https://www.gravatar.com/avatar/${md5(space.did())}?d=identicon`} className='w-32' />
           )}
         </div>
-        <SimpleUploader onUploadComplete={() => { void reload() }} />
+        <Uploader onUploadComplete={() => { void reload() }} />
       </div>
-      <SimpleUploadsList />
+      <UploadsList />
     </div>
   )
 }
@@ -26,7 +26,7 @@ export function App (): JSX.Element {
   return (
     <main className='bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 min-h-screen'>
       <W3APIProvider>
-        <SimpleAuthenticator>
+        <Authenticator>
           <div className='flex flex-row space-x-4'>
             <div className='flex flex-col w-1/3 bg-gray-200 dark:bg-gray-800 p-4 rounded-md'>
               <div className='h-24'>
@@ -45,7 +45,7 @@ export function App (): JSX.Element {
               <Space />
             </div>
           </div>
-        </SimpleAuthenticator>
+        </Authenticator>
       </W3APIProvider>
     </main>
   )
