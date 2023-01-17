@@ -91,10 +91,10 @@ export default function rollup (options: RollupOptions): RollupOptions[] {
       }
     }),
     ...buildConfigs({
-      name: 'react-ui',
-      packageDir: 'packages/react-ui',
-      jsName: 'ReactUI',
-      outputFile: 'react-ui',
+      name: 'react',
+      packageDir: 'packages/react',
+      jsName: 'W3UI',
+      outputFile: 'react',
       entryFile: 'src/index.ts',
       globals: {
         react: 'React'
