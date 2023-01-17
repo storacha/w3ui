@@ -1,23 +1,16 @@
-name: Test
-description: 'Setup and test'
+name: pnpm
+description: 'Setup node & pnpm'
 
 runs:
   using: "composite"
   steps:
     - uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: 18
     - uses: pnpm/action-setup@v2
       with:
         version: 7
         run_install: |
           - recursive: true
             args: [--frozen-lockfile, --strict-peer-dependencies]
-    - run: pnpm run lint
-      shell: bash
-    - run: pnpm run compile
-      shell: bash
-    - run: pnpm run build
-      shell: bash
-    - run: pnpm test
-      shell: bash
+
