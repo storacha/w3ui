@@ -67,13 +67,13 @@ function DropinUIComponent () {
 export function ContentPage () {
   return (
     <>
-      <p>
+      <p style={{color: 'lightgray', padding: '24px 0', fontSize: '1.2rem', fontWeight: '300'}}>
         W3UI provides React components at four different levels of
         abstraction, each of which builds upon the last.
       </p>
 
       <section>
-        <h3>1. Drop-in UI</h3>
+        <h2>1. Drop-in UI</h2>
         <p>
           Components designed to be dropped into a page with very little customization.
           Limited styling customization may be supported:
@@ -91,7 +91,7 @@ function ${DropinUIComponent.name} () {
       </section>
 
       <section>
-        <h3>2. Customizable UI</h3>
+        <h2>2. Customizable UI</h2>
         <p>
           Components that work out of the box, and let you customize some aspects of
           markup and most of the styling:
@@ -110,8 +110,9 @@ function ${CustomizableUIComponent.name}() {
         </SyntaxHighlighter>
         <CustomizableUIComponent />
       </section>
+
       <section>
-        <h3>3. Headless UI</h3>
+        <h2>3. Headless UI</h2>
         <p>
           A set of components designed to work together, modeled after HeadlessUI
           components like <a href='https://headlessui.com/react/combobox'>Combobox</a>.
@@ -137,7 +138,7 @@ function ${HeadlessUIComponent.name}() {
         <HeadlessUIComponent />
       </section>
 
-      <h3>4. No UI</h3>
+      <h2>4. No UI</h2>
       <p>
         Maximum flexibility, React Contexts and hooks only:
       </p>
