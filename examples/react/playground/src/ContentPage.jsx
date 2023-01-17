@@ -67,7 +67,7 @@ function DropinUIComponent () {
 export function ContentPage () {
   return (
     <>
-      <p style={{color: 'lightgray', padding: '24px 0', fontSize: '1.2rem', fontWeight: '300'}}>
+      <p style={{ color: 'lightgray', padding: '24px 0', fontSize: '1.2rem', fontWeight: '300' }}>
         W3UI provides React components at four different levels of
         abstraction, each of which builds upon the last.
       </p>
@@ -170,7 +170,6 @@ function ${NoUIComponent.name}() {
 `}
       </SyntaxHighlighter>
       <NoUIComponent />
-
 
     </>
   )
