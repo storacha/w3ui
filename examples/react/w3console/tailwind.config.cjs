@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       colors: {
         'gray-dark': '#1d2027'
-      },
+      }
     }
   },
   plugins: []
