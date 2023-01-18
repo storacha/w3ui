@@ -1,7 +1,8 @@
 import React from 'react'
 import { CID } from 'multiformats/cid'
-import { sha256 } from 'multiformats/hashes/sha2'
-import * as raw from 'multiformats/codecs/raw'
+// these imports used by commented-out functions below, delete if we don't bring those back soon
+// import { sha256 } from 'multiformats/hashes/sha2'
+// import * as raw from 'multiformats/codecs/raw'
 import { UploadsList } from '@w3ui/react'
 import { UploadsListContext } from '@w3ui/react-uploads-list'
 
@@ -17,7 +18,7 @@ export const Empty = {
   render: () => {
     const state = { data: [], loading: false }
     const actions = {
-      next: async (): Promise<void> => {  },
+      next: async (): Promise<void> => { },
       reload: async (): Promise<void> => { }
     }
     return (
@@ -30,7 +31,7 @@ export const Empty = {
 
 export const OneItem = {
   render: () => {
-    const state = { data: [{ root: CID.parse('QmPr755CxWUwt39C2Yiw4UGKrv16uZhSgeZJmoHUUS9TSJ')}], loading: false }
+    const state = { data: [{ root: CID.parse('QmPr755CxWUwt39C2Yiw4UGKrv16uZhSgeZJmoHUUS9TSJ') }], loading: false }
     const actions = {
       next: async (): Promise<void> => { console.log('NEXT') },
       reload: async (): Promise<void> => { }
@@ -58,8 +59,9 @@ export const OneHundredItems = {
   }
 }
 
-async function randomCid () {
-  const bytes = new TextEncoder().encode(Date.now().toString() + Math.random())
+/* commenting because currently unused but potentially useful soon
+async function randomCid (): Promise<CID> {
+  const bytes = new TextEncoder().encode(Date.now().toString() + Math.random().toString())
   const hash = await sha256.digest(bytes)
   return CID.create(1, raw.code, hash)
 }
@@ -68,6 +70,7 @@ async function createUploadsList (n = 100) {
   const cids = await Promise.all(Array(n).fill(0).map(randomCid))
   return cids.map(root => ({ root }))
 }
+*/
 
 // the render function must be sync, and top level await causes an initial error in storybook render.
 // so we prebake CIDs here.
