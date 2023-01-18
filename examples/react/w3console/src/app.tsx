@@ -29,8 +29,8 @@ function SpaceSelector () {
       Space selector
       <ul>
         {spaces.map((space, i) => (
-          <li className={`${space.sameAs(currentSpace) ?? 'font-bold'} hover:font-bold`}>
-            <button onClick={() => setCurrentSpace(space)}>
+          <li className={`${space.sameAs(currentSpace) ?  'font-bold' : ''} hover:font-bold`}>
+            <button onClick={() => setCurrentSpace(space.did())}>
               {space.name() || `Space ${i + 1}`}
             </button>
           </li>
