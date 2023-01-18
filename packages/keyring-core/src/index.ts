@@ -20,7 +20,8 @@ export class Space implements Principal {
    * The given space name.
    */
   name (): string | undefined {
-    return this.#meta.name == null ? String(this.#meta.name) : undefined
+    // TODO: I think this was a typo, please review carefully!
+    return this.#meta.name != null ? String(this.#meta.name) : undefined
   }
 
   /**
@@ -42,6 +43,12 @@ export class Space implements Principal {
    */
   meta (): Record<string, any> {
     return this.#meta
+  }
+
+  // TODO: is this the right name for this function?
+  // TODO: needs docs once settled on name and API
+  sameAs (space?: Space): boolean {
+    return this.did() === space?.did()
   }
 }
 

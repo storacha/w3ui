@@ -22,6 +22,24 @@ function Space (): JSX.Element {
   )
 }
 
+function SpaceSelector () {
+  const [{ space: currentSpace, spaces }, { setCurrentSpace }] = useKeyring()
+  return (
+    <div className='flex-none'>
+      Space selector
+      <ul>
+        {spaces.map((space, i) => (
+          <li className={`${space.sameAs(currentSpace) ?? 'font-bold'} hover:font-bold`}>
+            <button onClick={() => setCurrentSpace(space)}>
+              {space.name() || `Space ${i + 1}`}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 export function App (): JSX.Element {
   return (
     <W3APIProvider>
@@ -35,13 +53,7 @@ export function App (): JSX.Element {
                   console
                 </h1>
               </div>
-              <div className='flex-none'>
-                Space selector
-                <ul>
-                  <li>space 1</li>
-                  <li className='font-bold'>space 2</li>
-                </ul>
-              </div>
+              <SpaceSelector />
             </div>
           </nav>
           <main className='grow bg-gray-100 dark:bg-dark-gray p-4'>
