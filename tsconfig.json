@@ -5,6 +5,7 @@
     ]
   },
   "files": [],
+  "exclude":["**/dist"],
   "references": [
     {
       "path": "packages/react-keyring"
@@ -14,6 +15,9 @@
     },
     {
       "path": "packages/react-uploads-list"
+    },
+    {
+      "path": "packages/react"
     },
     {
       "path": "packages/solid-keyring"
