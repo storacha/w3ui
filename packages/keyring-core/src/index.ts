@@ -20,7 +20,6 @@ export class Space implements Principal {
    * The given space name.
    */
   name (): string | undefined {
-    // TODO: I think this was a typo, please review carefully!
     return this.#meta.name != null ? String(this.#meta.name) : undefined
   }
 
@@ -45,8 +44,12 @@ export class Space implements Principal {
     return this.#meta
   }
 
-  // TODO: is this the right name for this function?
-  // TODO: needs docs once settled on name and API
+  /**
+   * Compares this space's DID to `space`'s DID, returns
+   * true if they are the same, false otherwise.
+   * If `space` is null or undefined, returns false since
+   * this space is neither.
+   */
   sameAs (space?: Space): boolean {
     return this.did() === space?.did()
   }
@@ -91,12 +94,11 @@ export interface KeyringContextActions {
    */
   setCurrentSpace: (did: DID) => Promise<void>
   /**
-   * Register a space (current space by default), verify the email
-   * address and store in secure storage. Use cancelRegisterSpace
-   * to abort. Automatically sets the newly registered space
-   * as the current space.
+   * Register the current space, verify the email address and store in secure
+   * storage. Use cancelRegisterSpace to abort. Automatically sets the
+   * newly registered space as the current space.
    */
-  registerSpace: (email: string, did?: DID) => Promise<void>
+  registerSpace: (email: string) => Promise<void>
   /**
    * Abort an ongoing account registration.
    */
