@@ -70,24 +70,26 @@ function SpaceSection (): JSX.Element {
           <div className='flex flex-row items-start gap-2'>
             <img title={space.did()} src={`https://www.gravatar.com/avatar/${md5(space.did())}?d=identicon`} className='w-10 hover:saturate-200 saturate-0 invert border-solid border-gray-500 border' />
             <div>
-              <h1 className='text-xl font-semibold leading-5'>{space.name() || 'Untitled'}</h1>
+              <h1 className='text-xl font-semibold leading-5'>{space.name() ?? 'Untitled'}</h1>
               <label className='font-mono text-xs text-gray-500'>{space.did()}</label>
             </div>
           </div>
         )}
-        
+
       </header>
       <div className='container mx-auto'>
-        {registered ? (
-          <>
-            <Uploader onUploadComplete={() => { void reload() }} />
-            <div className='mt-8'>
-              <UploadsList />
-            </div>
-          </>
-        ) : (
-          <SpaceRegistrar />
-        )}
+        {registered
+          ? (
+            <>
+              <Uploader onUploadComplete={() => { void reload() }} />
+              <div className='mt-8'>
+                <UploadsList />
+              </div>
+            </>
+            )
+          : (
+            <SpaceRegistrar />
+            )}
       </div>
     </div>
   )
@@ -119,13 +121,13 @@ function SpaceCreator (props: any): JSX.Element {
         ? (
           <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => { void onSubmit(e) }}>
             <input
-              className="text-black"
+              className='text-black'
               type='email' placeholder='Email' autofocus
               value={email}
               onChange={(e: ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value) }}
             />
             <input
-              className="text-black"
+              className='text-black'
               placeholder='Name'
               value={name}
               onChange={(e: ChangeEvent<HTMLInputElement>) => { setName(e.target.value) }}
@@ -154,7 +156,7 @@ function SpaceSelector (props: any): JSX.Element {
   return (
     <div>
       <h3 className='text-xs tracking-wider uppercase font-bold my-2 text-gray-400 font-mono'>Spaces</h3>
-      <SpaceFinder spaces={spaces} selected={currentSpace} setSelected={selectSpace} />
+      <SpaceFinder spaces={spaces} selected={currentSpace} setSelected={(space: Space) => { void selectSpace(space) }} />
     </div>
   )
 }
@@ -175,7 +177,7 @@ export function App (): JSX.Element {
         <div className='flex min-h-full w-full'>
           <nav className='flex-none w-64 bg-gray-900 text-white px-4 pb-4 border-r border-gray-800'>
             <div className='flex flex-col justify-between min-h-full'>
-              <div class="flex-none">
+              <div class='flex-none'>
                 <SpaceSelector />
               </div>
               <div>
