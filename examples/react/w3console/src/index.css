@@ -21,7 +21,7 @@
 }
 
 .w3-uploads-list thead {
-  @apply text-left bg-gray-400 dark:bg-gray-900 bg-opacity-50 text-sm;
+  @apply text-left bg-gray-400 bg-opacity-50 text-sm;
 }
 
 .w3-uploads-list th {

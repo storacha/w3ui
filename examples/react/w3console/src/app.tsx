@@ -153,8 +153,8 @@ function SpaceSelector (props: any): JSX.Element {
             </button>
           </li>
         ))}
-        <SpaceCreator className='mt-12' />
       </ul>
+      <SpaceCreator className='mt-12' />
     </div>
   )
 }
