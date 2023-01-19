@@ -230,6 +230,7 @@ importers:
     specifiers:
       '@preact/preset-vite': ^2.4.0
       '@types/blueimp-md5': ^2.18.0
+      '@w3ui/keyring-core': workspace:^2.0.1
       '@w3ui/react': workspace:^
       '@w3ui/react-keyring': workspace:^
       '@w3ui/react-uploads-list': workspace:^2.0.1
@@ -241,6 +242,7 @@ importers:
       typescript: ^4.9.3
       vite: ^4.0.0
     dependencies:
+      '@w3ui/keyring-core': link:../../../packages/keyring-core
       '@w3ui/react': link:../../../packages/react
       '@w3ui/react-keyring': link:../../../packages/react-keyring
       '@w3ui/react-uploads-list': link:../../../packages/react-uploads-list

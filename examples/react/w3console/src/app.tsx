@@ -1,40 +1,159 @@
+import { ChangeEvent, useEffect, useState } from 'react'
+import type { Space } from '@w3ui/keyring-core'
+
 import { Authenticator, Uploader, UploadsList, W3APIProvider } from '@w3ui/react'
 import { useKeyring } from '@w3ui/react-keyring'
 import { useUploadsList } from '@w3ui/react-uploads-list'
 import md5 from 'blueimp-md5'
 import '@w3ui/react/src/styles/uploader.css'
 
-function Space (): JSX.Element {
-  const [{ space }] = useKeyring()
-  const [, { reload }] = useUploadsList()
+function SpaceRegistrar (): JSX.Element {
+  const [, { registerSpace }] = useKeyring()
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  async function onSubmit (e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    e.preventDefault()
+    setSubmitted(true)
+    try {
+      await registerSpace(email)
+    } catch (err) {
+      console.log(err)
+      throw new Error('failed to register', { cause: err })
+    } finally {
+      setSubmitted(false)
+    }
+  }
   return (
-    <div className='container mx-auto'>
-      <div className='flex flex-row space-x-4 mb-4 justify-between'>
-        <div className='shrink-0'>
-          {(space !== undefined) && (
-            <img src={`https://www.gravatar.com/avatar/${md5(space.did())}?d=identicon`} className='w-20' />
+    <div>
+      {submitted
+        ? (
+          <p>
+            Please check your email for a verification email.
+          </p>
+          )
+        : (
+          <>
+            <p>
+              Before you upload files, you must register this space.
+            </p>
+            <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => { void onSubmit(e) }}>
+              <input
+                type='email' placeholder='Email' autofocus
+                value={email}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value) }}
+              />
+              <input
+                type='submit' className='w3ui-button' value='Register'
+                disabled={email === ''}
+              />
+            </form>
+          </>
           )}
-        </div>
-        <Uploader onUploadComplete={() => { void reload() }} />
-      </div>
-      <UploadsList />
     </div>
   )
 }
 
-function SpaceSelector (props: any) {
-  const [{ space: currentSpace, spaces }, { setCurrentSpace }] = useKeyring()
+function SpaceSection (): JSX.Element {
+  const [{ space }] = useKeyring()
+  const [, { reload }] = useUploadsList()
+  // reload the uploads list when the space changes
+  // TODO: this currently does a network request - we'd like to just reset
+  // to the latest state we have and revalidate in the background (SWR)
+  // but it's not clear how all that state should work yet - perhaps
+  // we need some sort of state management primitive in the uploads list?
+  useEffect(() => { void reload() }, [space])
+  const registered = Boolean(space?.registered())
+  return (
+    <div className='container mx-auto'>
+      {registered
+        ? (
+          <>
+            <div className='flex flex-row space-x-4 mb-4 justify-between'>
+              <div className='shrink-0'>
+                {(space !== undefined) && (
+                  <img src={`https://www.gravatar.com/avatar/${md5(space.did())}?d=identicon`} className='w-20' />
+                )}
+              </div>
+              <Uploader onUploadComplete={() => { void reload() }} />
+            </div>
+            <UploadsList />
+          </>
+          )
+        : (
+          <SpaceRegistrar />
+          )}
+    </div>
+  )
+}
+
+function SpaceCreator (props: any): JSX.Element {
+  const [, { createSpace, registerSpace }] = useKeyring()
+  const [creating, setCreating] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+
+  async function onSubmit (e: React.FormEvent<HTMLFormElement>): Promise<void> {
+    e.preventDefault()
+    setSubmitted(true)
+    try {
+      await createSpace(name)
+      await registerSpace(email)
+    } catch (err) {
+      console.log(err)
+      throw new Error('failed to register', { cause: err })
+    } finally {
+      setSubmitted(false)
+    }
+  }
   return (
     <div {...props}>
-      Space selector
-      <ul>
+      {(creating)
+        ? (
+          <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => { void onSubmit(e) }}>
+            <input
+              type='email' placeholder='Email' autofocus
+              value={email}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value) }}
+            />
+            <input
+              placeholder='Name'
+              value={name}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => { setName(e.target.value) }}
+            />
+            <input type='submit' className='w3ui-button' value='Create' />
+          </form>
+          )
+        : submitted
+          ? (
+            <div>creating space...</div>
+            )
+          : (
+            <button className='w3ui-button py-2' onClick={() => setCreating(true)}>
+              Add Space
+            </button>
+            )}
+    </div>
+  )
+}
+
+function SpaceSelector (props: any): JSX.Element {
+  const [{ space: currentSpace, spaces }, { setCurrentSpace }] = useKeyring()
+  async function selectSpace (space: Space): Promise<void> {
+    await setCurrentSpace(space.did())
+  }
+  return (
+    <div {...props}>
+      <h3 className='text-lg uppercase font-bold my-4'>Spaces</h3>
+      <ul className='space-y-2'>
         {spaces.map((space, i) => (
-          <li className={`${space.sameAs(currentSpace) ? 'font-bold' : ''} hover:font-bold`}>
-            <button onClick={() => setCurrentSpace(space.did())}>
-              {space.name() || `Space ${i + 1}`}
+          <li key={space.did()} className={`hover:font-bold ${space.sameAs(currentSpace) ? 'font-bold' : ''}`}>
+            <button onClick={() => { void selectSpace(space) }}>
+              {space.name() ?? `Space ${i + 1}`}
             </button>
           </li>
         ))}
+        <SpaceCreator className='mt-12' />
       </ul>
     </div>
   )
@@ -53,11 +172,11 @@ export function App (): JSX.Element {
                   console
                 </h1>
               </div>
-              <SpaceSelector className="flex-none grow"/>
+              <SpaceSelector className='flex-none grow' />
             </div>
           </nav>
           <main className='grow bg-gray-100 dark:bg-dark-gray p-4'>
-            <Space />
+            <SpaceSection />
           </main>
         </div>
       </Authenticator>
