@@ -59,11 +59,11 @@ const UploaderForm = (): JSX.Element => {
   )
 }
 
-function pickFileIconLabel (file: File) {
+function pickFileIconLabel (file: File): string | undefined {
   const type = file.type.split('/')
-  if (!type.length || type.at(0) === '') {
+  if ((type.length === 0) || type.at(0) === '') {
     const ext = file.name.split('.').at(-1)
-    if (ext && ext.length < 5) {
+    if ((ext !== undefined) && ext.length < 5) {
       return ext
     }
     return 'Data'
@@ -74,7 +74,7 @@ function pickFileIconLabel (file: File) {
   return type.at(0)
 }
 
-function humanFileSize (bytes: number) {
+function humanFileSize (bytes: number): string {
   const size = (bytes / (1024 * 1024)).toFixed(2)
   return `${size} MiB`
 }
@@ -87,7 +87,7 @@ const UploaderContents = (): JSX.Element => {
       return (
         <>
           <div className='w3ui-uploader__file'>
-            <div className='w3ui-uploader__file_icon' title={ file.type }>
+            <div className='w3ui-uploader__file_icon' title={file.type}>
               {pickFileIconLabel(file)}
             </div>
             <div className='w3ui-uploader__file_meta'>
