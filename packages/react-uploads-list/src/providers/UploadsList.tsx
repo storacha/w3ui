@@ -95,6 +95,6 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
 export function useUploadsList (): UploadsListContextValue {
   const ctx = useContext(UploadsListContext)
   // automatically load the first page of results
-  useEffect(() => { ctx[1].next() }, [])
+  useEffect(() => { void ctx[1].next() }, [])
   return ctx
 }
