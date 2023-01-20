@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState } from 'react'
+import React, { useContext, createContext, useState, useEffect } from 'react'
 import { UploadListResult, UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { list as uploadList } from '@web3-storage/capabilities/upload'
@@ -13,8 +13,8 @@ export const uploadsListContextDefaultValue: UploadsListContextValue = [
     loading: false
   },
   {
-    next: async () => {},
-    reload: async () => {}
+    next: async () => { },
+    reload: async () => { }
   }
 ]
 
@@ -72,6 +72,8 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
       setLoading(false)
     }
   }
+  // automatically load the first page of results
+  useEffect(() => { void loadPage() }, [])
 
   const state = { data, loading, error }
   const actions = {

@@ -68,10 +68,6 @@ export const UploadsListRoot = (props: UploadsListRootProps): JSX.Element => {
   } else {
     renderedChildren = children as React.ReactNode
   }
-  useEffect(() => {
-    // load the first page of results asynchronously
-    void actions.next()
-  }, [])
   return (
     <UploadsListComponentContext.Provider value={contextValue}>
       {renderedChildren}
