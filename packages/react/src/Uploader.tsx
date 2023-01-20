@@ -38,11 +38,13 @@ export const Done = ({ dataCID }: DoneProps): JSX.Element => {
       <p className='cid'>
         Uploaded to <a href={`https://${cid}.ipfs.w3s.link/`}>{cid}</a>
       </p>
-      <button className="w3ui-button"
-        onClick={() => { setFile(undefined) }}>
+      <button
+        className='w3ui-button'
+        onClick={() => { setFile(undefined) }}
+      >
         Add More
       </button>
-    </div >
+    </div>
   )
 }
 

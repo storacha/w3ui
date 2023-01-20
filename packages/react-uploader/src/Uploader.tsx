@@ -93,7 +93,7 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent((props
   const [status, setStatus] = useState(Status.Idle)
   const [error, setError] = useState()
 
-  const setFileAndReset = (file?: File) => {
+  const setFileAndReset = (file?: File): void => {
     setFile(file)
     setStatus(Status.Idle)
   }
