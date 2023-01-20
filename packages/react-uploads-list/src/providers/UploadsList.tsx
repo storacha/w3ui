@@ -72,8 +72,6 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
       setLoading(false)
     }
   }
-  // automatically load the first page of results
-  useEffect(() => { void loadPage() }, [])
 
   const state = { data, loading, error }
   const actions = {
@@ -93,7 +91,10 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
 
 /**
  * Use the scoped uploads list context state from a parent `UploadsListProvider`.
- */
+*/
 export function useUploadsList (): UploadsListContextValue {
-  return useContext(UploadsListContext)
+  const ctx = useContext(UploadsListContext)
+  // automatically load the first page of results
+  useEffect(() => { ctx[1].next() }, [])
+  return ctx
 }
