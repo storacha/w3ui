@@ -36,7 +36,7 @@ outputs:
     value: ${{ steps.get_url.outputs.url }}
   summary:
     description: 'Text summary of the published urls'
-    value: ${{ steps.set-summary.ouputs.summary }}
+    value: ${{ steps.set_summary.ouputs.summary }}
 runs:
   using: "composite"
   steps:
@@ -52,7 +52,7 @@ runs:
       run: npx dnslink-cloudflare --record ${{ inputs.dnslink_record }} --domain ${{ inputs.dnslink_domain }} --link /ipfs/${{ steps.ipfs.outputs.cid }}
       shell: bash
       env:
-        CF_API_TOKEN: ${{ inputs }}
+        CF_API_TOKEN: ${{ inputs.cf_token }}
 
     - name: Deploy preview build to Cloudflare Pages
       uses: mathiasvr/command-output@v1.1.0
@@ -71,7 +71,7 @@ runs:
 
     - name: Set Job Summary
       uses: actions/github-script@v5
-      id: set-summary
+      id: set_summary
       with:
         script: |
           core.setOutput('summary', `### Website preview 🔗✨
