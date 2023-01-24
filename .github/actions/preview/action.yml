@@ -36,7 +36,8 @@ outputs:
     value: ${{ steps.get_url.outputs.url }}
   summary:
     description: 'Text summary of the published urls'
-    value: ${{ steps.set_summary.ouputs.summary }}
+    value: ${{ steps.set_summary.outputs.summary }}
+
 runs:
   using: "composite"
   steps:
