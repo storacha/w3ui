@@ -10,7 +10,7 @@ patchedPreactPlugin[0].config = () => ({
     alias: {
       'react-dom/test-utils': path.resolve(__dirname, './node_modules/preact/test-utils'),
       'react-dom': path.resolve(__dirname, './node_modules/preact/compat'),
-      'react': path.resolve(__dirname, './node_modules/preact/compat'),
+      react: path.resolve(__dirname, './node_modules/preact/compat'),
       'preact/jsx-runtime': path.resolve(__dirname, './node_modules/preact/jsx-runtime')
     }
   }
