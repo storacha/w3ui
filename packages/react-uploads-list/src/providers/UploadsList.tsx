@@ -13,8 +13,8 @@ export const uploadsListContextDefaultValue: UploadsListContextValue = [
     loading: false
   },
   {
-    next: async () => { },
-    reload: async () => { }
+    next: async () => {},
+    reload: async () => {}
   }
 ]
 
@@ -82,6 +82,9 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
     }
   }
 
+  // we should reload the page any time the space or agent change
+  useEffect(() => { void loadPage() }, [space, agent])
+
   return (
     <UploadsListContext.Provider value={[state, actions]}>
       {children}
@@ -93,8 +96,5 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
  * Use the scoped uploads list context state from a parent `UploadsListProvider`.
 */
 export function useUploadsList (): UploadsListContextValue {
-  const ctx = useContext(UploadsListContext)
-  // automatically load the first page of results
-  useEffect(() => { void ctx[1].next() }, [])
-  return ctx
+  return useContext(UploadsListContext)
 }
