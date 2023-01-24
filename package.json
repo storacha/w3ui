@@ -20,7 +20,8 @@
     "typecheck": "tsc -b",
     "test:examples": "pnpm run --filter './examples/**' test",
     "build:examples": "pnpm run --filter './examples/**' --no-bail build || true",
-    "serve:examples": "serve examples"
+    "serve:examples": "serve examples",
+    "codesandbox:install": "npx pnpm install --frozen-lockfile, --strict-peer-dependencies"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
