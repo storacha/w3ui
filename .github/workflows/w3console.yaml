@@ -25,8 +25,8 @@ jobs:
         working-directory: examples/react/w3console
       
       - name: Publish static site
-        uses: ./.github/actions/publish
-        id: publish
+        uses: ./.github/actions/preview
+        id: preview
         with:
           path_to_add: examples/react/w3console/dist
           web3_token: ${{ secrets.WEB3_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
           cf_token: ${{ secrets.CF_TOKEN }}
 
       - name: Add Preview URLs as Job Summary
-        run: echo "${{ steps.publish.outputs.summary }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "${{ steps.preview.outputs.summary }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Find Current Pull Request
         uses: jwalton/gh-find-current-pr@v1.3.0
@@ -48,4 +48,4 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2.2.0
         with:
           number: ${{ steps.finder.outputs.pr }}
-          message: ${{ steps.publish.outputs.summary }}
+          message: ${{ steps.preview.outputs.summary }}
