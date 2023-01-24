@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - "examples/react/w3console"
+      - 'examples/react/w3console/**'
   pull_request:
     branches:
       - main
     paths:
-      - "examples/react/w3console"
+      - 'examples/react/w3console/**'
 jobs:
   publish:
     name: Publish
