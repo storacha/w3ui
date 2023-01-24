@@ -1,5 +1,6 @@
 name: w3console
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -16,19 +17,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/pnpm
-      - run: pnpm build
+
+      - name: Build w3console
+        run: pnpm build
         working-directory: examples/react/w3console
-      - uses: ./.github/actions/publish
+      
+      - name: Publish static site
+        uses: ./.github/actions/publish
         id: publish
         with:
-          path_to_add: examples/react/w3console
+          path_to_add: examples/react/w3console/dist
           web3_token: ${{ secrets.WEB3_TOKEN }}
-          dnslink_record: console
-          dnslink_domain: web3.storage
+          # Enable to publish dnslink on merge to main
+          # dnslink_record: console
+          # dnslink_domain: web3.storage
           cf_pages_project: w3console
           cf_account_id: ${{ secrets.CF_ACCOUNT_ID }}
           cf_token: ${{ secrets.CF_TOKEN }}
+
       - name: Add Preview URLs as Job Summary
         run: echo "${{ steps.publish.outputs.summary }}" >> $GITHUB_STEP_SUMMARY
-          
+
+      - name: Find Current Pull Request
+        uses: jwalton/gh-find-current-pr@v1.3.0
+        id: finder
+
+      - name: Update Preview URLs PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2.2.0
+        with:
+          number: ${{ steps.finder.outputs.pr }}
+          message: ${{ steps.publish.outputs.summary }}

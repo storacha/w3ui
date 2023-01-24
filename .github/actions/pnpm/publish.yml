@@ -10,10 +10,10 @@ inputs:
     required: true
   dnslink_record:
     description: 'subdomain to publish DNSLink TXT record under e.g console'
-    required: true
+    required: false
   dnslink_domain:
     description: 'domain to publish DNSLink TXT record under e.g web3.storage'
-    required: true
+    required: false
   cf_pages_project:
     description: 'Pages project name to publish to'
     required: true
@@ -48,7 +48,7 @@ runs:
         web3_token: ${{ inputs.web3_token }}
     
     - name: Update IPFS DNSLink
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      if: inputs.dnslink_domain != '' && github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: npx dnslink-cloudflare --record ${{ inputs.dnslink_record }} --domain ${{ inputs.dnslink_domain }} --link /ipfs/${{ steps.ipfs.outputs.cid }}
       env:
         CF_API_TOKEN: ${{ inputs }}
