@@ -1,5 +1,4 @@
 {
-  "installCommand": "codesandbox:install",
   "buildCommand": false,
   "sandboxes": [
     "/examples/react/file-upload",
