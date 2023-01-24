@@ -50,6 +50,7 @@ runs:
     - name: Update IPFS DNSLink
       if: inputs.dnslink_domain != '' && github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: npx dnslink-cloudflare --record ${{ inputs.dnslink_record }} --domain ${{ inputs.dnslink_domain }} --link /ipfs/${{ steps.ipfs.outputs.cid }}
+      shell: bash
       env:
         CF_API_TOKEN: ${{ inputs }}
 
