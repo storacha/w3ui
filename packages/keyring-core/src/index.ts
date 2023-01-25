@@ -67,7 +67,7 @@ export interface KeyringContextState {
   /**
    * The current user agent (this device).
    */
-  agent?: Signer
+  agent?: Agent
 }
 
 export interface KeyringContextActions {

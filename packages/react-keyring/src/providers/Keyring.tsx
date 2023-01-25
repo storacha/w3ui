@@ -119,7 +119,7 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
   const state = {
     space,
     spaces,
-    agent: issuer
+    agent
   }
   const actions = {
     loadAgent,
