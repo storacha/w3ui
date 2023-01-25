@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/web3-storage/w3ui/compare/keyring-core-v2.0.1...keyring-core-v2.1.0) (2023-01-25)
+
+
+### Features
+
+* adds space-finder autocomplete combobox ([#268](https://github.com/web3-storage/w3ui/issues/268)) ([3dcd647](https://github.com/web3-storage/w3ui/commit/3dcd647d3c05c6b403a439af58688885073631b8))
+
 ## [2.0.1](https://github.com/web3-storage/w3ui/compare/keyring-core-v2.0.0...keyring-core-v2.0.1) (2022-12-15)
 
 
