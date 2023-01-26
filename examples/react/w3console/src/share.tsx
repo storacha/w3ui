@@ -1,36 +1,16 @@
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useKeyring } from '@w3ui/react-keyring'
 import * as DID from '@ipld/dag-ucan/did'
 import { CarWriter } from '@ipld/car/writer'
+import type { PropsWithChildren } from 'react'
+import type { Delegation } from '@ucanto/interface'
 
-const Header = ({children}) => <h3 className='font-semibold text-xs font-mono uppercase tracking-wider mb-4 text-gray-400'>{children}</h3>
+const Header = (props: PropsWithChildren) => <h3 className='font-semibold text-xs font-mono uppercase tracking-wider mb-4 text-gray-400'>{props.children}</h3>
 
-/**
- * @param {Agent} agent
- * @param {string} audienceDID
- * @param {object} opts
- * @param {string[]|string} opts.can
- * @param {string} [opts.name]
- * @param {string} [opts.type]
- * @param {number} [opts.expiration]
- * @param {string} [opts.output]
- */
-export async function createDelegation (agent, audience, opts) {
-  const abilities = Array.isArray(opts.can) ? opts.can : [opts.can]
-  const audienceMeta = {}
-  if (opts.name) audienceMeta.name = opts.name
-  if (opts.type) audienceMeta.type = opts.type
-  const expiration = opts.expiration || Infinity
-  return agent.delegate({
-    audience,
-    abilities,
-    expiration
-  })
-}
-
-export async function toCarBlob (delegation) {
+export async function toCarBlob (delegation: Delegation) {
   const { writer, out } = CarWriter.create()
   for (const block of delegation.export()) {
+    // @ts-expect-error
     writer.put(block)
   }
   writer.close()
@@ -46,27 +26,24 @@ export async function toCarBlob (delegation) {
 }
 
 export function SpaceShare (): JSX.Element {
-  const [{ agent }] = useKeyring()
+  const [, { createDelegation }] = useKeyring()
   const [value, setValue] = useState('')
   const [downloadUrl, setDownloadUrl] = useState('')
 
-  async function makeDownloadLink (input) {
-    console.log('input', input)
+  async function makeDownloadLink (input: string) {
     let audience
     try {
       audience = DID.parse(input.trim())
     } catch (err) {
-      console.log('nope', input)
       setDownloadUrl('')
       return
     }
 
     try {
-      const delegation = await createDelegation(agent, audience, { can: '*' })
+      const delegation = await createDelegation(audience, ['*'], { expiration: Infinity })
       const blob = await toCarBlob(delegation)
       const url = URL.createObjectURL(blob)
       setDownloadUrl(url)
-      console.log(url)
     } catch (err) {
       throw new Error('failed to register', { cause: err })
     }
@@ -78,9 +55,9 @@ export function SpaceShare (): JSX.Element {
     makeDownloadLink(value)
   }
 
-  async function onChange (e: ChangeEvent<HTMLInputElement>): void {
+  function onChange (e: ChangeEvent<HTMLInputElement>): void {
     const input = e.target.value
-    await makeDownloadLink(input)
+    makeDownloadLink(input)
     setValue(input)
   }
 
@@ -98,11 +75,6 @@ export function SpaceShare (): JSX.Element {
           />
           <a className='w3ui-button text-center block w-52 opacity-30' style={{opacity: downloadUrl ? '1' : '0.2' }} href={'' || downloadUrl} download={ downloadUrl && `did-${value.split(':').at(1)}-${value.split(':').at(2)?.substring(0, 10)}.ucan`}>Download UCAN</a>
         </form>
-      </div>
-      <div className='mt-16 py-16 border-t border-gray-700'>
-        <Header>Import a space</Header>
-        <p className='mb-2'>Copy and paste your DID to your friend</p>
-        <div className='bg-opacity-10 bg-white font-mono text-sm py-2 px-3 rounded break-words max-w-4xl'>{agent.did()}</div>
       </div>
     </div>
   )
