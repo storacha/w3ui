@@ -2,8 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --w3ui-uploader-primary: theme(colors.slate.800);
-  --w3ui-button-primary: theme(colors.slate.800);
-  --w3ui-button-primary-hover: theme(colors.blue.900);
-}

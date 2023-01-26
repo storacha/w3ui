@@ -1,11 +1,13 @@
 :root {
+  --w3ui-button-text-color: white;
   --w3ui-button-border-radius: 0.375rem;
-  --w3ui-button-primary: salmon;
-  --w3ui-button-primary-hover: rgb(250, 136, 124);
+  --w3ui-button-primary: rgb(30 41 59);
+  --w3ui-button-primary-hover: rgb(30 58 138);
 }
 
 .w3ui-button {
   width: 100%;
+  color: var(--w3ui-button-text-color);
   background-color: var(--w3ui-button-primary);
   border-radius: var(--w3ui-button-border-radius);
   outline: none;
