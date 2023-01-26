@@ -7,7 +7,7 @@ function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
     return (
       <>
         <div>
-          <div>
+          <div className='w3-uploads-list-no-uploads'>
             No uploads
           </div>
           <nav>

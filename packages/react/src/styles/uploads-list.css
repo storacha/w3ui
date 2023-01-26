@@ -2,6 +2,10 @@
   margin-bottom: 1.25rem;
 }
 
+.w3-uploads-list-no-uploads {
+  color: rgb(212 212 216);
+}
+
 .w3-uploads-list-data {
   overflow: auto;
   border-radius: 0.375rem;

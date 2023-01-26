@@ -6,6 +6,11 @@ export default {
   component: Uploader,
   tags: ['autodocs'],
   argTypes: {
+  },
+  parameters: {
+    backgrounds: {
+      default: 'dark'
+    }
   }
 }
 

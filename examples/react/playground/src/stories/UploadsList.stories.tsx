@@ -11,7 +11,12 @@ import '@w3ui/react/src/styles/uploads-list.css'
 export default {
   title: 'w3ui/UploadsList',
   component: UploadsList,
-  tags: ['autodocs']
+  tags: ['autodocs'],
+  parameters: {
+    backgrounds: {
+      default: 'dark'
+    }
+  }
 }
 
 // More on writing stories with args: https://storybook.js.org/docs/7.0/react/writing-stories/args
