@@ -121,7 +121,7 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
   const createDelegation = async (audience: Principal, abilities: Abilities[], options: CreateDelegationOptions) => {
     const agent = await getAgent()
     const audienceMeta = options.audienceMeta ?? { name: 'agent', type: 'device' }
-    return agent.delegate({
+    return await agent.delegate({
       ...options,
       abilities,
       audience,

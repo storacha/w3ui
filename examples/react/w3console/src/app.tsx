@@ -64,10 +64,8 @@ function SpaceRegistrar (): JSX.Element {
   )
 }
 
-
-
 function SpaceSection (): JSX.Element {
-  const [share, setShare] = useState()
+  const [share, setShare] = useState(false)
   const [{ space }] = useKeyring()
   const [, { reload }] = useUploadsList()
   // reload the uploads list when the space changes

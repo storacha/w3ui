@@ -5,22 +5,24 @@ import { CarWriter } from '@ipld/car/writer'
 import type { PropsWithChildren } from 'react'
 import type { Delegation } from '@ucanto/interface'
 
-const Header = (props: PropsWithChildren) => <h3 className='font-semibold text-xs font-mono uppercase tracking-wider mb-4 text-gray-400'>{props.children}</h3>
+function Header (props: PropsWithChildren): JSX.Element {
+  return <h3 className='font-semibold text-xs font-mono uppercase tracking-wider mb-4 text-gray-400'>{props.children}</h3>
+}
 
-export async function toCarBlob (delegation: Delegation) {
+export async function toCarBlob (delegation: Delegation): Promise<Blob> {
   const { writer, out } = CarWriter.create()
   for (const block of delegation.export()) {
     // @ts-expect-error
-    writer.put(block)
+    await writer.put(block)
   }
-  writer.close()
-  
+  await writer.close()
+
   const carParts = []
   for await (const chunk of out) {
     carParts.push(chunk)
   }
   const car = new Blob(carParts, {
-    type: 'vnd.ipld.car',
+    type: 'vnd.ipld.car'
   })
   return car
 }
@@ -30,7 +32,7 @@ export function SpaceShare (): JSX.Element {
   const [value, setValue] = useState('')
   const [downloadUrl, setDownloadUrl] = useState('')
 
-  async function makeDownloadLink (input: string) {
+  async function makeDownloadLink (input: string): Promise<void> {
     let audience
     try {
       audience = DID.parse(input.trim())
@@ -52,13 +54,19 @@ export function SpaceShare (): JSX.Element {
   function onSubmit (e: React.FormEvent<HTMLFormElement>): void {
     console.log('on submit', value)
     e.preventDefault()
-    makeDownloadLink(value)
+    void makeDownloadLink(value)
   }
 
   function onChange (e: ChangeEvent<HTMLInputElement>): void {
     const input = e.target.value
-    makeDownloadLink(input)
+    void makeDownloadLink(input)
     setValue(input)
+  }
+
+  function downloadName (ready: boolean, inputDid: string): string {
+    if (!ready || inputDid === '') return ''
+    const [, method = '', id = ''] = inputDid.split(':')
+    return `did-${method}-${id?.substring(0, 10)}.ucan`
   }
 
   return (
@@ -66,14 +74,14 @@ export function SpaceShare (): JSX.Element {
       <div className=''>
         <Header>Share your space</Header>
         <p className='mb-4'>Ask your friend for their Decentralized Identifier (DID) and paste it in below</p>
-        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => { void onSubmit(e) }} >
+        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => { void onSubmit(e) }}>
           <input
             className='text-black px-2 py-2 rounded block mb-4 w-full max-w-4xl font-mono text-sm'
-            type='pattern' pattern="did:.+" placeholder='did:'
+            type='pattern' pattern='did:.+' placeholder='did:'
             value={value}
             onChange={onChange}
           />
-          <a className='w3ui-button text-center block w-52 opacity-30' style={{opacity: downloadUrl ? '1' : '0.2' }} href={'' || downloadUrl} download={ downloadUrl && `did-${value.split(':').at(1)}-${value.split(':').at(2)?.substring(0, 10)}.ucan`}>Download UCAN</a>
+          <a className='w3ui-button text-center block w-52 opacity-30' style={{ opacity: downloadUrl !== '' ? '1' : '0.2' }} href={downloadUrl ?? ''} download={downloadName(downloadUrl !== '', value)}>Download UCAN</a>
         </form>
       </div>
     </div>
