@@ -27,6 +27,6 @@ export const Primary = {
       <div style={{ margin: '3em' }}>
         <Story />
       </div>
-    ),
+    )
   ]
 }
