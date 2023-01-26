@@ -13,9 +13,9 @@ export async function toCarBlob (delegation: Delegation): Promise<Blob> {
   const { writer, out } = CarWriter.create()
   for (const block of delegation.export()) {
     // @ts-expect-error
-    await writer.put(block)
+    void writer.put(block)
   }
-  await writer.close()
+  void writer.close()
 
   const carParts = []
   for await (const chunk of out) {

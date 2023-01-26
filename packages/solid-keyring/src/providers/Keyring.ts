@@ -123,7 +123,7 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
     return agent.proofs(caps)
   }
 
-  const createDelegation = async (audience: Principal, abilities: Abilities[], options: CreateDelegationOptions) => {
+  const createDelegation = async (audience: Principal, abilities: Abilities[], options: CreateDelegationOptions): Promise<Delegation> => {
     const agent = await getAgent()
     const audienceMeta = options.audienceMeta ?? { name: 'agent', type: 'device' }
     return await agent.delegate({

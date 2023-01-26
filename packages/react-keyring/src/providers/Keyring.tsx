@@ -3,7 +3,7 @@ import { createAgent, Space, getCurrentSpace, getSpaces, CreateDelegationOptions
 import type { KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Abilities } from '@web3-storage/access/types'
-import type { Capability, DID, Principal, Proof, Signer } from '@ucanto/interface'
+import type { Capability, Delegation, DID, Principal, Proof, Signer } from '@ucanto/interface'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -118,7 +118,7 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
     return agent.proofs(caps)
   }
 
-  const createDelegation = async (audience: Principal, abilities: Abilities[], options: CreateDelegationOptions) => {
+  const createDelegation = async (audience: Principal, abilities: Abilities[], options: CreateDelegationOptions): Promise<Delegation> => {
     const agent = await getAgent()
     const audienceMeta = options.audienceMeta ?? { name: 'agent', type: 'device' }
     return await agent.delegate({
