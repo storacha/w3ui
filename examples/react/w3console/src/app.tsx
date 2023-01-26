@@ -9,6 +9,7 @@ import { ArrowPathIcon } from '@heroicons/react/20/solid'
 import md5 from 'blueimp-md5'
 import '@w3ui/react/src/styles/uploader.css'
 import '@w3ui/react/src/styles/space-finder.css'
+import '@w3ui/react/src/styles/uploads-list.css'
 
 function SpaceRegistrar (): JSX.Element {
   const [, { registerSpace }] = useKeyring()
