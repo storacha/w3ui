@@ -100,7 +100,7 @@ function SpaceSection (): JSX.Element {
           <>
             <Uploader onUploadComplete={() => { void reload() }} />
             <div className='mt-8'>
-              <UploadsList />
+              <UploadsList pageSize={10} />
             </div>
           </>
         )}

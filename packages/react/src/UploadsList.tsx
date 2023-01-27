@@ -54,9 +54,13 @@ function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
   }
 }
 
-export const UploadsList = (): JSX.Element => {
+export interface UploadsListProps {
+  pageSize?: number
+}
+
+export const UploadsList = (uploadsListProps: UploadsListProps): JSX.Element => {
   return (
-    <UploadsListCore>
+    <UploadsListCore {...uploadsListProps}>
       {(props) => (
         <div className='w3-uploads-list'>
           <Uploads uploads={props.uploadsList?.[0].data} />

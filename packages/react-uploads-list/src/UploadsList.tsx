@@ -3,7 +3,7 @@ import type { UploadsListContextState, UploadsListContextActions } from '@w3ui/u
 
 import React, { Fragment, createContext, useContext, useMemo, useCallback } from 'react'
 import { createComponent, createElement } from 'ariakit-react-utils'
-import { useUploadsList } from './providers/UploadsList'
+import { uploadsListContextDefaultValue, useUploadsList } from './providers/UploadsList'
 
 export type UploadsListComponentContextState = UploadsListContextState & {
 
@@ -18,25 +18,7 @@ export type UploadsListComponentContextValue = [
   actions: UploadsListComponentContextActions
 ]
 
-export const UploadsListComponentContext = createContext<UploadsListComponentContextValue>([
-  {
-    /**
-     * A boolean indicating whether the uploads list
-     * is currently loading data from the server.
-     */
-    loading: false
-  },
-  {
-    /**
-     * A function that will load the next page of results.
-     */
-    next: async () => { },
-    /**
-     * A function that will reload the uploads list.
-     */
-    reload: async () => { }
-  }
-])
+export const UploadsListComponentContext = createContext<UploadsListComponentContextValue>(uploadsListContextDefaultValue)
 
 export type UploadsListRootOptions = Options<typeof Fragment>
 export type UploadsListRenderProps = Omit<Props<UploadsListRootOptions>, 'children'> & {
@@ -44,6 +26,7 @@ export type UploadsListRenderProps = Omit<Props<UploadsListRootOptions>, 'childr
 }
 export type UploadsListRootProps = Omit<Props<UploadsListRootOptions>, 'children'> & {
   uploadsList?: UploadsListComponentContextValue
+  pageSize?: number
   children?: React.ReactNode | RenderProp<UploadsListRenderProps>
 }
 
@@ -57,7 +40,7 @@ export type UploadsListRootProps = Omit<Props<UploadsListRootOptions>, 'children
  * Always renders as a Fragment and does not support the `as` property.
  */
 export const UploadsListRoot = (props: UploadsListRootProps): JSX.Element => {
-  const [state, actions] = useUploadsList()
+  const [state, actions] = useUploadsList({ pageSize: props.pageSize })
   const contextValue = useMemo<UploadsListComponentContextValue>(
     () => ([state, actions]),
     [state, actions])

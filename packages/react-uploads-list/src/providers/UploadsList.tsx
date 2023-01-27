@@ -10,11 +10,25 @@ export type UploadsListContextValue = [
 
 export const uploadsListContextDefaultValue: UploadsListContextValue = [
   {
+    /**
+     * A boolean indicating whether the uploads list
+     * is currently loading data from the server.
+     */
     loading: false
   },
   {
-    next: async () => {},
-    reload: async () => {}
+    /**
+     * A function that will load the next page of results.
+     */
+    next: async () => { },
+    /**
+     * A function that will reload the uploads list.
+     */
+    reload: async () => { },
+    /**
+     * A function that will change the page size of the uploads list.
+     */
+    setPageSize: () => { }
   }
 ]
 
@@ -25,14 +39,15 @@ export interface UploadsListProviderProps extends ServiceConfig {
   /**
    * Maximum number of items to return per page.
    */
-  size?: number
+  pageSize?: number
 }
 
 /**
  * Provider for a list of items uploaded to the current space.
  */
-export function UploadsListProvider ({ size, servicePrincipal, connection, children }: UploadsListProviderProps): JSX.Element {
+export function UploadsListProvider ({ pageSize, servicePrincipal, connection, children }: UploadsListProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
+  const [currentPageSize, setPageSize] = useState<number | undefined>(pageSize)
   const [cursor, setCursor] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
@@ -57,7 +72,7 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
       }
       const page = await list(conf, {
         cursor,
-        size,
+        size: currentPageSize,
         signal: newController.signal,
         connection
       })
@@ -79,11 +94,12 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
     reload: async (): Promise<void> => {
       setCursor(undefined)
       await loadPage()
-    }
+    },
+    setPageSize
   }
 
   // we should reload the page any time the space or agent change
-  useEffect(() => { void loadPage() }, [space, agent])
+  useEffect(() => { void loadPage() }, [space, agent, currentPageSize])
 
   return (
     <UploadsListContext.Provider value={[state, actions]}>
@@ -92,9 +108,17 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
   )
 }
 
+interface UseUploadsListProps {
+  pageSize?: number
+}
+
 /**
  * Use the scoped uploads list context state from a parent `UploadsListProvider`.
  */
-export function useUploadsList (): UploadsListContextValue {
-  return useContext(UploadsListContext)
+export function useUploadsList ({ pageSize }: UseUploadsListProps = {}): UploadsListContextValue {
+  const ctx = useContext(UploadsListContext)
+  if (pageSize !== undefined) {
+    ctx[1].setPageSize(pageSize)
+  }
+  return ctx
 }

@@ -34,4 +34,8 @@ export interface UploadsListContextActions {
    * Call to reload the uploads list (discarding the current page).
    */
   reload: () => Promise<void>
+  /**
+   * Call to set uploads list page size.
+   */
+  setPageSize: React.Dispatch<React.SetStateAction<number | undefined>>
 }
