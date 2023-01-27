@@ -22,7 +22,7 @@ export async function toCarBlob (delegation: Delegation): Promise<Blob> {
     carParts.push(chunk)
   }
   const car = new Blob(carParts, {
-    type: 'vnd.ipld.car'
+    type: 'application/vnd.ipld.car'
   })
   return car
 }
