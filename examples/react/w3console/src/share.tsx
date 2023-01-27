@@ -52,7 +52,6 @@ export function SpaceShare (): JSX.Element {
   }
 
   function onSubmit (e: React.FormEvent<HTMLFormElement>): void {
-    console.log('on submit', value)
     e.preventDefault()
     void makeDownloadLink(value)
   }
