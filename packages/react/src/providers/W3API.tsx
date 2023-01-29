@@ -17,7 +17,7 @@ export function W3APIProvider ({ children }: { children: JSX.Element | JSX.Eleme
   return (
     <KeyringProvider>
       <UploaderProvider>
-        <UploadsListProvider>
+        <UploadsListProvider size={4}>
           <>{children}</>
         </UploadsListProvider>
       </UploaderProvider>

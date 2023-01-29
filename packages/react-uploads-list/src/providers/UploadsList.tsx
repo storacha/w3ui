@@ -13,8 +13,9 @@ export const uploadsListContextDefaultValue: UploadsListContextValue = [
     loading: false
   },
   {
-    next: async () => {},
-    reload: async () => {}
+    next: async () => { },
+    prev: async () => { },
+    reload: async () => { }
   }
 ]
 
@@ -34,11 +35,22 @@ export interface UploadsListProviderProps extends ServiceConfig {
 export function UploadsListProvider ({ size, servicePrincipal, connection, children }: UploadsListProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [cursor, setCursor] = useState<string>()
+  const [prevCursors, setPrevCursors] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const [data, setData] = useState<UploadListResult[]>()
   const [controller, setController] = useState(new AbortController())
-
+  function pushPrevCursors (cursor?: string): void {
+    if (cursor !== undefined) {
+      setPrevCursors([cursor, ...prevCursors])
+    }
+  }
+  function popPrevCursor (): string | undefined {
+    if (prevCursors.length > 0) {
+      setPrevCursors(prevCursors.slice(1))
+      return prevCursors[0]
+    }
+  }
   const loadPage = async (cursor?: string): Promise<void> => {
     if (space == null) return
     if (agent == null) return
@@ -61,6 +73,7 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
         signal: newController.signal,
         connection
       })
+      pushPrevCursors(cursor)
       setCursor(page.cursor)
       setData(page.results)
     } catch (err: any) {
@@ -75,9 +88,17 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
 
   const state = { data, loading, error }
   const actions = {
-    next: async (): Promise<void> => { await loadPage(cursor) },
+    next: async (): Promise<void> => {
+      await loadPage(cursor)
+    },
+    prev: async (): Promise<void> => {
+      const c = popPrevCursor()
+      console.log("popped", c)
+      await loadPage(c)
+    },
     reload: async (): Promise<void> => {
       setCursor(undefined)
+      setPrevCursors([])
       await loadPage()
     }
   }

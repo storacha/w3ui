@@ -93,6 +93,24 @@ export const NextButton: Component<NextButtonProps> = createComponent((props: an
   return createElement('button', { ...props, onClick })
 })
 
+export type PrevButtonOptions<T extends As = 'button'> = Options<T>
+export type PrevButtonProps<T extends As = 'button'> = Props<PrevButtonOptions<T>>
+
+/**
+ * Button that loads the most recently loaded previous page of results.
+ *
+ * A 'button' designed to work with `UploadsList`. Any passed props will
+ * be passed along to the `button` component.
+ */
+export const PrevButton: Component<PrevButtonProps> = createComponent((props: any) => {
+  const [, { prev }] = useContext(UploadsListComponentContext)
+  const onClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    void prev()
+  }, [prev])
+  return createElement('button', { ...props, onClick })
+})
+
 export type ReloadButtonOptions<T extends As = 'button'> = Options<T>
 export type ReloadButtonProps<T extends As = 'button'> = Props<ReloadButtonOptions<T>>
 
@@ -118,4 +136,4 @@ export function useUploadsListComponent (): UploadsListComponentContextValue {
   return useContext(UploadsListComponentContext)
 }
 
-export const UploadsList = Object.assign(UploadsListRoot, { NextButton, ReloadButton })
+export const UploadsList = Object.assign(UploadsListRoot, { PrevButton, NextButton, ReloadButton })
