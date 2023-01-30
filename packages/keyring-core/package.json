@@ -30,8 +30,8 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/keyring-core",
   "dependencies": {
-    "@ucanto/interface": "^4.0.3",
-    "@ucanto/principal": "^4.0.3",
+    "@ucanto/interface": "^4.1.0",
+    "@ucanto/principal": "^4.1.0",
     "@web3-storage/access": "^9.2.0"
   }
 }

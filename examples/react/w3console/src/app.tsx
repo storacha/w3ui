@@ -9,6 +9,7 @@ import { ArrowPathIcon, ShareIcon } from '@heroicons/react/20/solid'
 import md5 from 'blueimp-md5'
 import '@w3ui/react/src/styles/uploader.css'
 import { SpaceShare } from './share'
+import { DIDKey } from '@ucanto/interface'
 
 function SpaceRegistrar (): JSX.Element {
   const [, { registerSpace }] = useKeyring()
@@ -64,8 +65,14 @@ function SpaceRegistrar (): JSX.Element {
   )
 }
 
-function SpaceSection (): JSX.Element {
-  const [share, setShare] = useState(false)
+interface SpaceSectionProps {
+  viewSpace: (did: string) => void
+  setShare: (share: boolean) => void
+  share: boolean
+}
+
+function SpaceSection (props: SpaceSectionProps): JSX.Element {
+  const { viewSpace, share, setShare } = props
   const [{ space }] = useKeyring()
   const [, { reload }] = useUploadsList()
   // reload the uploads list when the space changes
@@ -93,7 +100,7 @@ function SpaceSection (): JSX.Element {
 
       </header>
       <div className='container mx-auto'>
-        {share && <SpaceShare />}
+        {share && <SpaceShare viewSpace={viewSpace} />}
         {registered && !share && (
           <>
             <Uploader onUploadComplete={() => { void reload() }} />
@@ -102,7 +109,7 @@ function SpaceSection (): JSX.Element {
             </div>
           </>
         )}
-        {!registered && (
+        {!registered && !share && (
           <SpaceRegistrar />
         )}
       </div>
@@ -178,14 +185,11 @@ function SpaceCreator (props: any): JSX.Element {
 }
 
 function SpaceSelector (props: any): JSX.Element {
-  const [{ space: currentSpace, spaces }, { setCurrentSpace }] = useKeyring()
-  async function selectSpace (space: Space): Promise<void> {
-    await setCurrentSpace(space.did())
-  }
+  const { selected, setSelected, spaces } = props
   return (
     <div>
       <h3 className='text-xs tracking-wider uppercase font-bold my-2 text-gray-400 font-mono'>Spaces</h3>
-      <SpaceFinder spaces={spaces} selected={currentSpace} setSelected={(space: Space) => { void selectSpace(space) }} />
+      <SpaceFinder spaces={spaces} selected={selected} setSelected={(space: Space) => { void setSelected(space.did()) }} />
     </div>
   )
 }
@@ -199,26 +203,40 @@ export function Logo (): JSX.Element {
   )
 }
 
+export function Layout (): JsxElement {
+  const [share, setShare] = useState(false)
+  const [{ space, spaces }, { setCurrentSpace }] = useKeyring()
+
+  function viewSpace (did: DIDKey): void {
+    setShare(false)
+    void setCurrentSpace(did)
+  }
+
+  return (
+    <div className='flex min-h-full w-full'>
+      <nav className='flex-none w-64 bg-gray-900 text-white px-4 pb-4 border-r border-gray-800'>
+        <div className='flex flex-col justify-between min-h-full'>
+          <div class='flex-none'>
+            <SpaceSelector selected={space} setSelected={viewSpace} spaces={spaces} />
+          </div>
+          <div>
+            <SpaceCreator className='mb-4' />
+            <Logo />
+          </div>
+        </div>
+      </nav>
+      <main className='grow bg-dark-gray text-white p-4'>
+        <SpaceSection viewSpace={viewSpace} share={share} setShare={setShare} />
+      </main>
+    </div>
+  )
+}
+
 export function App (): JSX.Element {
   return (
     <W3APIProvider>
       <Authenticator>
-        <div className='flex min-h-full w-full'>
-          <nav className='flex-none w-64 bg-gray-900 text-white px-4 pb-4 border-r border-gray-800'>
-            <div className='flex flex-col justify-between min-h-full'>
-              <div class='flex-none'>
-                <SpaceSelector />
-              </div>
-              <div>
-                <SpaceCreator className='mb-4' />
-                <Logo />
-              </div>
-            </div>
-          </nav>
-          <main className='grow bg-dark-gray text-white p-4'>
-            <SpaceSection />
-          </main>
-        </div>
+        <Layout />
       </Authenticator>
     </W3APIProvider>
   )
