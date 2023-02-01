@@ -2,19 +2,14 @@ import { AuthenticationSubmitted } from '@w3ui/react'
 import '@w3ui/react/src/styles/authenticator.css'
 
 export default {
-  title: 'w3ui/AuthenticationSubmitted',
+  title: 'w3ui/Authenticator',
   component: AuthenticationSubmitted,
   tags: ['autodocs'],
   argTypes: {
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark'
-    }
   }
 }
 
-export const Primary = {
+export const Submitted = {
   args: {
   }
 }

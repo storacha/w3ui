@@ -6,11 +6,6 @@ export default {
   component: SpaceCreator,
   tags: ['autodocs'],
   argTypes: {
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark'
-    }
   }
 }
 

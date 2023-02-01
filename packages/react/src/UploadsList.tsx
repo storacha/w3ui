@@ -5,8 +5,7 @@ import { UploadsList as UploadsListCore } from '@w3ui/react-uploads-list'
 function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
   if ((uploads === undefined) || (uploads.length === 0)) {
     return (
-      <>
-        <div>
+        <>
           <div className='w3-uploads-list-no-uploads'>
             No uploads
           </div>
@@ -15,8 +14,7 @@ function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
               Reload
             </UploadsListCore.ReloadButton>
           </nav>
-        </div>
-      </>
+        </>
     )
   } else {
     return (

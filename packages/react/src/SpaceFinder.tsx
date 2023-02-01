@@ -24,7 +24,7 @@ export function SpaceFinder ({ spaces, selected, setSelected, className = '' }: 
       )
 
   return (
-    <div className={`${className} w3ui-space-finder-wrapper`}>
+    <div className={`${className} w3ui-space-finder`}>
       <Combobox value={selected} onChange={setSelected} by={(a, b) => a.sameAs(b)}>
         <div className='w3ui-space-finder-contents'>
           <div className='w3ui-space-finder-closed'>

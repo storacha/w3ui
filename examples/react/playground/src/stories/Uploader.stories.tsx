@@ -8,9 +8,7 @@ export default {
   argTypes: {
   },
   parameters: {
-    backgrounds: {
-      default: 'dark'
-    }
+
   }
 }
 

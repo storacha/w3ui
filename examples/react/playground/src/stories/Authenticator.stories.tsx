@@ -6,11 +6,6 @@ export default {
   component: Authenticator,
   tags: ['autodocs'],
   argTypes: {
-  },
-  parameters: {
-    backgrounds: {
-      default: 'dark'
-    }
   }
 }
 
