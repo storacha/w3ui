@@ -143,8 +143,11 @@ export function SpaceShare ({ viewSpace }: { viewSpace: (did: DIDKey) => void })
                     </a>
                   </figcaption>
                   <div>
-                    <a href='#' className='font-sm font-semibold align-[-8px]' 
-                       onClick={() => viewSpace(cap.with)}>
+                    <a
+                      href='#'
+                      className='font-sm font-semibold align-[-8px]'
+                      onClick={() => viewSpace(cap.with)}
+                    >
                       View
                     </a>
                   </div>
