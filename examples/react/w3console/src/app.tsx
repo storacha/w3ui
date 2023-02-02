@@ -7,9 +7,7 @@ import { useKeyring } from '@w3ui/react-keyring'
 import { useUploadsList } from '@w3ui/react-uploads-list'
 import { ShareIcon } from '@heroicons/react/20/solid'
 import md5 from 'blueimp-md5'
-import '@w3ui/react/src/styles/uploader.css'
-import '@w3ui/react/src/styles/space-finder.css'
-import '@w3ui/react/src/styles/uploads-list.css'
+import '@w3ui/react/src/styles/all.css'
 import { SpaceShare } from './share'
 
 function SpaceRegistrar (): JSX.Element {
@@ -136,7 +134,7 @@ export function Logo (): JSX.Element {
 
 export function App (): JSX.Element {
   return (
-    <W3APIProvider>
+    <W3APIProvider uploadsListPageSize={20}>
       <Authenticator>
         <div className='flex min-h-full w-full'>
           <nav className='flex-none w-64 bg-gray-900 text-white px-4 pb-4 border-r border-gray-800'>
