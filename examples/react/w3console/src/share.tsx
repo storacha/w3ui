@@ -136,7 +136,9 @@ export function SpaceShare ({ viewSpace }: { viewSpace: (did: DIDKey) => void })
                   <DidIcon did={cap.with} />
                   <figcaption className='grow'>
                     <a href='#' onClick={() => viewSpace(cap.with)} className='block'>
-                      <span className='block text-xl font-semibold leading-5 mb-1'>{proof.facts.at(i)?.space.name ?? 'Untitled Space'}</span>
+                      <span className='block text-xl font-semibold leading-5 mb-1'>
+                        {proof.facts.at(i)?.space.name ?? 'Untitled Space'}
+                      </span>
                       <span className='block font-mono text-xs text-gray-500 truncate'>{cap.with}</span>
                     </a>
                   </figcaption>
