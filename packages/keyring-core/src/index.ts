@@ -124,7 +124,7 @@ export interface ServiceConfig {
 
 /**
  * Convenience function for returning an agent's current Space.
- * @param agent 
+ * @param agent
  * @returns the currently selected Space for the given agent
  */
 export function getCurrentSpace (agent: Agent): Space | undefined {
@@ -136,7 +136,7 @@ export function getCurrentSpace (agent: Agent): Space | undefined {
 
 /**
  * Convenience function for returning all of an agent's Spaces.
- * @param agent 
+ * @param agent
  * @returns all of the given agent's Spaces
  */
 export function getSpaces (agent: Agent): Space[] {
