@@ -4,7 +4,7 @@
 
 
 .w3ui-authenticator {
-  background-image: url("w3.svg");
+  background-image: url("/w3.svg");
   background-repeat: no-repeat;
   background-position: center 95%;
   @apply bg-gray-900;
