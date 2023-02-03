@@ -21,14 +21,14 @@ test('Form', async () => {
     <UploaderContext.Provider value={contextValue}>
       <Uploader>
         <Form>
-          <Input data-testid="file-upload" />
+          <Input data-testid='file-upload' />
           <input type='submit' value='Upload' />
         </Form>
       </Uploader>
     </UploaderContext.Provider>
   )
 
-  const file = new File(['hello'], 'hello.txt', { type: 'text/plain' });
+  const file = new File(['hello'], 'hello.txt', { type: 'text/plain' })
 
   const fileInput = screen.getByTestId('file-upload')
   await user.upload(fileInput, file)

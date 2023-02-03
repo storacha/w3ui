@@ -26,7 +26,7 @@ test('Form', async () => {
           <div>
             <ul>
               {uploadsList?.[0].data?.map(({ root }) => (
-                <li>{root.toString()}</li>
+                <li key={root.toString()}>{root.toString()}</li>
               ))}
             </ul>
             <NextButton>Next</NextButton>
@@ -34,10 +34,8 @@ test('Form', async () => {
           </div>
         )}
       </UploadsList>
-    </UploadsListContext.Provider >
+    </UploadsListContext.Provider>
   )
-
-  
 
   const reloadButton = screen.getByText('Reload')
   await user.click(reloadButton)
