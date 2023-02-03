@@ -158,7 +158,7 @@ export function Layout (): JsxElement {
           </div>
         </div>
       </nav>
-      <main className='grow bg-dark-gray text-white p-4'>
+      <main className='grow bg-gray-dark text-white p-4'>
         <SpaceSection viewSpace={viewSpace} share={share} setShare={setShare} />
       </main>
     </div>
@@ -168,7 +168,7 @@ export function Layout (): JsxElement {
 export function App (): JSX.Element {
   return (
     <W3APIProvider uploadsListPageSize={20}>
-      <Authenticator>
+      <Authenticator className='h-full'>
         <Layout />
       </Authenticator>
     </W3APIProvider>

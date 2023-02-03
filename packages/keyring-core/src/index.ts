@@ -7,6 +7,16 @@ import * as RSASigner from '@ucanto/principal/rsa'
 const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
 
+/**
+ * A Space is the core organizational structure of web3-storage,
+ * similar to a bucket in S3 but with some special properties.
+ *
+ * At its core, a Space is just a public/private keypair that
+ * that users can associate web3-storage uploads with. The keypair
+ * is stored locally in a user's browser and can be registered with
+ * web3-storage to enable uploads and allow for recovery of upload
+ * capabilities in case the keypair is lost.
+ */
 export class Space implements Principal {
   #did: DID
   #meta: Record<string, any>
@@ -126,6 +136,11 @@ export interface ServiceConfig {
   connection?: ConnectionView<Service>
 }
 
+/**
+ * Convenience function for returning an agent's current Space.
+ * @param agent
+ * @returns the currently selected Space for the given agent
+ */
 export function getCurrentSpace (agent: Agent): Space | undefined {
   const did = agent.currentSpace()
   if (did == null) return
@@ -133,6 +148,11 @@ export function getCurrentSpace (agent: Agent): Space | undefined {
   return new Space(did, meta)
 }
 
+/**
+ * Convenience function for returning all of an agent's Spaces.
+ * @param agent
+ * @returns all of the given agent's Spaces
+ */
 export function getSpaces (agent: Agent): Space[] {
   const spaces: Space[] = []
   for (const [did, meta] of agent.spaces.entries()) {
