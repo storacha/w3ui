@@ -5,9 +5,9 @@
 
 ### Features
 
-* "Headless" UI components ([#136](https://github.com/web3-storage/w3ui/issues/136)) ([46583e0](https://github.com/web3-storage/w3ui/commit/46583e08d49de1dc9dd57287fd5b9bac79a1e2e2))
-* delegate access to spaces ([#293](https://github.com/web3-storage/w3ui/issues/293)) ([441d757](https://github.com/web3-storage/w3ui/commit/441d7573f628e358aa76fe8313f01e209c42c68f))
-* support `as` prop in uploader component ([#236](https://github.com/web3-storage/w3ui/issues/236)) ([c802e99](https://github.com/web3-storage/w3ui/commit/c802e9909289a113bf646f22d25e5c6fbd1c1d3e)), closes [#235](https://github.com/web3-storage/w3ui/issues/235)
+* "Headless" Authenticator component ([#136](https://github.com/web3-storage/w3ui/issues/136)) ([46583e0](https://github.com/web3-storage/w3ui/commit/46583e08d49de1dc9dd57287fd5b9bac79a1e2e2))
+* enable delegating access to spaces ([#293](https://github.com/web3-storage/w3ui/issues/293)) ([441d757](https://github.com/web3-storage/w3ui/commit/441d7573f628e358aa76fe8313f01e209c42c68f))
+* support `as` prop in Authenticator component ([#236](https://github.com/web3-storage/w3ui/issues/236)) ([c802e99](https://github.com/web3-storage/w3ui/commit/c802e9909289a113bf646f22d25e5c6fbd1c1d3e)), closes [#235](https://github.com/web3-storage/w3ui/issues/235)
 
 ## [2.0.1](https://github.com/web3-storage/w3ui/compare/react-keyring-v2.0.0...react-keyring-v2.0.1) (2022-12-15)
 
