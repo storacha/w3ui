@@ -38,10 +38,10 @@ export function AuthenticationEnsurer ({ children }: { children: JSX.Element | J
   const registered = Boolean(spaces.some(s => s.registered()))
   if (registered) {
     return <>{children}</>
-  } 
+  }
   if (submitted) {
     return <AuthenticationSubmitted />
-  } 
+  }
   return <AuthenticationForm />
 }
 
