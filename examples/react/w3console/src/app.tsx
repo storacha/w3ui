@@ -135,7 +135,7 @@ export function Logo (): JSX.Element {
 export function App (): JSX.Element {
   return (
     <W3APIProvider uploadsListPageSize={20}>
-      <Authenticator>
+      <Authenticator className='h-full'>
         <div className='flex min-h-full w-full'>
           <nav className='flex-none w-64 bg-gray-900 text-white px-4 pb-4 border-r border-gray-800'>
             <div className='flex flex-col justify-between min-h-full'>
@@ -148,7 +148,7 @@ export function App (): JSX.Element {
               </div>
             </div>
           </nav>
-          <main className='grow bg-dark-gray text-white p-4'>
+          <main className='grow bg-gray-dark text-white p-4'>
             <SpaceSection />
           </main>
         </div>
