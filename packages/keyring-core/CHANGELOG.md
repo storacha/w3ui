@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/web3-storage/w3ui/compare/keyring-core-v2.1.0...keyring-core-v2.1.1) (2023-02-03)
+
+
+### Bug Fixes
+
+* add more docs ([#368](https://github.com/web3-storage/w3ui/issues/368)) ([c339d82](https://github.com/web3-storage/w3ui/commit/c339d82decd1675daf34e17fd37af8c3d6da8a0e))
+
 ## [2.1.0](https://github.com/web3-storage/w3ui/compare/keyring-core-v2.0.1...keyring-core-v2.1.0) (2023-02-02)
 
 
