@@ -518,6 +518,8 @@ importers:
 
   packages/react-uploads-list:
     specifiers:
+      '@testing-library/react': ^13.4.0
+      '@testing-library/user-event': ^14.4.3
       '@w3ui/react-keyring': workspace:^
       '@w3ui/uploads-list-core': workspace:^
       '@web3-storage/capabilities': ^2.2.0
@@ -527,6 +529,9 @@ importers:
       '@w3ui/uploads-list-core': link:../uploads-list-core
       '@web3-storage/capabilities': 2.2.0
       ariakit-react-utils: 0.17.0-next.27
+    devDependencies:
+      '@testing-library/react': 13.4.0
+      '@testing-library/user-event': 14.4.3
 
   packages/solid-keyring:
     specifiers:
