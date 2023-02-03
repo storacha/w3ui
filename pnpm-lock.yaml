@@ -487,19 +487,15 @@ importers:
       '@w3ui/keyring-core': workspace:^
       '@web3-storage/access': ^9.3.0
       ariakit-react-utils: 0.17.0-next.27
-      react-dom: ^18.2.0
-      react-test-renderer: ^18.2.0
     dependencies:
       '@w3ui/keyring-core': link:../keyring-core
       ariakit-react-utils: 0.17.0-next.27
     devDependencies:
-      '@testing-library/react': 13.4.0_react-dom@18.2.0
+      '@testing-library/react': 13.4.0
       '@testing-library/user-event': 14.4.3
       '@ucanto/interface': 4.2.3
       '@ucanto/principal': 4.2.3
       '@web3-storage/access': 9.3.0
-      react-dom: 18.2.0
-      react-test-renderer: 18.2.0
 
   packages/react-uploader:
     specifiers:
@@ -4812,7 +4808,7 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react/13.4.0_react-dom@18.2.0:
+  /@testing-library/react/13.4.0:
     resolution: {integrity: sha512-sXOGON+WNTh3MLE9rve97ftaZukN3oNf2KjDy7YTx6hcTO2uuLHuCGynMDhFwGw/jYf4OJ2Qk0i4i79qMNNkyw==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -4822,7 +4818,6 @@ packages:
       '@babel/runtime': 7.20.7
       '@testing-library/dom': 8.20.0
       '@types/react-dom': 18.0.9
-      react-dom: 18.2.0
     dev: true
 
   /@testing-library/user-event/13.5.0_yxlyej73nftwmh2fiao7paxmlm:
@@ -10915,15 +10910,6 @@ packages:
       - supports-color
     dev: true
 
-  /react-dom/18.2.0:
-    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
-    peerDependencies:
-      react: ^18.2.0
-    dependencies:
-      loose-envify: 1.4.0
-      scheduler: 0.23.0
-    dev: true
-
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -10986,15 +10972,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-shallow-renderer/16.15.0:
-    resolution: {integrity: sha512-oScf2FqQ9LFVQgA73vr86xl2NaOIX73rh+YFqcOp68CWj56tSfgtGKrEbyhCj0rSijyG9M1CYprTh39fBi5hzA==}
-    peerDependencies:
-      react: ^16.0.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      object-assign: 4.1.1
-      react-is: 18.2.0
-    dev: true
-
   /react-syntax-highlighter/15.5.0_react@18.2.0:
     resolution: {integrity: sha512-+zq2myprEnQmH5yw6Gqc8lD55QHnpKaU8TOcFeC/Lg/MQSs8UknEA0JC4nTZGFAXC2J2Hyj/ijJ7NlabyPi2gg==}
     peerDependencies:
@@ -11007,16 +10984,6 @@ packages:
       react: 18.2.0
       refractor: 3.6.0
     dev: false
-
-  /react-test-renderer/18.2.0:
-    resolution: {integrity: sha512-JWD+aQ0lh2gvh4NM3bBM42Kx+XybOxCpgYK7F8ugAlpaTSnWsX+39Z4XkOykGZAHrjwwTZT3x3KxswVWxHPUqA==}
-    peerDependencies:
-      react: ^18.2.0
-    dependencies:
-      react-is: 18.2.0
-      react-shallow-renderer: 16.15.0
-      scheduler: 0.23.0
-    dev: true
 
   /react/18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
