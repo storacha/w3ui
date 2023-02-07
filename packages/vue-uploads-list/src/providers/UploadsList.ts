@@ -1,17 +1,41 @@
-import { defineComponent, provide, InjectionKey, inject, shallowReactive, Ref, computed, watch } from 'vue'
+import {
+  defineComponent,
+  provide,
+  InjectionKey,
+  inject,
+  shallowReactive,
+  Ref,
+  computed,
+  watch,
+} from 'vue'
 import { KeyringProviderInjectionKey } from '@w3ui/vue-keyring'
-import { UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
+import {
+  UploadsListContextState,
+  UploadsListContextActions,
+  ServiceConfig,
+  list,
+} from '@w3ui/uploads-list-core'
 import { list as uploadList } from '@web3-storage/capabilities/upload'
 
 /**
  * Injection keys for uploads list context.
  */
 export const UploadsListProviderInjectionKey = {
-  loading: Symbol('w3ui uploads list loading') as InjectionKey<Ref<UploadsListContextState['loading']>>,
-  error: Symbol('w3ui uploads list error') as InjectionKey<Ref<UploadsListContextState['error']>>,
-  data: Symbol('w3ui uploads list data') as InjectionKey<Ref<UploadsListContextState['data']>>,
-  next: Symbol('w3ui uploads list next') as InjectionKey<UploadsListContextActions['next']>,
-  reload: Symbol('w3ui uploads list reload') as InjectionKey<UploadsListContextActions['reload']>
+  loading: Symbol('w3ui uploads list loading') as InjectionKey<
+    Ref<UploadsListContextState['loading']>
+  >,
+  error: Symbol('w3ui uploads list error') as InjectionKey<
+    Ref<UploadsListContextState['error']>
+  >,
+  data: Symbol('w3ui uploads list data') as InjectionKey<
+    Ref<UploadsListContextState['data']>
+  >,
+  next: Symbol('w3ui uploads list next') as InjectionKey<
+    UploadsListContextActions['next']
+  >,
+  reload: Symbol('w3ui uploads list reload') as InjectionKey<
+    UploadsListContextActions['reload']
+  >,
 }
 
 export interface UploadsListProviderProps extends ServiceConfig {
@@ -25,7 +49,7 @@ export interface UploadsListProviderProps extends ServiceConfig {
  * Provider for a list of items uploaded by the current identity.
  */
 export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
-  setup ({ size, servicePrincipal, connection }) {
+  setup({ size, servicePrincipal, connection }) {
     const space = inject(KeyringProviderInjectionKey.space)
     const agent = inject(KeyringProviderInjectionKey.agent)
     const getProofs = inject(KeyringProviderInjectionKey.getProofs)
@@ -33,15 +57,24 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
     const state = shallowReactive<UploadsListContextState>({
       loading: false,
       error: undefined,
-      data: undefined
+      data: undefined,
     })
 
     let cursor: string | undefined
     let controller = new AbortController()
 
-    provide(UploadsListProviderInjectionKey.loading, computed(() => state.loading))
-    provide(UploadsListProviderInjectionKey.error, computed(() => state.error))
-    provide(UploadsListProviderInjectionKey.data, computed(() => state.data))
+    provide(
+      UploadsListProviderInjectionKey.loading,
+      computed(() => state.loading)
+    )
+    provide(
+      UploadsListProviderInjectionKey.error,
+      computed(() => state.error)
+    )
+    provide(
+      UploadsListProviderInjectionKey.data,
+      computed(() => state.data)
+    )
 
     const loadPage = async (cursor?: string): Promise<void> => {
       if (space?.value == null) return
@@ -58,13 +91,15 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
           issuer: agent.value,
           with: space.value.did(),
           audience: servicePrincipal,
-          proofs: await getProofs([{ can: uploadList.can, with: space.value.did() }])
+          proofs: await getProofs([
+            { can: uploadList.can, with: space.value.did() },
+          ]),
         }
         const page = await list(conf, {
           cursor,
           size,
           signal: newController.signal,
-          connection
+          connection,
         })
         cursor = page.cursor
         state.data = page.results
@@ -95,8 +130,8 @@ export const UploadsListProvider = defineComponent<UploadsListProviderProps>({
 
   // Our provider component is a renderless component
   // it does not render any markup of its own.
-  render () {
+  render() {
     // @ts-expect-error
     return this.$slots.default()
-  }
+  },
 })

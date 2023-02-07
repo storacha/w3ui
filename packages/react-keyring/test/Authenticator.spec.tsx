@@ -4,14 +4,18 @@ import { test, expect, vi } from 'vitest'
 import user from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
 
-import { KeyringContext, keyringContextDefaultValue, KeyringContextValue } from '../src/providers/Keyring'
+import {
+  KeyringContext,
+  keyringContextDefaultValue,
+  KeyringContextValue,
+} from '../src/providers/Keyring'
 import { Authenticator, CancelButton, Form, EmailInput } from '../src/index'
 
 test('CancelButton', async () => {
   const cancelRegisterSpace = vi.fn()
   const contextValue: KeyringContextValue = [
     keyringContextDefaultValue[0],
-    { ...keyringContextDefaultValue[1], cancelRegisterSpace }
+    { ...keyringContextDefaultValue[1], cancelRegisterSpace },
   ]
   render(
     <KeyringContext.Provider value={contextValue}>
@@ -36,8 +40,8 @@ test('Form', async () => {
     {
       ...keyringContextDefaultValue[1],
       createSpace,
-      registerSpace
-    }
+      registerSpace,
+    },
   ]
   render(
     <KeyringContext.Provider value={contextValue}>

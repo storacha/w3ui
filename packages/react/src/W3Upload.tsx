@@ -4,7 +4,7 @@ import { Authenticator } from './Authenticator'
 import { Uploader } from './Uploader'
 import { UploadsList } from './UploadsList'
 
-export function W3Upload (): JSX.Element {
+export function W3Upload(): JSX.Element {
   return (
     <W3APIProvider>
       <Authenticator>

@@ -1,10 +1,20 @@
 import type { ParentComponent } from 'solid-js'
-import type { KeyringContextState, KeyringContextActions, ServiceConfig, CreateDelegationOptions } from '@w3ui/keyring-core'
+import type {
+  KeyringContextState,
+  KeyringContextActions,
+  ServiceConfig,
+  CreateDelegationOptions,
+} from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Abilities } from '@web3-storage/access/types'
 import type { Delegation, Capability, DID, Principal } from '@ucanto/interface'
 
-import { createContext, useContext, createSignal, createComponent } from 'solid-js'
+import {
+  createContext,
+  useContext,
+  createSignal,
+  createComponent,
+} from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { createAgent, getCurrentSpace, getSpaces } from '@w3ui/keyring-core'
 
@@ -18,44 +28,54 @@ export type KeyringContextValue = [
 const defaultState: KeyringContextState = {
   space: undefined,
   spaces: [],
-  agent: undefined
+  agent: undefined,
 }
 
 export const AuthContext = createContext<KeyringContextValue>([
   defaultState,
   {
-    loadAgent: async () => { },
-    unloadAgent: async () => { },
-    resetAgent: async () => { },
-    createSpace: async () => { throw new Error('missing keyring context provider') },
-    setCurrentSpace: async () => { },
-    registerSpace: async () => { },
-    cancelRegisterSpace: () => { },
+    loadAgent: async () => {},
+    unloadAgent: async () => {},
+    resetAgent: async () => {},
+    createSpace: async () => {
+      throw new Error('missing keyring context provider')
+    },
+    setCurrentSpace: async () => {},
+    registerSpace: async () => {},
+    cancelRegisterSpace: () => {},
     getProofs: async () => [],
-    createDelegation: async () => { throw new Error('missing keyring context provider') },
-    addSpace: async () => { }
-  }
+    createDelegation: async () => {
+      throw new Error('missing keyring context provider')
+    },
+    addSpace: async () => {},
+  },
 ])
 
-export interface KeyringProviderProps extends ServiceConfig { }
+export interface KeyringProviderProps extends ServiceConfig {}
 
 /**
  * Key management provider.
  */
-export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
+export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
+  props
+) => {
   const [state, setState] = createStore({
     space: defaultState.space,
     spaces: defaultState.spaces,
-    agent: defaultState.agent
+    agent: defaultState.agent,
   })
 
   const [agent, setAgent] = createSignal<Agent>()
-  const [registerAbortController, setRegisterAbortController] = createSignal<AbortController>()
+  const [registerAbortController, setRegisterAbortController] =
+    createSignal<AbortController>()
 
   const getAgent = async (): Promise<Agent> => {
     let a = agent()
     if (a == null) {
-      a = await createAgent({ servicePrincipal: props.servicePrincipal, connection: props.connection })
+      a = await createAgent({
+        servicePrincipal: props.servicePrincipal,
+        connection: props.connection,
+      })
       setAgent(a)
       setState('agent', a.issuer)
       setState('space', getCurrentSpace(a))
@@ -124,14 +144,21 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
     return agent.proofs(caps)
   }
 
-  const createDelegation = async (audience: Principal, abilities: Abilities[], options: CreateDelegationOptions): Promise<Delegation> => {
+  const createDelegation = async (
+    audience: Principal,
+    abilities: Abilities[],
+    options: CreateDelegationOptions
+  ): Promise<Delegation> => {
     const agent = await getAgent()
-    const audienceMeta = options.audienceMeta ?? { name: 'agent', type: 'device' }
+    const audienceMeta = options.audienceMeta ?? {
+      name: 'agent',
+      type: 'device',
+    }
     return await agent.delegate({
       ...options,
       abilities,
       audience,
-      audienceMeta
+      audienceMeta,
     })
   }
 
@@ -150,20 +177,20 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = props => {
     setCurrentSpace,
     getProofs,
     createDelegation,
-    addSpace
+    addSpace,
   }
 
   return createComponent(AuthContext.Provider, {
     value: [state, actions],
-    get children () {
+    get children() {
       return props.children
-    }
+    },
   })
 }
 
 /**
  * Use the scoped keyring context state from a parent KeyringProvider.
  */
-export function useKeyring (): KeyringContextValue {
+export function useKeyring(): KeyringContextValue {
   return useContext(AuthContext)
 }

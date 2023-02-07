@@ -2,13 +2,11 @@ import type { UploadListResult } from '@w3ui/uploads-list-core'
 import React from 'react'
 import { UploadsList as UploadsListCore } from '@w3ui/react-uploads-list'
 
-function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
-  if ((uploads === undefined) || (uploads.length === 0)) {
+function Uploads({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
+  if (uploads === undefined || uploads.length === 0) {
     return (
       <>
-        <div className='w3-uploads-list-no-uploads'>
-          No uploads
-        </div>
+        <div className='w3-uploads-list-no-uploads'>No uploads</div>
         <nav>
           <UploadsListCore.ReloadButton className='reload w3ui-button'>
             Reload

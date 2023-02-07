@@ -1,9 +1,26 @@
 import React, { createContext, useState, useContext } from 'react'
-import { createAgent, Space, getCurrentSpace, getSpaces, CreateDelegationOptions } from '@w3ui/keyring-core'
-import type { KeyringContextState, KeyringContextActions, ServiceConfig } from '@w3ui/keyring-core'
+import {
+  createAgent,
+  Space,
+  getCurrentSpace,
+  getSpaces,
+  CreateDelegationOptions,
+} from '@w3ui/keyring-core'
+import type {
+  KeyringContextState,
+  KeyringContextActions,
+  ServiceConfig,
+} from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Abilities } from '@web3-storage/access/types'
-import type { Capability, Delegation, DID, Principal, Proof, Signer } from '@ucanto/interface'
+import type {
+  Capability,
+  Delegation,
+  DID,
+  Principal,
+  Proof,
+  Signer,
+} from '@ucanto/interface'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -16,23 +33,29 @@ export const keyringContextDefaultValue: KeyringContextValue = [
   {
     space: undefined,
     spaces: [],
-    agent: undefined
+    agent: undefined,
   },
   {
-    loadAgent: async () => { },
-    unloadAgent: async () => { },
-    resetAgent: async () => { },
-    createSpace: async () => { throw new Error('missing keyring context provider') },
-    setCurrentSpace: async () => { },
-    registerSpace: async () => { },
-    cancelRegisterSpace: () => { },
+    loadAgent: async () => {},
+    unloadAgent: async () => {},
+    resetAgent: async () => {},
+    createSpace: async () => {
+      throw new Error('missing keyring context provider')
+    },
+    setCurrentSpace: async () => {},
+    registerSpace: async () => {},
+    cancelRegisterSpace: () => {},
     getProofs: async () => [],
-    createDelegation: async () => { throw new Error('missing keyring context provider') },
-    addSpace: async () => { }
-  }
+    createDelegation: async () => {
+      throw new Error('missing keyring context provider')
+    },
+    addSpace: async () => {},
+  },
 ]
 
-export const KeyringContext = createContext<KeyringContextValue>(keyringContextDefaultValue)
+export const KeyringContext = createContext<KeyringContextValue>(
+  keyringContextDefaultValue
+)
 
 export interface KeyringProviderProps extends ServiceConfig {
   children?: JSX.Element
@@ -41,12 +64,17 @@ export interface KeyringProviderProps extends ServiceConfig {
 /**
  * Key management provider.
  */
-export function KeyringProvider ({ children, servicePrincipal, connection }: KeyringProviderProps): JSX.Element {
+export function KeyringProvider({
+  children,
+  servicePrincipal,
+  connection,
+}: KeyringProviderProps): JSX.Element {
   const [agent, setAgent] = useState<Agent>()
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
   const [issuer, setIssuer] = useState<Signer>()
-  const [registerAbortController, setRegisterAbortController] = useState<AbortController>()
+  const [registerAbortController, setRegisterAbortController] =
+    useState<AbortController>()
 
   const getAgent = async (): Promise<Agent> => {
     if (agent == null) {
@@ -119,14 +147,21 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
     return agent.proofs(caps)
   }
 
-  const createDelegation = async (audience: Principal, abilities: Abilities[], options: CreateDelegationOptions): Promise<Delegation> => {
+  const createDelegation = async (
+    audience: Principal,
+    abilities: Abilities[],
+    options: CreateDelegationOptions
+  ): Promise<Delegation> => {
     const agent = await getAgent()
-    const audienceMeta = options.audienceMeta ?? { name: 'agent', type: 'device' }
+    const audienceMeta = options.audienceMeta ?? {
+      name: 'agent',
+      type: 'device',
+    }
     return await agent.delegate({
       ...options,
       abilities,
       audience,
-      audienceMeta
+      audienceMeta,
     })
   }
 
@@ -138,7 +173,7 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
   const state = {
     space,
     spaces,
-    agent: issuer
+    agent: issuer,
   }
   const actions = {
     loadAgent,
@@ -150,7 +185,7 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
     setCurrentSpace,
     getProofs,
     createDelegation,
-    addSpace
+    addSpace,
   }
 
   return (
@@ -163,6 +198,6 @@ export function KeyringProvider ({ children, servicePrincipal, connection }: Key
 /**
  * Use the scoped keyring context state from a parent KeyringProvider.
  */
-export function useKeyring (): KeyringContextValue {
+export function useKeyring(): KeyringContextValue {
   return useContext(KeyringContext)
 }

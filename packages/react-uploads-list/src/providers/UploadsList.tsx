@@ -1,5 +1,11 @@
 import React, { useContext, createContext, useState, useEffect } from 'react'
-import { UploadListResult, UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
+import {
+  UploadListResult,
+  UploadsListContextState,
+  UploadsListContextActions,
+  ServiceConfig,
+  list,
+} from '@w3ui/uploads-list-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { list as uploadList } from '@web3-storage/capabilities/upload'
 
@@ -10,15 +16,17 @@ export type UploadsListContextValue = [
 
 export const uploadsListContextDefaultValue: UploadsListContextValue = [
   {
-    loading: false
+    loading: false,
   },
   {
     next: async () => {},
-    reload: async () => {}
-  }
+    reload: async () => {},
+  },
 ]
 
-export const UploadsListContext = createContext<UploadsListContextValue>(uploadsListContextDefaultValue)
+export const UploadsListContext = createContext<UploadsListContextValue>(
+  uploadsListContextDefaultValue
+)
 
 export interface UploadsListProviderProps extends ServiceConfig {
   children?: JSX.Element
@@ -31,7 +39,12 @@ export interface UploadsListProviderProps extends ServiceConfig {
 /**
  * Provider for a list of items uploaded to the current space.
  */
-export function UploadsListProvider ({ size, servicePrincipal, connection, children }: UploadsListProviderProps): JSX.Element {
+export function UploadsListProvider({
+  size,
+  servicePrincipal,
+  connection,
+  children,
+}: UploadsListProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [cursor, setCursor] = useState<string>()
   const [loading, setLoading] = useState(false)
@@ -53,13 +66,13 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
         issuer: agent,
         with: space.did(),
         audience: servicePrincipal,
-        proofs: await getProofs([{ can: uploadList.can, with: space.did() }])
+        proofs: await getProofs([{ can: uploadList.can, with: space.did() }]),
       }
       const page = await list(conf, {
         cursor,
         size,
         signal: newController.signal,
-        connection
+        connection,
       })
       setCursor(page.cursor)
       setData(page.results)
@@ -75,15 +88,19 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
 
   const state = { data, loading, error }
   const actions = {
-    next: async (): Promise<void> => { await loadPage(cursor) },
+    next: async (): Promise<void> => {
+      await loadPage(cursor)
+    },
     reload: async (): Promise<void> => {
       setCursor(undefined)
       await loadPage()
-    }
+    },
   }
 
   // we should reload the page any time the space or agent change
-  useEffect(() => { void loadPage() }, [space, agent])
+  useEffect(() => {
+    void loadPage()
+  }, [space, agent])
 
   return (
     <UploadsListContext.Provider value={[state, actions]}>
@@ -95,6 +112,6 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
 /**
  * Use the scoped uploads list context state from a parent `UploadsListProvider`.
  */
-export function useUploadsList (): UploadsListContextValue {
+export function useUploadsList(): UploadsListContextValue {
   return useContext(UploadsListContext)
 }

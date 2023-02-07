@@ -4,7 +4,11 @@ import { test, expect, vi } from 'vitest'
 import user from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
 
-import { UploadsListContext, uploadsListContextDefaultValue, UploadsListContextValue } from '../src/providers/UploadsList'
+import {
+  UploadsListContext,
+  uploadsListContextDefaultValue,
+  UploadsListContextValue,
+} from '../src/providers/UploadsList'
 import { UploadsList, NextButton, ReloadButton } from '../src/index'
 
 test('Form', async () => {
@@ -16,8 +20,8 @@ test('Form', async () => {
     {
       ...uploadsListContextDefaultValue[1],
       reload,
-      next
-    }
+      next,
+    },
   ]
   render(
     <UploadsListContext.Provider value={contextValue}>
