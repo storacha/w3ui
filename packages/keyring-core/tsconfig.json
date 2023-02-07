@@ -4,8 +4,7 @@
   "compilerOptions": {
     "outDir": "./build/types"
   },
-  "files": ["src/index.ts"],
-  "include": ["src"],
+  "include": ["src", "test"],
   "ts-node": {
     "esm": true,
     "transpileOnly": true,
