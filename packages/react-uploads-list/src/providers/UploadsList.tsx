@@ -94,7 +94,7 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
 
 /**
  * Use the scoped uploads list context state from a parent `UploadsListProvider`.
- */
+*/
 export function useUploadsList (): UploadsListContextValue {
   return useContext(UploadsListContext)
 }
