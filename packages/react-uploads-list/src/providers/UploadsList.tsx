@@ -33,13 +33,14 @@ export interface UploadsListProviderProps extends ServiceConfig {
  */
 export function UploadsListProvider ({ size, servicePrincipal, connection, children }: UploadsListProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
-  const [cursor, setCursor] = useState<string>()
+  const [startCursor, setStartCursor] = useState<string>()
+  const [endCursor, setEndCursor] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const [data, setData] = useState<UploadListResult[]>()
   const [controller, setController] = useState(new AbortController())
 
-  const loadPage = async (cursor?: string): Promise<void> => {
+  const loadPage = async (cursor?: string, pre?: boolean): Promise<void> => {
     if (space == null) return
     if (agent == null) return
 
@@ -58,10 +59,12 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
       const page = await list(conf, {
         cursor,
         size,
+        pre,
         signal: newController.signal,
         connection
       })
-      setCursor(page.cursor)
+      setStartCursor(page.startCursor)
+      setEndCursor(page.endCursor)
       setData(page.results)
     } catch (err: any) {
       if (err.name !== 'AbortError') {
@@ -75,9 +78,11 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
 
   const state = { data, loading, error }
   const actions = {
-    next: async (): Promise<void> => { await loadPage(cursor) },
+    next: async (): Promise<void> => { await loadPage(endCursor) },
+    prev: async (): Promise<void> => { await loadPage(startCursor, true) },
     reload: async (): Promise<void> => {
-      setCursor(undefined)
+      setStartCursor(undefined)
+      setEndCursor(undefined)
       await loadPage()
     }
   }

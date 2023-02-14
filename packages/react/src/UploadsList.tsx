@@ -40,12 +40,15 @@ function Uploads ({ uploads }: { uploads?: UploadListResult[] }): JSX.Element {
           </table>
         </div>
         <nav>
-          <UploadsListCore.NextButton className='next w3ui-button'>
-            Next
-          </UploadsListCore.NextButton>
+          <UploadsListCore.PrevButton className='prev w3ui-button'>
+            Prev
+          </UploadsListCore.PrevButton>
           <UploadsListCore.ReloadButton className='reload w3ui-button'>
             Reload
           </UploadsListCore.ReloadButton>
+          <UploadsListCore.NextButton className='next w3ui-button'>
+            Next
+          </UploadsListCore.NextButton>
         </nav>
       </>
     )
