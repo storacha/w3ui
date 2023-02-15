@@ -1,10 +1,10 @@
 import React from 'react'
 import {
   Authenticator as AuthCore,
-  useAuthenticator,
+  useAuthenticator
 } from '@w3ui/react-keyring'
 
-export function AuthenticationForm(): JSX.Element {
+export function AuthenticationForm (): JSX.Element {
   const [{ submitted }] = useAuthenticator()
 
   return (
@@ -26,7 +26,7 @@ export function AuthenticationForm(): JSX.Element {
   )
 }
 
-export function AuthenticationSubmitted(): JSX.Element {
+export function AuthenticationSubmitted (): JSX.Element {
   const [{ email }] = useAuthenticator()
 
   return (
@@ -44,8 +44,8 @@ export function AuthenticationSubmitted(): JSX.Element {
   )
 }
 
-export function AuthenticationEnsurer({
-  children,
+export function AuthenticationEnsurer ({
+  children
 }: {
   children: JSX.Element | JSX.Element[]
 }): JSX.Element {
@@ -65,9 +65,9 @@ interface AuthenticatorProps {
   className?: string
 }
 
-export function Authenticator({
+export function Authenticator ({
   children,
-  className = '',
+  className = ''
 }: AuthenticatorProps): JSX.Element {
   return (
     <AuthCore as='div' className={className}>
@@ -79,7 +79,7 @@ export function Authenticator({
 /**
  * Wrapping a component with this HoC ensures an identity exists.
  */
-export function withIdentity<C extends React.JSXElementConstructor<P>, P>(
+export function withIdentity<C extends React.JSXElementConstructor<P>, P> (
   Component: C
 ) {
   return (props: any) => (

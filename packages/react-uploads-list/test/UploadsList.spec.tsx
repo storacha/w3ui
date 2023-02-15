@@ -7,7 +7,7 @@ import { render, screen } from '@testing-library/react'
 import {
   UploadsListContext,
   uploadsListContextDefaultValue,
-  UploadsListContextValue,
+  UploadsListContextValue
 } from '../src/providers/UploadsList'
 import { UploadsList, NextButton, ReloadButton } from '../src/index'
 
@@ -20,8 +20,8 @@ test('Form', async () => {
     {
       ...uploadsListContextDefaultValue[1],
       reload,
-      next,
-    },
+      next
+    }
   ]
   render(
     <UploadsListContext.Provider value={contextValue}>

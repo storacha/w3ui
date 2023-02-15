@@ -4,13 +4,13 @@ import {
   computed,
   InjectionKey,
   Ref,
-  shallowReactive,
+  shallowReactive
 } from 'vue'
 import { createAgent, getCurrentSpace, getSpaces } from '@w3ui/keyring-core'
 import type {
   KeyringContextState,
   KeyringContextActions,
-  ServiceConfig,
+  ServiceConfig
 } from '@w3ui/keyring-core'
 
 import type { Agent } from '@web3-storage/access'
@@ -28,9 +28,7 @@ interface KeyringProviderInjectionKeyType {
   createSpace: InjectionKey<KeyringContextActions['createSpace']>
   setCurrentSpace: InjectionKey<KeyringContextActions['setCurrentSpace']>
   registerSpace: InjectionKey<KeyringContextActions['registerSpace']>
-  cancelRegisterSpace: InjectionKey<
-    KeyringContextActions['cancelRegisterSpace']
-  >
+  cancelRegisterSpace: InjectionKey<KeyringContextActions['cancelRegisterSpace']>
   getProofs: InjectionKey<KeyringContextActions['getProofs']>
 }
 
@@ -48,7 +46,7 @@ export const KeyringProviderInjectionKey: KeyringProviderInjectionKeyType = {
   setCurrentSpace: Symbol('w3ui keyring setCurrentSpace'),
   registerSpace: Symbol('w3ui keyring registerSpace'),
   cancelRegisterSpace: Symbol('w3ui keyring cancelRegisterSpace'),
-  getProofs: Symbol('w3ui keyring getProofs'),
+  getProofs: Symbol('w3ui keyring getProofs')
 }
 
 export interface KeyringProviderProps extends ServiceConfig {}
@@ -57,11 +55,11 @@ export interface KeyringProviderProps extends ServiceConfig {}
  * Provider for authentication with the service.
  */
 export const KeyringProvider = defineComponent<KeyringProviderProps>({
-  setup({ servicePrincipal, connection }) {
+  setup ({ servicePrincipal, connection }) {
     const state = shallowReactive<KeyringContextState>({
       agent: undefined,
       space: undefined,
-      spaces: [],
+      spaces: []
     })
     let agent: Agent | undefined
     let registerAbortController: AbortController
@@ -117,9 +115,9 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
           await agent.registerSpace(email, { signal: controller.signal })
           state.space = getCurrentSpace(agent)
           state.spaces = getSpaces(agent)
-        } catch (err) {
+        } catch (error) {
           if (!controller.signal.aborted) {
-            throw err
+            throw error
           }
         }
       }
@@ -150,7 +148,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
 
     provide(KeyringProviderInjectionKey.resetAgent, async (): Promise<void> => {
       const agent = await getAgent()
-      // @ts-expect-error
+      // @ts-expect-error TODO: expose store in access client
       await Promise.all([agent.store.reset(), unloadAgent()])
     })
 
@@ -169,8 +167,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
 
   // Our provider component is a renderless component
   // it does not render any markup of its own.
-  render() {
-    // @ts-expect-error
-    return this.$slots.default()
-  },
+  render () {
+    return this.$slots.default?.()
+  }
 })

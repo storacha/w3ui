@@ -2,14 +2,14 @@ import type {
   UploaderContextState,
   UploaderContextActions,
   CARMetadata,
-  ServiceConfig,
+  ServiceConfig
 } from '@w3ui/uploader-core'
 
 import {
   createContext,
   useContext,
   createComponent,
-  ParentComponent,
+  ParentComponent
 } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import { uploadFile, uploadDirectory } from '@w3ui/uploader-core'
@@ -30,8 +30,8 @@ const UploaderContext = createContext<UploaderContextValue>([
     },
     uploadDirectory: async () => {
       throw new Error('missing uploader context provider')
-    },
-  },
+    }
+  }
 ])
 
 export interface UploaderProviderProps extends ServiceConfig {}
@@ -44,11 +44,11 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
 ) => {
   const [keyringState, keyringActions] = useKeyring()
   const [state, setState] = createStore<UploaderContextState>({
-    storedDAGShards: [],
+    storedDAGShards: []
   })
 
   const actions: UploaderContextActions = {
-    async uploadFile(file: Blob) {
+    async uploadFile (file: Blob) {
       if (keyringState.space == null) throw new Error('missing space')
       if (keyringState.agent == null) throw new Error('missing agent')
 
@@ -61,8 +61,8 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
         audience: props.servicePrincipal,
         proofs: await keyringActions.getProofs([
           { can: storeAdd.can, with: keyringState.space.did() },
-          { can: uploadAdd.can, with: keyringState.space.did() },
-        ]),
+          { can: uploadAdd.can, with: keyringState.space.did() }
+        ])
       }
 
       return await uploadFile(conf, file, {
@@ -70,10 +70,10 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
           storedShards.push(meta)
           setState('storedDAGShards', [...storedShards])
         },
-        connection: props.connection,
+        connection: props.connection
       })
     },
-    async uploadDirectory(files: File[]) {
+    async uploadDirectory (files: File[]) {
       if (keyringState.space == null) throw new Error('missing space')
       if (keyringState.agent == null) throw new Error('missing agent')
 
@@ -86,31 +86,31 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
         audience: props.servicePrincipal,
         proofs: await keyringActions.getProofs([
           { can: storeAdd.can, with: keyringState.space.did() },
-          { can: uploadAdd.can, with: keyringState.space.did() },
+          { can: uploadAdd.can, with: keyringState.space.did() }
         ]),
-        connection: props.connection,
+        connection: props.connection
       }
 
       return await uploadDirectory(conf, files, {
         onShardStored: (meta) => {
           storedShards.push(meta)
           setState('storedDAGShards', [...storedShards])
-        },
+        }
       })
-    },
+    }
   }
 
   return createComponent(UploaderContext.Provider, {
     value: [state, actions],
-    get children() {
+    get children () {
       return props.children
-    },
+    }
   })
 }
 
 /**
  * Use the scoped uploader context state from a parent `UploaderProvider`.
  */
-export function useUploader(): UploaderContextValue {
+export function useUploader (): UploaderContextValue {
   return useContext(UploaderContext)
 }

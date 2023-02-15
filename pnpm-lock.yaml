@@ -25,6 +25,7 @@ importers:
       '@web3-storage/capabilities': ^2.2.0
       esm: ^3.2.25
       fake-indexeddb: ^4.0.1
+      hd-scripts: ^4.1.0
       jsdom: ^21.1.0
       path: ^0.12.7
       prettier: ^2.8.3
@@ -62,6 +63,7 @@ importers:
       '@web3-storage/capabilities': 2.2.0
       esm: 3.2.25
       fake-indexeddb: 4.0.1
+      hd-scripts: 4.1.0
       jsdom: 21.1.0
       path: 0.12.7
       prettier: 2.8.3

@@ -4,12 +4,12 @@ import {
   Space,
   getCurrentSpace,
   getSpaces,
-  CreateDelegationOptions,
+  CreateDelegationOptions
 } from '@w3ui/keyring-core'
 import type {
   KeyringContextState,
   KeyringContextActions,
-  ServiceConfig,
+  ServiceConfig
 } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Abilities } from '@web3-storage/access/types'
@@ -19,7 +19,7 @@ import type {
   DID,
   Principal,
   Proof,
-  Signer,
+  Signer
 } from '@ucanto/interface'
 
 export { KeyringContextState, KeyringContextActions }
@@ -33,7 +33,7 @@ export const keyringContextDefaultValue: KeyringContextValue = [
   {
     space: undefined,
     spaces: [],
-    agent: undefined,
+    agent: undefined
   },
   {
     loadAgent: async () => {},
@@ -49,8 +49,8 @@ export const keyringContextDefaultValue: KeyringContextValue = [
     createDelegation: async () => {
       throw new Error('missing keyring context provider')
     },
-    addSpace: async () => {},
-  },
+    addSpace: async () => {}
+  }
 ]
 
 export const KeyringContext = createContext<KeyringContextValue>(
@@ -64,10 +64,10 @@ export interface KeyringProviderProps extends ServiceConfig {
 /**
  * Key management provider.
  */
-export function KeyringProvider({
+export function KeyringProvider ({
   children,
   servicePrincipal,
-  connection,
+  connection
 }: KeyringProviderProps): JSX.Element {
   const [agent, setAgent] = useState<Agent>()
   const [space, setSpace] = useState<Space>()
@@ -111,9 +111,9 @@ export function KeyringProvider({
       await agent.registerSpace(email, { signal: controller.signal })
       setSpace(getCurrentSpace(agent))
       setSpaces(getSpaces(agent))
-    } catch (err) {
+    } catch (error) {
       if (!controller.signal.aborted) {
-        throw err
+        throw error
       }
     }
   }
@@ -138,7 +138,7 @@ export function KeyringProvider({
 
   const resetAgent = async (): Promise<void> => {
     const agent = await getAgent()
-    // @ts-expect-error
+    // @ts-expect-error TODO expose store from access client
     await Promise.all([agent.store.reset(), unloadAgent()])
   }
 
@@ -155,13 +155,13 @@ export function KeyringProvider({
     const agent = await getAgent()
     const audienceMeta = options.audienceMeta ?? {
       name: 'agent',
-      type: 'device',
+      type: 'device'
     }
     return await agent.delegate({
       ...options,
       abilities,
       audience,
-      audienceMeta,
+      audienceMeta
     })
   }
 
@@ -173,7 +173,7 @@ export function KeyringProvider({
   const state = {
     space,
     spaces,
-    agent: issuer,
+    agent: issuer
   }
   const actions = {
     loadAgent,
@@ -185,7 +185,7 @@ export function KeyringProvider({
     setCurrentSpace,
     getProofs,
     createDelegation,
-    addSpace,
+    addSpace
   }
 
   return (
@@ -198,6 +198,6 @@ export function KeyringProvider({
 /**
  * Use the scoped keyring context state from a parent KeyringProvider.
  */
-export function useKeyring(): KeyringContextValue {
+export function useKeyring (): KeyringContextValue {
   return useContext(KeyringContext)
 }

@@ -1,7 +1,7 @@
 import type {
   ListResponse,
   UploadListResult,
-  Service,
+  Service
 } from '@web3-storage/upload-client/types'
 import { ConnectionView, Principal } from '@ucanto/interface'
 

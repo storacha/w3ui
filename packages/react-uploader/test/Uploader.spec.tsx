@@ -7,7 +7,7 @@ import { render, screen } from '@testing-library/react'
 import {
   UploaderContext,
   uploaderContextDefaultValue,
-  UploaderContextValue,
+  UploaderContextValue
 } from '../src/providers/Uploader'
 import { Uploader, Input, Form } from '../src/index'
 
@@ -18,8 +18,8 @@ test('Form', async () => {
     uploaderContextDefaultValue[0],
     {
       ...uploaderContextDefaultValue[1],
-      uploadFile,
-    },
+      uploadFile
+    }
   ]
   render(
     <UploaderContext.Provider value={contextValue}>

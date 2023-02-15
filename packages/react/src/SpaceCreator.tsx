@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useKeyring } from '@w3ui/react-keyring'
 import { ArrowPathIcon } from '@heroicons/react/20/solid'
 
-export function SpaceCreatorCreating(): JSX.Element {
+export function SpaceCreatorCreating (): JSX.Element {
   return (
     <div className='w3ui-space-creator-creating'>
       <h5>Creating Space...</h5>
@@ -17,8 +17,8 @@ interface SpaceCreatorProps {
   className?: string
 }
 
-export function SpaceCreator({
-  className = '',
+export function SpaceCreator ({
+  className = ''
 }: SpaceCreatorProps): JSX.Element {
   const [, { createSpace, registerSpace }] = useKeyring()
   const [creating, setCreating] = useState(false)
@@ -26,12 +26,12 @@ export function SpaceCreator({
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
 
-  function resetForm(): void {
+  function resetForm (): void {
     setEmail('')
     setName('')
   }
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+  async function onSubmit (e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault()
     setSubmitted(true)
     try {
@@ -39,58 +39,66 @@ export function SpaceCreator({
       // ignore this because the Space UI should handle helping the user recover
       // from space registration failure
       void registerSpace(email)
-    } catch (err) {
-      console.log(err)
-      throw new Error('failed to register', { cause: err })
+    } catch (error) {
+      /* eslint-disable no-console */
+      console.error(error)
+      /* eslint-enable no-console */
+      throw new Error('failed to register', { cause: error })
     } finally {
       resetForm()
       setSubmitted(false)
     }
   }
+  /* eslint-disable no-nested-ternary */
   return (
     <div className={`w3ui-space-creator ${className}`}>
-      {creating ? (
-        submitted ? (
-          <SpaceCreatorCreating />
-        ) : (
-          <form
-            className='w3ui-space-creator-form'
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              void onSubmit(e)
-            }}
+      {creating
+        ? (
+            submitted
+              ? (
+              <SpaceCreatorCreating />
+                )
+              : (
+              <form
+                className='w3ui-space-creator-form'
+                onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                  void onSubmit(e)
+                }}
+              >
+                <input
+                  className='w3ui-space-creator-email'
+                  type='email'
+                  placeholder='Email'
+                  value={email}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setEmail(e.target.value)
+                  }}
+                />
+                <input
+                  className='w3ui-space-creator-name'
+                  placeholder='Name'
+                  value={name}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setName(e.target.value)
+                  }}
+                />
+                <input
+                  type='submit'
+                  className='w3ui-button w3ui-space-creator-submit'
+                  value='Create'
+                />
+              </form>
+                )
+          )
+        : (
+          <button
+            className='w3ui-button w3ui-space-creator-add'
+            onClick={() => { setCreating(true) }}
           >
-            <input
-              className='w3ui-space-creator-email'
-              type='email'
-              placeholder='Email'
-              value={email}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                setEmail(e.target.value)
-              }}
-            />
-            <input
-              className='w3ui-space-creator-name'
-              placeholder='Name'
-              value={name}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                setName(e.target.value)
-              }}
-            />
-            <input
-              type='submit'
-              className='w3ui-button w3ui-space-creator-submit'
-              value='Create'
-            />
-          </form>
-        )
-      ) : (
-        <button
-          className='w3ui-button w3ui-space-creator-add'
-          onClick={() => setCreating(true)}
-        >
-          Add Space
-        </button>
-      )}
+            Add Space
+          </button>
+          )}
     </div>
   )
+  /* eslint-enable no-nested-ternary */
 }

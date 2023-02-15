@@ -11,22 +11,22 @@ interface SpaceFinderProps {
   className?: string
 }
 
-export function SpaceFinder({
+export function SpaceFinder ({
   spaces,
   selected,
   setSelected,
-  className = '',
+  className = ''
 }: SpaceFinderProps): JSX.Element {
   const [query, setQuery] = useState('')
   const filtered =
     query === ''
       ? spaces
       : spaces.filter((space: Space) =>
-          (space.name() ?? space.did())
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(query.toLowerCase().replace(/\s+/g, ''))
-        )
+        (space.name() ?? space.did())
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, ''))
+      )
 
   return (
     <div className={`${className} w3ui-space-finder`}>
@@ -40,7 +40,7 @@ export function SpaceFinder({
             <Combobox.Input
               className='w3ui-space-finder-combobox-input'
               displayValue={(space: Space) => space.name() ?? space.did()}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => { setQuery(event.target.value) }}
             />
             <Combobox.Button className='w3ui-space-finder-combobox-button'>
               <ChevronUpDownIcon
@@ -54,18 +54,20 @@ export function SpaceFinder({
             leave='transition ease-in duration-100'
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
-            afterLeave={() => setQuery('')}
+            afterLeave={() => { setQuery('') }}
           >
             <Combobox.Options
               className='w3ui-space-finder-combobox-options'
               static
             >
-              {filtered.length === 0 && query !== '' ? (
+              {filtered.length === 0 && query !== ''
+                ? (
                 <div className='w3ui-space-finder-combobox-no-results'>
                   (╯°□°)╯︵ ┻━┻
                 </div>
-              ) : (
-                filtered.map((space) => (
+                  )
+                : (
+                    filtered.map((space) => (
                   <Combobox.Option
                     key={space.did()}
                     className={({ active }) =>
@@ -84,7 +86,8 @@ export function SpaceFinder({
                         >
                           {space.name() ?? space.did()}
                         </span>
-                        {selected ? (
+                        {selected
+                          ? (
                           <span
                             className={`w3ui-space-finder-combobox-option-selected-icon-wrapper ${
                               active ? 'active' : ''
@@ -95,12 +98,13 @@ export function SpaceFinder({
                               aria-hidden='true'
                             />
                           </span>
-                        ) : null}
+                            )
+                          : null}
                       </>
                     )}
                   </Combobox.Option>
-                ))
-              )}
+                    ))
+                  )}
             </Combobox.Options>
           </Transition>
         </div>

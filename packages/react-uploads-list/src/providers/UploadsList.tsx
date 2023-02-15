@@ -4,7 +4,7 @@ import {
   UploadsListContextState,
   UploadsListContextActions,
   ServiceConfig,
-  list,
+  list
 } from '@w3ui/uploads-list-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { list as uploadList } from '@web3-storage/capabilities/upload'
@@ -16,12 +16,12 @@ export type UploadsListContextValue = [
 
 export const uploadsListContextDefaultValue: UploadsListContextValue = [
   {
-    loading: false,
+    loading: false
   },
   {
     next: async () => {},
-    reload: async () => {},
-  },
+    reload: async () => {}
+  }
 ]
 
 export const UploadsListContext = createContext<UploadsListContextValue>(
@@ -39,11 +39,11 @@ export interface UploadsListProviderProps extends ServiceConfig {
 /**
  * Provider for a list of items uploaded to the current space.
  */
-export function UploadsListProvider({
+export function UploadsListProvider ({
   size,
   servicePrincipal,
   connection,
-  children,
+  children
 }: UploadsListProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [cursor, setCursor] = useState<string>()
@@ -66,20 +66,22 @@ export function UploadsListProvider({
         issuer: agent,
         with: space.did(),
         audience: servicePrincipal,
-        proofs: await getProofs([{ can: uploadList.can, with: space.did() }]),
+        proofs: await getProofs([{ can: uploadList.can, with: space.did() }])
       }
       const page = await list(conf, {
         cursor,
         size,
         signal: newController.signal,
-        connection,
+        connection
       })
       setCursor(page.cursor)
       setData(page.results)
-    } catch (err: any) {
-      if (err.name !== 'AbortError') {
-        console.error(err)
-        setError(new Error('failed to fetch uploads list', { cause: err }))
+    } catch (error_: any) {
+      if (error_.name !== 'AbortError') {
+        /* eslint-disable no-console */
+        console.error(error_)
+        /* eslint-enable no-console */
+        setError(new Error('failed to fetch uploads list', { cause: error_ }))
       }
     } finally {
       setLoading(false)
@@ -94,7 +96,7 @@ export function UploadsListProvider({
     reload: async (): Promise<void> => {
       setCursor(undefined)
       await loadPage()
-    },
+    }
   }
 
   // we should reload the page any time the space or agent change
@@ -112,6 +114,6 @@ export function UploadsListProvider({
 /**
  * Use the scoped uploads list context state from a parent `UploadsListProvider`.
  */
-export function useUploadsList(): UploadsListContextValue {
+export function useUploadsList (): UploadsListContextValue {
   return useContext(UploadsListContext)
 }

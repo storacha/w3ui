@@ -5,13 +5,13 @@ import { CARMetadata } from '@w3ui/uploader-core'
 import {
   Status,
   Uploader as UploaderCore,
-  useUploaderComponent,
+  useUploaderComponent
 } from '@w3ui/react-uploader'
 import { Link, Version } from 'multiformats'
 
 export const Uploading = ({
   file,
-  storedDAGShards,
+  storedDAGShards
 }: {
   file?: File
   storedDAGShards?: CARMetadata[]
@@ -85,7 +85,7 @@ const UploaderForm = (): JSX.Element => {
   )
 }
 
-function pickFileIconLabel(file: File): string | undefined {
+function pickFileIconLabel (file: File): string | undefined {
   const type = file.type.split('/')
   if (type.length === 0 || type.at(0) === '') {
     const ext = file.name.split('.').at(-1)
@@ -100,7 +100,7 @@ function pickFileIconLabel(file: File): string | undefined {
   return type.at(0)
 }
 
-function humanFileSize(bytes: number): string {
+function humanFileSize (bytes: number): string {
   const size = (bytes / (1024 * 1024)).toFixed(2)
   return `${size} MiB`
 }
@@ -109,8 +109,8 @@ const UploaderContents = (): JSX.Element => {
   const [{ status, file }] = useUploaderComponent()
   const hasFile = file !== undefined
   if (status === Status.Idle) {
-    if (hasFile) {
-      return (
+    return hasFile
+      ? (
         <>
           <div className='w3ui-uploader__file'>
             <div className='w3ui-uploader__file_icon' title={file.type}>
@@ -133,10 +133,8 @@ const UploaderContents = (): JSX.Element => {
             </button>
           </div>
         </>
-      )
-    } else {
-      return <></>
-    }
+        )
+      : <></>
   } else {
     return (
       <div className='w3ui-uploader-console'>
@@ -150,16 +148,20 @@ const UploaderConsole = (): JSX.Element => {
   const [{ status, file, error, dataCID, storedDAGShards }] =
     useUploaderComponent()
   switch (status) {
-    case Status.Uploading:
+    case Status.Uploading: {
       return <Uploading file={file} storedDAGShards={storedDAGShards} />
-    case Status.Succeeded:
+    }
+    case Status.Succeeded: {
       return (
         <Done file={file} dataCID={dataCID} storedDAGShards={storedDAGShards} />
       )
-    case Status.Failed:
+    }
+    case Status.Failed: {
       return <Errored error={error} />
-    default:
+    }
+    default: {
       return <></>
+    }
   }
 }
 
@@ -168,7 +170,7 @@ export interface SimpleUploaderProps {
 }
 
 export const Uploader = ({
-  onUploadComplete,
+  onUploadComplete
 }: SimpleUploaderProps): JSX.Element => {
   return (
     <UploaderCore

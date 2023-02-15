@@ -3,11 +3,11 @@ import type {
   Component,
   Props,
   Options,
-  RenderProp,
+  RenderProp
 } from 'ariakit-react-utils'
 import type {
   UploadsListContextState,
-  UploadsListContextActions,
+  UploadsListContextActions
 } from '@w3ui/uploads-list-core'
 
 import React, {
@@ -15,14 +15,14 @@ import React, {
   createContext,
   useContext,
   useMemo,
-  useCallback,
+  useCallback
 } from 'react'
 import { createComponent, createElement } from 'ariakit-react-utils'
 import { useUploadsList } from './providers/UploadsList'
 
-export type UploadsListComponentContextState = UploadsListContextState & {}
+export type UploadsListComponentContextState = UploadsListContextState
 
-export type UploadsListComponentContextActions = UploadsListContextActions & {}
+export type UploadsListComponentContextActions = UploadsListContextActions
 
 export type UploadsListComponentContextValue = [
   state: UploadsListComponentContextState,
@@ -36,7 +36,7 @@ export const UploadsListComponentContext =
        * A boolean indicating whether the uploads list
        * is currently loading data from the server.
        */
-      loading: false,
+      loading: false
     },
     {
       /**
@@ -46,20 +46,20 @@ export const UploadsListComponentContext =
       /**
        * A function that will reload the uploads list.
        */
-      reload: async () => {},
-    },
+      reload: async () => {}
+    }
   ])
 
 export type UploadsListRootOptions = Options<typeof Fragment>
 export type UploadsListRenderProps = Omit<
-  Props<UploadsListRootOptions>,
-  'children'
+Props<UploadsListRootOptions>,
+'children'
 > & {
   uploadsList?: UploadsListComponentContextValue
 }
 export type UploadsListRootProps = Omit<
-  Props<UploadsListRootOptions>,
-  'children'
+Props<UploadsListRootOptions>,
+'children'
 > & {
   uploadsList?: UploadsListComponentContextValue
   children?: React.ReactNode | RenderProp<UploadsListRenderProps>
@@ -81,15 +81,12 @@ export const UploadsListRoot = (props: UploadsListRootProps): JSX.Element => {
     [state, actions]
   )
   const { children, ...childlessProps } = props
-  let renderedChildren: React.ReactNode
-  if (Boolean(children) && typeof children === 'function') {
-    renderedChildren = children({
+  const renderedChildren: React.ReactNode = Boolean(children) && typeof children === 'function'
+    ? children({
       ...childlessProps,
-      uploadsList: contextValue,
+      uploadsList: contextValue
     })
-  } else {
-    renderedChildren = children as React.ReactNode
-  }
+    : children as React.ReactNode
   return (
     <UploadsListComponentContext.Provider value={contextValue}>
       {renderedChildren}
@@ -98,9 +95,8 @@ export const UploadsListRoot = (props: UploadsListRootProps): JSX.Element => {
 }
 
 export type NextButtonOptions<T extends As = 'button'> = Options<T>
-export type NextButtonProps<T extends As = 'button'> = Props<
-  NextButtonOptions<T>
->
+export type NextButtonProps<T extends As = 'button'> =
+  Props<NextButtonOptions<T>>
 
 /**
  * Button that loads the next page of results.
@@ -124,7 +120,7 @@ export const NextButton: Component<NextButtonProps> = createComponent(
 
 export type ReloadButtonOptions<T extends As = 'button'> = Options<T>
 export type ReloadButtonProps<T extends As = 'button'> = Props<
-  ReloadButtonOptions<T>
+ReloadButtonOptions<T>
 >
 
 /**
@@ -150,11 +146,11 @@ export const ReloadButton: Component<ReloadButtonProps> = createComponent(
 /**
  * Use the scoped uploads list context state from a parent `UploadsList`.
  */
-export function useUploadsListComponent(): UploadsListComponentContextValue {
+export function useUploadsListComponent (): UploadsListComponentContextValue {
   return useContext(UploadsListComponentContext)
 }
 
 export const UploadsList = Object.assign(UploadsListRoot, {
   NextButton,
-  ReloadButton,
+  ReloadButton
 })

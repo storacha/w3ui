@@ -3,17 +3,17 @@ import { ServiceConfig } from '@w3ui/uploader-core'
 import {
   useUploader,
   UploaderContextValue,
-  UploaderProvider,
+  UploaderProvider
 } from '@w3ui/react-uploader'
 import {
   useUploadsList,
   UploadsListContextValue,
-  UploadsListProvider,
+  UploadsListProvider
 } from '@w3ui/react-uploads-list'
 import {
   useKeyring,
   KeyringContextValue,
-  KeyringProvider,
+  KeyringProvider
 } from '@w3ui/react-keyring'
 
 export interface W3APIContextValue {
@@ -30,9 +30,9 @@ export interface W3APIProviderProps {
   uploadsListPageSize?: number
 }
 
-export function W3APIProvider({
+export function W3APIProvider ({
   children,
-  uploadsListPageSize,
+  uploadsListPageSize
 }: W3APIProviderProps): JSX.Element {
   return (
     <KeyringProvider>
@@ -45,7 +45,7 @@ export function W3APIProvider({
   )
 }
 
-export function useW3API(): W3APIContextValue {
+export function useW3API (): W3APIContextValue {
   const keyring = useKeyring()
   const uploader = useUploader()
   const uploadsList = useUploadsList()
@@ -53,7 +53,7 @@ export function useW3API(): W3APIContextValue {
     () => ({
       keyring,
       uploader,
-      uploadsList,
+      uploadsList
     }),
     [keyring, uploader, uploadsList]
   )

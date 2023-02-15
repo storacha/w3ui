@@ -5,7 +5,7 @@ import {
   UploaderContextState,
   UploaderContextActions,
   CARMetadata,
-  ServiceConfig,
+  ServiceConfig
 } from '@w3ui/uploader-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { add as storeAdd } from '@web3-storage/capabilities/store'
@@ -24,8 +24,8 @@ export const uploaderContextDefaultValue: UploaderContextValue = [
     },
     uploadDirectory: async () => {
       throw new Error('missing uploader context provider')
-    },
-  },
+    }
+  }
 ]
 
 export const UploaderContext = createContext<UploaderContextValue>(
@@ -39,19 +39,19 @@ export interface UploaderProviderProps extends ServiceConfig {
 /**
  * Provider for actions and state to facilitate uploads to the service.
  */
-export function UploaderProvider({
+export function UploaderProvider ({
   servicePrincipal,
   connection,
-  children,
+  children
 }: UploaderProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [storedDAGShards, setStoredDAGShards] = useState<
-    UploaderContextState['storedDAGShards']
+  UploaderContextState['storedDAGShards']
   >([])
 
   const state = { storedDAGShards }
   const actions: UploaderContextActions = {
-    async uploadFile(file: Blob) {
+    async uploadFile (file: Blob) {
       if (space == null) throw new Error('missing space')
       if (agent == null) throw new Error('missing agent')
 
@@ -64,8 +64,8 @@ export function UploaderProvider({
         audience: servicePrincipal,
         proofs: await getProofs([
           { can: storeAdd.can, with: space.did() },
-          { can: uploadAdd.can, with: space.did() },
-        ]),
+          { can: uploadAdd.can, with: space.did() }
+        ])
       }
 
       return await uploadFile(conf, file, {
@@ -73,10 +73,10 @@ export function UploaderProvider({
           storedShards.push(meta)
           setStoredDAGShards([...storedShards])
         },
-        connection,
+        connection
       })
     },
-    async uploadDirectory(files: File[]) {
+    async uploadDirectory (files: File[]) {
       if (space == null) throw new Error('missing space')
       if (agent == null) throw new Error('missing agent')
 
@@ -88,8 +88,8 @@ export function UploaderProvider({
         with: space.did(),
         proofs: await getProofs([
           { can: storeAdd.can, with: space.did() },
-          { can: uploadAdd.can, with: space.did() },
-        ]),
+          { can: uploadAdd.can, with: space.did() }
+        ])
       }
 
       return await uploadDirectory(conf, files, {
@@ -97,9 +97,9 @@ export function UploaderProvider({
           storedShards.push(meta)
           setStoredDAGShards([...storedShards])
         },
-        connection,
+        connection
       })
-    },
+    }
   }
 
   return (
@@ -112,6 +112,6 @@ export function UploaderProvider({
 /**
  * Use the scoped uploader context state from a parent `UploaderProvider`.
  */
-export function useUploader(): UploaderContextValue {
+export function useUploader (): UploaderContextValue {
   return useContext(UploaderContext)
 }

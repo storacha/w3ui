@@ -8,13 +8,13 @@ import React, {
   useContext,
   useCallback,
   useMemo,
-  useEffect,
+  useEffect
 } from 'react'
 import { createComponent, createElement } from 'ariakit-react-utils'
 import {
   useKeyring,
   KeyringContextState,
-  KeyringContextActions,
+  KeyringContextActions
 } from './providers/Keyring'
 
 export type AuthenticatorContextState = KeyringContextState & {
@@ -48,7 +48,7 @@ export type AuthenticatorContextValue = [
 export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
   {
     spaces: [],
-    submitted: false,
+    submitted: false
   },
   {
     setEmail: () => {
@@ -67,19 +67,18 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
     createDelegation: async () => {
       throw new Error('missing keyring context provider')
     },
-    addSpace: async () => {},
-  },
+    addSpace: async () => {}
+  }
 ])
 
 export const AgentLoader = ({
-  children,
+  children
 }: {
   children: JSX.Element
 }): JSX.Element => {
   const [, { loadAgent }] = useKeyring()
-  // eslint-disable-next-line
   useEffect(() => {
-    loadAgent()
+    void loadAgent()
   }, []) // load agent - once.
   return children
 }
@@ -87,7 +86,7 @@ export const AgentLoader = ({
 export type AuthenticatorRootOptions<T extends As = typeof Fragment> =
   Options<T>
 export type AuthenticatorRootProps<T extends As = typeof Fragment> = Props<
-  AuthenticatorRootOptions<T>
+AuthenticatorRootOptions<T>
 >
 
 /**
@@ -112,8 +111,8 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
         try {
           await createSpace()
           await registerSpace(email)
-        } catch (err: any) {
-          throw new Error('failed to register', { cause: err })
+        } catch (error: any) {
+          throw new Error('failed to register', { cause: error })
         } finally {
           setSubmitted(false)
         }
@@ -124,7 +123,7 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
     const value = useMemo<AuthenticatorContextValue>(
       () => [
         { ...state, email, submitted, handleRegisterSubmit },
-        { ...actions, setEmail },
+        { ...actions, setEmail }
       ],
       [state, actions, email, submitted, handleRegisterSubmit]
     )
@@ -153,7 +152,7 @@ export const Form: Component<FormProps> = createComponent((props) => {
 
 export type EmailInputOptions<T extends As = 'input'> = Options<T>
 export type EmailInputProps<T extends As = 'input'> = Props<
-  EmailInputOptions<T>
+EmailInputOptions<T>
 >
 
 /**
@@ -165,22 +164,21 @@ export type EmailInputProps<T extends As = 'input'> = Props<
 export const EmailInput: Component<EmailInputProps> = createComponent(
   (props) => {
     const [{ email }, { setEmail }] = useAuthenticator()
-    const onChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value),
-      []
-    )
+    const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value)
+    }, [])
     return createElement('input', {
       ...props,
       type: 'email',
       value: email,
-      onChange,
+      onChange
     })
   }
 )
 
 export type CancelButtonOptions<T extends As = 'button'> = Options<T>
 export type CancelButtonProps<T extends As = 'button'> = Props<
-  CancelButtonOptions<T>
+CancelButtonOptions<T>
 >
 
 /**
@@ -199,12 +197,12 @@ export const CancelButton: Component<CancelButtonProps> = createComponent(
 /**
  * Use the scoped authenticator context state from a parent `Authenticator`.
  */
-export function useAuthenticator(): AuthenticatorContextValue {
+export function useAuthenticator (): AuthenticatorContextValue {
   return useContext(AuthenticatorContext)
 }
 
 export const Authenticator = Object.assign(AuthenticatorRoot, {
   Form,
   EmailInput,
-  CancelButton,
+  CancelButton
 })

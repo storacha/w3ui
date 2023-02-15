@@ -9,7 +9,7 @@ import type {
   ConnectionView,
   Principal,
   Delegation,
-  UCANOptions,
+  UCANOptions
 } from '@ucanto/interface'
 import * as RSASigner from '@ucanto/principal/rsa'
 
@@ -30,7 +30,7 @@ export class Space implements Principal {
   #did: DID
   #meta: Record<string, any>
 
-  constructor(did: DID, meta: Record<string, any> = {}) {
+  constructor (did: DID, meta: Record<string, any> = {}) {
     this.#did = did
     this.#meta = meta
   }
@@ -38,28 +38,28 @@ export class Space implements Principal {
   /**
    * The given space name.
    */
-  name(): string | undefined {
+  name (): string | undefined {
     return this.#meta.name != null ? String(this.#meta.name) : undefined
   }
 
   /**
    * The DID of the space.
    */
-  did(): DID {
+  did (): DID {
     return this.#did
   }
 
   /**
    * Whether the space has been registered with the service.
    */
-  registered(): boolean {
+  registered (): boolean {
     return Boolean(this.#meta.isRegistered)
   }
 
   /**
    * User defined space metadata.
    */
-  meta(): Record<string, any> {
+  meta (): Record<string, any> {
     return this.#meta
   }
 
@@ -69,7 +69,7 @@ export class Space implements Principal {
    * If `space` is null or undefined, returns false since
    * this space is neither.
    */
-  sameAs(space?: Space): boolean {
+  sameAs (space?: Space): boolean {
     return this.did() === space?.did()
   }
 }
@@ -156,7 +156,7 @@ export interface ServiceConfig {
  * @param agent
  * @returns the currently selected Space for the given agent
  */
-export function getCurrentSpace(agent: Agent): Space | undefined {
+export function getCurrentSpace (agent: Agent): Space | undefined {
   const did = agent.currentSpace()
   if (did == null) return
   const meta = agent.spaces.get(did)
@@ -168,7 +168,7 @@ export function getCurrentSpace(agent: Agent): Space | undefined {
  * @param agent
  * @returns all of the given agent's Spaces
  */
-export function getSpaces(agent: Agent): Space[] {
+export function getSpaces (agent: Agent): Space[] {
   const spaces: Space[] = []
   for (const [did, meta] of agent.spaces.entries()) {
     spaces.push(new Space(did, meta))
@@ -182,7 +182,7 @@ export interface CreateAgentOptions extends ServiceConfig {}
  * Create an agent for managing identity. It uses RSA keys that are stored in
  * IndexedDB as unextractable `CryptoKey`s.
  */
-export async function createAgent(
+export async function createAgent (
   options: CreateAgentOptions = {}
 ): Promise<Agent> {
   const dbName = `${DB_NAME}${
@@ -190,7 +190,7 @@ export async function createAgent(
   }`
   const store = new StoreIndexedDB(dbName, {
     dbVersion: 1,
-    dbStoreName: DB_STORE_NAME,
+    dbStoreName: DB_STORE_NAME
   })
   const raw = await store.load()
   if (raw != null) {

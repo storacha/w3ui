@@ -7,14 +7,14 @@ import React, {
   useCallback,
   createContext,
   useState,
-  Fragment,
+  Fragment
 } from 'react'
 import { createComponent, createElement } from 'ariakit-react-utils'
 import { Link, Version } from 'multiformats'
 import {
   CARMetadata,
   UploaderContextState,
-  UploaderContextActions,
+  UploaderContextActions
 } from '@w3ui/uploader-core'
 import { useUploader } from './providers/Uploader'
 
@@ -69,7 +69,7 @@ export type UploaderComponentContextValue = [
 const UploaderComponentContext = createContext<UploaderComponentContextValue>([
   {
     status: Status.Idle,
-    storedDAGShards: [],
+    storedDAGShards: []
   },
   {
     setFile: () => {
@@ -80,8 +80,8 @@ const UploaderComponentContext = createContext<UploaderComponentContextValue>([
     },
     uploadDirectory: async () => {
       throw new Error('missing uploader context provider')
-    },
-  },
+    }
+  }
 ])
 
 interface OnUploadCompleteProps {
@@ -95,7 +95,7 @@ export type UploaderRootOptions<T extends As = typeof Fragment> = Options<T> & {
   onUploadComplete?: OnUploadComplete
 }
 export type UploaderRootProps<T extends As = typeof Fragment> = Props<
-  UploaderRootOptions<T>
+UploaderRootOptions<T>
 >
 
 /**
@@ -131,8 +131,8 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
           if (props.onUploadComplete !== undefined) {
             props.onUploadComplete({ file, dataCID })
           }
-        } catch (err: any) {
-          setError(err)
+        } catch (error_: any) {
+          setError(error_)
           setStatus(Status.Failed)
         }
       }
@@ -147,9 +147,9 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
             dataCID,
             status,
             error,
-            handleUploadSubmit,
+            handleUploadSubmit
           },
-          { ...uploaderActions, setFile: setFileAndReset },
+          { ...uploaderActions, setFile: setFileAndReset }
         ],
         [
           uploaderState,
@@ -159,7 +159,7 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
           error,
           handleUploadSubmit,
           uploaderActions,
-          setFile,
+          setFile
         ]
       )
 
@@ -208,7 +208,7 @@ export const Form: Component<FormProps> = createComponent((props) => {
 /**
  * Use the scoped uploader context state from a parent `Uploader`.
  */
-export function useUploaderComponent(): UploaderComponentContextValue {
+export function useUploaderComponent (): UploaderComponentContextValue {
   return useContext(UploaderComponentContext)
 }
 

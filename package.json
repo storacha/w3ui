@@ -15,8 +15,8 @@
     "build": "rollup --config rollup.config.js && pnpm run typecheck",
     "clean": "rm -rf node_modules package-lock.json coverage packages/*/{package-lock.json,build,node_modules}",
     "compile": "pnpm run --recursive --if-present compile",
-    "format": "prettier --write '**/*.{js,ts,tsx,yml,json}' --ignore-path .gitignore",
-    "format:check": "prettier --check '**/*.{js,tsx,yml,json}' --ignore-path .gitignore",
+    "format": "pnpm --recursive --if-present run lint --fix",
+    "format:check": "lint",
     "lint": "pnpm --recursive --if-present run lint",
     "test": "pnpm run --filter './packages/**' --recursive test",
     "typecheck": "tsc -b",
@@ -47,9 +47,9 @@
     "@web3-storage/capabilities": "^2.2.0",
     "esm": "^3.2.25",
     "fake-indexeddb": "^4.0.1",
+    "hd-scripts": "^4.1.0",
     "jsdom": "^21.1.0",
     "path": "^0.12.7",
-    "prettier": "^2.8.3",
     "react": "^18.2.0",
     "rollup": "^2.79.1",
     "rollup-plugin-size": "^0.2.2",
@@ -62,12 +62,5 @@
     "vitest": "^0.27.3",
     "vitest-environment-w3ui": "workspace:^",
     "vue": "^3.2.45"
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "tabWidth": 2,
-    "semi": false,
-    "singleQuote": true,
-    "jsxSingleQuote": true
   }
 }

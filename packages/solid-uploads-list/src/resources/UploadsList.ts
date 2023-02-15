@@ -2,13 +2,13 @@ import type {
   InitializedResourceReturn,
   ResourceOptions,
   ResourceReturn,
-  ResourceSource,
+  ResourceSource
 } from 'solid-js'
 import type { Space } from '@w3ui/keyring-core'
 import type {
   ServiceConfig,
   ListResponse,
-  UploadListResult,
+  UploadListResult
 } from '@w3ui/uploads-list-core'
 import type { Capability, Proof, Signer } from '@ucanto/interface'
 
@@ -29,7 +29,7 @@ interface UploadsListSource extends ServiceConfig {
  * see the docs for [`createResource`](https://www.solidjs.com/docs/latest/api#createresource)
  * for parameter and return type descriptions.
  */
-export function createUploadsListResource(
+export function createUploadsListResource (
   source: ResourceSource<UploadsListSource>,
   options?: ResourceOptions<ListResponse<UploadListResult>, UploadsListSource>
 ):
@@ -44,13 +44,13 @@ export function createUploadsListResource(
       agent,
       servicePrincipal,
       connection,
-      getProofs,
+      getProofs
     }) => {
       const conf = {
         issuer: agent,
         with: space.did(),
         audience: servicePrincipal,
-        proofs: await getProofs([{ can: uploadList.can, with: space.did() }]),
+        proofs: await getProofs([{ can: uploadList.can, with: space.did() }])
       }
       return await list(conf, { cursor, size, connection })
     },
