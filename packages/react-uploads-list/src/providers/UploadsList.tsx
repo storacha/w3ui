@@ -1,5 +1,11 @@
 import React, { useContext, createContext, useState, useEffect } from 'react'
-import { UploadListResult, UploadsListContextState, UploadsListContextActions, ServiceConfig, list } from '@w3ui/uploads-list-core'
+import {
+  UploadListResult,
+  UploadsListContextState,
+  UploadsListContextActions,
+  ServiceConfig,
+  list
+} from '@w3ui/uploads-list-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { list as uploadList } from '@web3-storage/capabilities/upload'
 
@@ -18,7 +24,9 @@ export const uploadsListContextDefaultValue: UploadsListContextValue = [
   }
 ]
 
-export const UploadsListContext = createContext<UploadsListContextValue>(uploadsListContextDefaultValue)
+export const UploadsListContext = createContext<UploadsListContextValue>(
+  uploadsListContextDefaultValue
+)
 
 export interface UploadsListProviderProps extends ServiceConfig {
   children?: JSX.Element
@@ -31,7 +39,12 @@ export interface UploadsListProviderProps extends ServiceConfig {
 /**
  * Provider for a list of items uploaded to the current space.
  */
-export function UploadsListProvider ({ size, servicePrincipal, connection, children }: UploadsListProviderProps): JSX.Element {
+export function UploadsListProvider ({
+  size,
+  servicePrincipal,
+  connection,
+  children
+}: UploadsListProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [startCursor, setStartCursor] = useState<string>()
   const [endCursor, setEndCursor] = useState<string>()
@@ -66,10 +79,12 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
       setStartCursor(page.startCursor)
       setEndCursor(page.endCursor)
       setData(page.results)
-    } catch (err: any) {
-      if (err.name !== 'AbortError') {
-        console.error(err)
-        setError(new Error('failed to fetch uploads list', { cause: err }))
+    } catch (error_: any) {
+      if (error_.name !== 'AbortError') {
+        /* eslint-disable no-console */
+        console.error(error_)
+        /* eslint-enable no-console */
+        setError(new Error('failed to fetch uploads list', { cause: error_ }))
       }
     } finally {
       setLoading(false)
@@ -88,7 +103,9 @@ export function UploadsListProvider ({ size, servicePrincipal, connection, child
   }
 
   // we should reload the page any time the space or agent change
-  useEffect(() => { void loadPage() }, [space, agent])
+  useEffect(() => {
+    void loadPage()
+  }, [space, agent])
 
   return (
     <UploadsListContext.Provider value={[state, actions]}>
