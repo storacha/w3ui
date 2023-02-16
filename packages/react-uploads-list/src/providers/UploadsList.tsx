@@ -19,6 +19,7 @@ export const uploadsListContextDefaultValue: UploadsListContextValue = [
     loading: false
   },
   {
+    prev: async () => {},
     next: async () => {},
     reload: async () => {}
   }

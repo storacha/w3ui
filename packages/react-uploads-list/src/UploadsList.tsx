@@ -41,15 +41,15 @@ export const UploadsListComponentContext = createContext<UploadsListComponentCon
     /**
      * A function that will load the previous page of results.
      */
-    prev: async () => { },
+    prev: async () => {},
     /**
      * A function that will load the next page of results.
      */
-    next: async () => { },
+    next: async () => {},
     /**
      * A function that will reload the uploads list.
      */
-    reload: async () => { }
+    reload: async () => {}
   }
 ])
 
