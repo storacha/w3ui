@@ -5,7 +5,7 @@ import { UploadsList as UploadsListCore } from '@w3ui/react-uploads-list'
 
 interface UploadsProps {
   uploads?: UploadListResult[]
-  loading?: boolean 
+  loading: boolean
 }
 
 function Uploads ({ uploads, loading }: UploadsProps): JSX.Element {
@@ -19,7 +19,7 @@ function Uploads ({ uploads, loading }: UploadsProps): JSX.Element {
           </UploadsListCore.ReloadButton>
         </nav>
       </>
-    )
+      )
     : (
       <>
         <div className='w3-uploads-list-data'>
@@ -54,7 +54,7 @@ function Uploads ({ uploads, loading }: UploadsProps): JSX.Element {
           </UploadsListCore.NextButton>
         </nav>
       </>
-    )
+      )
 }
 
 export const UploadsList = (): JSX.Element => {
@@ -62,7 +62,7 @@ export const UploadsList = (): JSX.Element => {
     <UploadsListCore>
       {(props) => (
         <div className='w3-uploads-list'>
-          <Uploads uploads={props.uploadsList?.[0].data} loading={props.uploadsList?.[0].loading}/>
+          <Uploads uploads={props.uploadsList?.[0].data} loading={props.uploadsList?.[0].loading ?? false}/>
         </div>
       )}
     </UploadsListCore>
