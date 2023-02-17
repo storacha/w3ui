@@ -116,8 +116,7 @@ export const PrevButton: Component<PrevButtonProps> = createComponent((props: an
 })
 
 export type NextButtonOptions<T extends As = 'button'> = Options<T>
-export type NextButtonProps<T extends As = 'button'> =
-  Props<NextButtonOptions<T>>
+export type NextButtonProps<T extends As = 'button'> = Props<NextButtonOptions<T>>
 
 /**
  * Button that loads the next page of results.
@@ -140,9 +139,7 @@ export const NextButton: Component<NextButtonProps> = createComponent(
 )
 
 export type ReloadButtonOptions<T extends As = 'button'> = Options<T>
-export type ReloadButtonProps<T extends As = 'button'> = Props<
-ReloadButtonOptions<T>
->
+export type ReloadButtonProps<T extends As = 'button'> = Props<ReloadButtonOptions<T>>
 
 /**
  * Button that reloads an `UploadsList`.

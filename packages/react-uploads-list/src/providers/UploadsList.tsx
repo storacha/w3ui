@@ -77,9 +77,11 @@ export function UploadsListProvider ({
         signal: newController.signal,
         connection
       })
-      setStartCursor(page.startCursor)
-      setEndCursor(page.endCursor)
-      setData(page.results)
+      if (page.size > 0) {
+        setStartCursor(page.startCursor)
+        setEndCursor(page.endCursor)
+        setData(page.results)
+      }
     } catch (error_: any) {
       if (error_.name !== 'AbortError') {
         /* eslint-disable no-console */
@@ -105,6 +107,9 @@ export function UploadsListProvider ({
 
   // we should reload the page any time the space or agent change
   useEffect(() => {
+    setStartCursor(undefined)
+    setEndCursor(undefined)
+    setData([])
     void loadPage()
   }, [space, agent])
 
