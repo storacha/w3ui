@@ -6,9 +6,9 @@ import { ArrowPathIcon } from '@heroicons/react/20/solid'
 
 export function SpaceCreatorCreating (): JSX.Element {
   return (
-    <div className='w3ui-space-creator-creating'>
+    <div className='flex flex-col items-center space-y-4'>
       <h5>Creating Space...</h5>
-      <ArrowPathIcon className='w3ui-space-creator-creating-icon' />
+      <ArrowPathIcon className='animate-spin w-6' />
     </div>
   )
 }
@@ -51,7 +51,7 @@ export function SpaceCreator ({
   }
   /* eslint-disable no-nested-ternary */
   return (
-    <div className={`w3ui-space-creator ${className}`}>
+    <div className={`${className}`}>
       {creating
         ? (
             submitted
@@ -60,13 +60,13 @@ export function SpaceCreator ({
                 )
               : (
               <form
-                className='w3ui-space-creator-form'
+                className='flex flex-col space-y-2'
                 onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                   void onSubmit(e)
                 }}
               >
                 <input
-                  className='w3ui-space-creator-email'
+                  className='text-black py-1 px-2 rounded'
                   type='email'
                   placeholder='Email'
                   value={email}
@@ -75,7 +75,7 @@ export function SpaceCreator ({
                   }}
                 />
                 <input
-                  className='w3ui-space-creator-name'
+                  className='text-black py-1 px-2 rounded'
                   placeholder='Name'
                   value={name}
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -84,7 +84,7 @@ export function SpaceCreator ({
                 />
                 <input
                   type='submit'
-                  className='w3ui-button w3ui-space-creator-submit'
+                  className='w3ui-button'
                   value='Create'
                 />
               </form>
@@ -92,7 +92,7 @@ export function SpaceCreator ({
           )
         : (
           <button
-            className='w3ui-button w3ui-space-creator-add'
+            className='w3ui-button py-2'
             onClick={() => { setCreating(true) }}
           >
             Add Space

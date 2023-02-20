@@ -29,22 +29,22 @@ export function SpaceFinder ({
       )
 
   return (
-    <div className={`${className} w3ui-space-finder`}>
+    <div className={`${className}`}>
       <Combobox
         value={selected}
         onChange={setSelected}
         by={(a, b) => a.sameAs(b)}
       >
-        <div className='w3ui-space-finder-contents'>
-          <div className='w3ui-space-finder-closed'>
+        <div className='relative mt-1'>
+          <div className='relative w-full overflow-hidden rounded-lg bg-white text-left shadow-md'>
             <Combobox.Input
-              className='w3ui-space-finder-combobox-input'
+              className='w-full border-none py-2 pl-3 pr-10 text-sm text-gray-900'
               displayValue={(space: Space) => space.name() ?? space.did()}
               onChange={(event) => { setQuery(event.target.value) }}
             />
-            <Combobox.Button className='w3ui-space-finder-combobox-button'>
+            <Combobox.Button className='absolute inset-y-0 right-0 flex items-center pl-2'>
               <ChevronUpDownIcon
-                className='w3ui-space-finder-combobox-icon'
+                className='h-5 w-5 text-gray-400'
                 aria-hidden='true'
               />
             </Combobox.Button>
@@ -57,12 +57,12 @@ export function SpaceFinder ({
             afterLeave={() => { setQuery('') }}
           >
             <Combobox.Options
-              className='w3ui-space-finder-combobox-options'
+              className='absolute mt-1 max-h-44 w-full bg-white rounded-md pt-1 shadow-lg'
               static
             >
               {filtered.length === 0 && query !== ''
                 ? (
-                <div className='w3ui-space-finder-combobox-no-results'>
+                <div className='relative select-non py-2 px-4 font-mono text-sm text-red-500'>
                   (╯°□°)╯︵ ┻━┻
                 </div>
                   )
@@ -71,8 +71,8 @@ export function SpaceFinder ({
                   <Combobox.Option
                     key={space.did()}
                     className={({ active }) =>
-                      `w3ui-space-finder-combobox-option ${
-                        active ? 'active' : ''
+                      `relative select-none py-2 pl-10 pr-4 ${
+                        active ? 'text-white bg-teal-600' : 'text-gray-400'
                       }`
                     }
                     value={space}
@@ -80,8 +80,8 @@ export function SpaceFinder ({
                     {({ selected, active }) => (
                       <>
                         <span
-                          className={`w3ui-space-finder-combobox-option-space-name ${
-                            selected ? 'selected' : ''
+                          className={`block overflow-hidden text-ellipsis whitespace-nowrap ${
+                            selected ? 'font-medium' : ''
                           }`}
                         >
                           {space.name() ?? space.did()}
@@ -89,12 +89,12 @@ export function SpaceFinder ({
                         {selected
                           ? (
                           <span
-                            className={`w3ui-space-finder-combobox-option-selected-icon-wrapper ${
-                              active ? 'active' : ''
+                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                              active ? 'text-white' : 'text-teal-600'
                             }`}
                           >
                             <CheckIcon
-                              className='w3ui-space-finder-combobox-option-selected-icon'
+                              className='h-5 w-5'
                               aria-hidden='true'
                             />
                           </span>

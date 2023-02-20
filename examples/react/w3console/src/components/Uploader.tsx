@@ -1,13 +1,13 @@
 import type { OnUploadComplete } from '@w3ui/react-uploader'
 
-import React from 'react'
+import { Link, Version } from 'multiformats'
+import { CloudArrowUpIcon } from '@heroicons/react/24/outline'
 import { CARMetadata } from '@w3ui/uploader-core'
 import {
   Status,
   Uploader as UploaderCore,
   useUploaderComponent
 } from '@w3ui/react-uploader'
-import { Link, Version } from 'multiformats'
 
 export const Uploading = ({
   file,
@@ -16,10 +16,10 @@ export const Uploading = ({
   file?: File
   storedDAGShards?: CARMetadata[]
 }): JSX.Element => (
-  <div className='uploading'>
-    <h1 className='w3ui-uploader-console__title'>Uploading {file?.name}</h1>
+  <div className='flex flex-col items-center'>
+    <h1 className='font-bold text-sm uppercase text-gray-400'>Uploading {file?.name}</h1>
     {storedDAGShards?.map(({ cid, size }) => (
-      <p className='w3ui-uploader-console__cid' key={cid.toString()}>
+      <p className='text-xs' key={cid.toString()}>
         shard {cid.toString()} ({humanFileSize(size)}) uploaded
       </p>
     ))}
@@ -27,11 +27,11 @@ export const Uploading = ({
 )
 
 export const Errored = ({ error }: { error: any }): JSX.Element => (
-  <div className='error'>
-    <h1 className='message'>
+  <div className='flex flex-col items-center'>
+    <h1>
       ⚠️ Error: failed to upload file: {error.message}
     </h1>
-    <p className='details'>Check the browser console for details.</p>
+    <p>Check the browser console for details.</p>
   </div>
 )
 
@@ -45,15 +45,15 @@ export const Done = ({ dataCID }: DoneProps): JSX.Element => {
   const [, { setFile }] = useUploaderComponent()
   const cid: string = dataCID?.toString() ?? ''
   return (
-    <div className='w3ui-uploader-console__done'>
-      <h1 className='w3ui-uploader-console__title'>Uploaded</h1>
+    <div className='flex flex-col items-center'>
+      <h1 className='font-bold text-sm uppercase text-gray-400 mb-1'>Uploaded</h1>
       <a
-        className='w3ui-uploader-console__cid'
+        className='font-mono text-xs'
         href={`https://${cid}.ipfs.w3s.link/`}
       >
         {cid}
       </a>
-      <div className='w3ui-uploader-console__actions'>
+      <div className='p-4'>
         <button
           className='w3ui-button'
           onClick={() => {
@@ -72,14 +72,12 @@ const UploaderForm = (): JSX.Element => {
   const hasFile = file !== undefined
   return (
     <UploaderCore.Form>
-      <div
-        className={`w3ui-uploader ${status} ${
-          hasFile ? 'has-file' : 'no-file'
-        }`}
-      >
-        <label className='w3ui-uploader__label'>File:</label>
-        <UploaderCore.Input className='w3ui-uploader__input' />
+      <div className={`relative h-52 p-8 rounded-md bg-white/5 hover:bg-white/10 border-2 border-dashed border-gray-600 flex flex-col justify-center items-center`}>
+        {hasFile ? '' : <span className='mb-5'><CloudArrowUpIcon className='w-8 h-8 text-gray-600'/></span>}
+        <label className={`${hasFile ? 'hidden' : 'block h-px w-px overflow-hidden absolute whitespace-nowrap'}`}>File:</label>
+        <UploaderCore.Input className={`${hasFile ? 'hidden' : 'block absolute inset-0 cursor-pointer w-full opacity-0'}`} />
         <UploaderContents />
+        {hasFile ? '' : <span>Drag files or Click to Browse</span>}
       </div>
     </UploaderCore.Form>
   )
@@ -112,18 +110,18 @@ const UploaderContents = (): JSX.Element => {
     return hasFile
       ? (
         <>
-          <div className='w3ui-uploader__file'>
-            <div className='w3ui-uploader__file_icon' title={file.type}>
+          <div className='flex flex-row'>
+            <div className='w-12 h-12 py-0.5 flex flex-col justify-center items-center bg-black text-xs uppercase text-center text-ellipsis rounded-xs mr-3' title={file.type}>
               {pickFileIconLabel(file)}
             </div>
-            <div className='w3ui-uploader__file_meta'>
-              <span className='w3ui-uploader__file_meta_name'>{file.name}</span>
-              <span className='w3ui-uploader__file_meta_size'>
+            <div className='flex flex-col justify-around'>
+              <span className='text-sm'>{file.name}</span>
+              <span className='text-xs text-white/75 font-mono'>
                 {humanFileSize(file.size)}
               </span>
             </div>
           </div>
-          <div className='w3ui-uploader-console__actions'>
+          <div className='p-4'>
             <button
               type='submit'
               className='w3ui-button'
@@ -137,7 +135,7 @@ const UploaderContents = (): JSX.Element => {
       : <></>
   } else {
     return (
-      <div className='w3ui-uploader-console'>
+      <div>
         <UploaderConsole />
       </div>
     )
@@ -175,7 +173,6 @@ export const Uploader = ({
   return (
     <UploaderCore
       as='div'
-      className='w3ui-uploader-wrapper'
       onUploadComplete={onUploadComplete}
     >
       <UploaderForm />
