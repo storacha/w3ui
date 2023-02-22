@@ -489,7 +489,7 @@ importers:
       '@ucanto/interface': ^4.2.3
       '@ucanto/principal': ^4.2.3
       '@w3ui/keyring-core': workspace:^
-      '@web3-storage/access': ^9.3.0
+      '@web3-storage/access': ^9.4.0
       ariakit-react-utils: 0.17.0-next.27
     dependencies:
       '@w3ui/keyring-core': link:../keyring-core
@@ -499,7 +499,7 @@ importers:
       '@testing-library/user-event': 14.4.3
       '@ucanto/interface': 4.2.3
       '@ucanto/principal': 4.2.3
-      '@web3-storage/access': 9.3.0
+      '@web3-storage/access': 9.4.0
 
   packages/react-uploader:
     specifiers:
@@ -542,12 +542,12 @@ importers:
       '@ucanto/interface': ^4.2.3
       '@ucanto/principal': ^4.2.3
       '@w3ui/keyring-core': workspace:^
-      '@web3-storage/access': ^9.3.0
+      '@web3-storage/access': ^9.4.0
     dependencies:
       '@ucanto/interface': 4.2.3
       '@ucanto/principal': 4.2.3
       '@w3ui/keyring-core': link:../keyring-core
-      '@web3-storage/access': 9.3.0
+      '@web3-storage/access': 9.4.0
 
   packages/solid-uploader:
     specifiers:
@@ -603,13 +603,13 @@ importers:
       '@ucanto/interface': ^4.2.3
       '@ucanto/principal': ^4.2.3
       '@w3ui/keyring-core': workspace:^
-      '@web3-storage/access': ^9.3.0
+      '@web3-storage/access': ^9.4.0
     dependencies:
       '@w3ui/keyring-core': link:../keyring-core
     devDependencies:
       '@ucanto/interface': 4.2.3
       '@ucanto/principal': 4.2.3
-      '@web3-storage/access': 9.3.0
+      '@web3-storage/access': 9.4.0
 
   packages/vue-uploader:
     specifiers:
@@ -5484,39 +5484,6 @@ packages:
       web-streams-polyfill: 3.2.1
     dev: false
 
-  /@web3-storage/access/9.3.0:
-    resolution: {integrity: sha512-j1HUqREA6etXP0/Rcg2+e3Ug6Vi9zgJBxenFSC4U+AyulGtfkKgJrZG8Qabj6L4+UjNxjrEjSmxUn8V8lq/ULw==}
-    hasBin: true
-    dependencies:
-      '@ipld/car': 5.1.0
-      '@ipld/dag-cbor': 9.0.0
-      '@ipld/dag-ucan': 3.2.0
-      '@ucanto/client': 4.2.3
-      '@ucanto/core': 4.2.3
-      '@ucanto/interface': 4.2.3
-      '@ucanto/principal': 4.2.3
-      '@ucanto/transport': 4.2.3
-      '@ucanto/validator': 4.2.3
-      '@web3-storage/capabilities': 2.2.0
-      bigint-mod-arith: 3.1.2
-      conf: 10.2.0
-      inquirer: 9.1.4
-      isomorphic-ws: 5.0.0_ws@8.12.0
-      kysely: 0.23.4
-      multiformats: 11.0.1
-      one-webcrypto: 1.0.3
-      ora: 6.1.2
-      p-defer: 4.0.0
-      p-wait-for: 5.0.0
-      type-fest: 3.4.0
-      uint8arrays: 4.0.3
-      varint: 6.0.0
-      ws: 8.12.0
-      zod: 3.20.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
   /@web3-storage/access/9.4.0:
     resolution: {integrity: sha512-GwrSHhOigNI009DRmRtJjqQ3JS/a+rlU7wXM7k5+FwMR9Kqr/Ayid+Ida1tN7NPEIKBqfe9wfXbVMowi86YNYw==}
     hasBin: true
@@ -5549,7 +5516,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-    dev: false
 
   /@web3-storage/capabilities/2.2.0:
     resolution: {integrity: sha512-TCGcpMSVQJa0CI2GzBxJSEZDdbilEe3dtXdCzwi9NWmulsnPPj3KjSil/qHW04pYtnfql4/9n4a+pxjx6iGNCA==}
@@ -5568,7 +5534,6 @@ packages:
       '@ucanto/principal': 4.2.3
       '@ucanto/transport': 4.2.3
       '@ucanto/validator': 4.2.3
-    dev: false
 
   /@web3-storage/upload-client/5.4.0:
     resolution: {integrity: sha512-OMpP2UB3OEukiJvCdbBuK+HcdHyfDBs6+WWxeiVKDjP8YZXrNjBlpWQ7x+spFLxZLERsy8hDJ1i+L2K+enp4gw==}
