@@ -47,8 +47,8 @@ export function UploadsListProvider ({
   children
 }: UploadsListProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
-  const [startCursor, setStartCursor] = useState<string>()
-  const [endCursor, setEndCursor] = useState<string>()
+  const [before, setBefore] = useState<string>()
+  const [after, setAfter] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const [data, setData] = useState<UploadListResult[]>()
@@ -78,8 +78,8 @@ export function UploadsListProvider ({
         connection
       })
       if (page.size > 0) {
-        setStartCursor(page.startCursor)
-        setEndCursor(page.endCursor)
+        setBefore(page.before)
+        setAfter(page.after)
         setData(page.results)
       }
     } catch (error_: any) {
@@ -96,19 +96,19 @@ export function UploadsListProvider ({
 
   const state = { data, loading, error }
   const actions = {
-    next: async (): Promise<void> => { await loadPage(endCursor) },
-    prev: async (): Promise<void> => { await loadPage(startCursor, true) },
+    next: async (): Promise<void> => { await loadPage(after) },
+    prev: async (): Promise<void> => { await loadPage(before, true) },
     reload: async (): Promise<void> => {
-      setStartCursor(undefined)
-      setEndCursor(undefined)
+      setBefore(undefined)
+      setAfter(undefined)
       await loadPage()
     }
   }
 
   // we should reload the page any time the space or agent change
   useEffect(() => {
-    setStartCursor(undefined)
-    setEndCursor(undefined)
+    setBefore(undefined)
+    setAfter(undefined)
     setData([])
     void loadPage()
   }, [space, agent])
