@@ -577,20 +577,20 @@ importers:
   packages/uploader-core:
     specifiers:
       '@ucanto/interface': ^4.2.3
-      '@web3-storage/upload-client': ^5.4.0
+      '@web3-storage/upload-client': ^6.0.0
       multiformats: ^11.0.1
     dependencies:
       '@ucanto/interface': 4.2.3
-      '@web3-storage/upload-client': 5.4.0
+      '@web3-storage/upload-client': 6.0.0
       multiformats: 11.0.1
 
   packages/uploads-list-core:
     specifiers:
       '@ucanto/interface': ^4.2.3
-      '@web3-storage/upload-client': ^5.6.0
+      '@web3-storage/upload-client': ^6.0.0
     dependencies:
       '@ucanto/interface': 4.2.3
-      '@web3-storage/upload-client': 5.6.0
+      '@web3-storage/upload-client': 6.0.0
 
   packages/vitest-environment-w3ui:
     specifiers:
@@ -5536,23 +5536,8 @@ packages:
       '@ucanto/validator': 4.2.3
     dev: false
 
-  /@web3-storage/upload-client/5.4.0:
-    resolution: {integrity: sha512-OMpP2UB3OEukiJvCdbBuK+HcdHyfDBs6+WWxeiVKDjP8YZXrNjBlpWQ7x+spFLxZLERsy8hDJ1i+L2K+enp4gw==}
-    dependencies:
-      '@ipld/car': 5.1.0
-      '@ipld/dag-ucan': 3.2.0
-      '@ipld/unixfs': 2.0.1
-      '@ucanto/client': 4.2.3
-      '@ucanto/interface': 4.2.3
-      '@ucanto/transport': 4.2.3
-      '@web3-storage/capabilities': 2.3.0
-      multiformats: 11.0.1
-      p-queue: 7.3.0
-      p-retry: 5.1.2
-    dev: false
-
-  /@web3-storage/upload-client/5.6.0:
-    resolution: {integrity: sha512-Z/qavtj87+3ybM1zrT05j/relhN2WgN6evLksQKtjQm7/h5jbZgqA/u5VqFdNhUJRXcZEYvrvHiboVEYz1Bb8w==}
+  /@web3-storage/upload-client/6.0.0:
+    resolution: {integrity: sha512-oJ1/cLBSap25j2ZfC1RNOW9IisOnWMX2ay7sAWY9KPDiWe/coBXDOQB3vXxtPWSIBID6+SOSGaHh3+kXv8b4yg==}
     dependencies:
       '@ipld/car': 5.1.0
       '@ipld/dag-ucan': 3.2.0
