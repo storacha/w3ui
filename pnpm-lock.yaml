@@ -464,11 +464,11 @@ importers:
     specifiers:
       '@ucanto/interface': ^4.2.3
       '@ucanto/principal': ^4.2.3
-      '@web3-storage/access': ^9.3.0
+      '@web3-storage/access': ^9.4.0
     dependencies:
       '@ucanto/interface': 4.2.3
       '@ucanto/principal': 4.2.3
-      '@web3-storage/access': 9.3.0
+      '@web3-storage/access': 9.4.0
 
   packages/react:
     specifiers:
@@ -493,7 +493,7 @@ importers:
       '@ucanto/interface': ^4.2.3
       '@ucanto/principal': ^4.2.3
       '@w3ui/keyring-core': workspace:^
-      '@web3-storage/access': ^9.3.0
+      '@web3-storage/access': ^9.4.0
       ariakit-react-utils: 0.17.0-next.27
     dependencies:
       '@w3ui/keyring-core': link:../keyring-core
@@ -503,7 +503,7 @@ importers:
       '@testing-library/user-event': 14.4.3
       '@ucanto/interface': 4.2.3
       '@ucanto/principal': 4.2.3
-      '@web3-storage/access': 9.3.0
+      '@web3-storage/access': 9.4.0
 
   packages/react-uploader:
     specifiers:
@@ -546,12 +546,12 @@ importers:
       '@ucanto/interface': ^4.2.3
       '@ucanto/principal': ^4.2.3
       '@w3ui/keyring-core': workspace:^
-      '@web3-storage/access': ^9.3.0
+      '@web3-storage/access': ^9.4.0
     dependencies:
       '@ucanto/interface': 4.2.3
       '@ucanto/principal': 4.2.3
       '@w3ui/keyring-core': link:../keyring-core
-      '@web3-storage/access': 9.3.0
+      '@web3-storage/access': 9.4.0
 
   packages/solid-uploader:
     specifiers:
@@ -581,20 +581,20 @@ importers:
   packages/uploader-core:
     specifiers:
       '@ucanto/interface': ^4.2.3
-      '@web3-storage/upload-client': ^5.4.0
+      '@web3-storage/upload-client': ^6.0.0
       multiformats: ^11.0.1
     dependencies:
       '@ucanto/interface': 4.2.3
-      '@web3-storage/upload-client': 5.4.0
+      '@web3-storage/upload-client': 6.0.0
       multiformats: 11.0.1
 
   packages/uploads-list-core:
     specifiers:
       '@ucanto/interface': ^4.2.3
-      '@web3-storage/upload-client': ^5.6.0
+      '@web3-storage/upload-client': ^6.0.0
     dependencies:
       '@ucanto/interface': 4.2.3
-      '@web3-storage/upload-client': 5.6.0
+      '@web3-storage/upload-client': 6.0.0
 
   packages/vitest-environment-w3ui:
     specifiers:
@@ -607,13 +607,13 @@ importers:
       '@ucanto/interface': ^4.2.3
       '@ucanto/principal': ^4.2.3
       '@w3ui/keyring-core': workspace:^
-      '@web3-storage/access': ^9.3.0
+      '@web3-storage/access': ^9.4.0
     dependencies:
       '@w3ui/keyring-core': link:../keyring-core
     devDependencies:
       '@ucanto/interface': 4.2.3
       '@ucanto/principal': 4.2.3
-      '@web3-storage/access': 9.3.0
+      '@web3-storage/access': 9.4.0
 
   packages/vue-uploader:
     specifiers:
@@ -5488,8 +5488,8 @@ packages:
       web-streams-polyfill: 3.2.1
     dev: false
 
-  /@web3-storage/access/9.3.0:
-    resolution: {integrity: sha512-j1HUqREA6etXP0/Rcg2+e3Ug6Vi9zgJBxenFSC4U+AyulGtfkKgJrZG8Qabj6L4+UjNxjrEjSmxUn8V8lq/ULw==}
+  /@web3-storage/access/9.4.0:
+    resolution: {integrity: sha512-GwrSHhOigNI009DRmRtJjqQ3JS/a+rlU7wXM7k5+FwMR9Kqr/Ayid+Ida1tN7NPEIKBqfe9wfXbVMowi86YNYw==}
     hasBin: true
     dependencies:
       '@ipld/car': 5.1.0
@@ -5501,7 +5501,7 @@ packages:
       '@ucanto/principal': 4.2.3
       '@ucanto/transport': 4.2.3
       '@ucanto/validator': 4.2.3
-      '@web3-storage/capabilities': 2.2.0
+      '@web3-storage/capabilities': 2.3.0
       bigint-mod-arith: 3.1.2
       conf: 10.2.0
       inquirer: 9.1.4
@@ -5538,25 +5538,9 @@ packages:
       '@ucanto/principal': 4.2.3
       '@ucanto/transport': 4.2.3
       '@ucanto/validator': 4.2.3
-    dev: false
 
-  /@web3-storage/upload-client/5.4.0:
-    resolution: {integrity: sha512-OMpP2UB3OEukiJvCdbBuK+HcdHyfDBs6+WWxeiVKDjP8YZXrNjBlpWQ7x+spFLxZLERsy8hDJ1i+L2K+enp4gw==}
-    dependencies:
-      '@ipld/car': 5.1.0
-      '@ipld/dag-ucan': 3.2.0
-      '@ipld/unixfs': 2.0.1
-      '@ucanto/client': 4.2.3
-      '@ucanto/interface': 4.2.3
-      '@ucanto/transport': 4.2.3
-      '@web3-storage/capabilities': 2.3.0
-      multiformats: 11.0.1
-      p-queue: 7.3.0
-      p-retry: 5.1.2
-    dev: false
-
-  /@web3-storage/upload-client/5.6.0:
-    resolution: {integrity: sha512-Z/qavtj87+3ybM1zrT05j/relhN2WgN6evLksQKtjQm7/h5jbZgqA/u5VqFdNhUJRXcZEYvrvHiboVEYz1Bb8w==}
+  /@web3-storage/upload-client/6.0.0:
+    resolution: {integrity: sha512-oJ1/cLBSap25j2ZfC1RNOW9IisOnWMX2ay7sAWY9KPDiWe/coBXDOQB3vXxtPWSIBID6+SOSGaHh3+kXv8b4yg==}
     dependencies:
       '@ipld/car': 5.1.0
       '@ipld/dag-ucan': 3.2.0
