@@ -244,9 +244,9 @@ importers:
       '@ucanto/interface': ^4.1.0
       '@w3ui/keyring-core': workspace:^
       '@w3ui/react-keyring': workspace:^
-      '@w3ui/react-uploader': workspace:^3.1.0
+      '@w3ui/react-uploader': workspace:^
       '@w3ui/react-uploads-list': workspace:^
-      '@w3ui/uploader-core': workspace:^4.0.0
+      '@w3ui/uploader-core': workspace:^
       autoprefixer: ^10.4.13
       blueimp-md5: ^2.19.0
       postcss: ^8.4.21
