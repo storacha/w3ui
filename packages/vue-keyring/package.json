@@ -1,6 +1,6 @@
 {
   "name": "@w3ui/vue-keyring",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Vue adapter for w3ui keyring.",
   "main": "src/index.ts",
   "publishConfig": {
@@ -35,7 +35,7 @@
   "devDependencies": {
     "@ucanto/interface": "^4.2.3",
     "@ucanto/principal": "^4.2.3",
-    "@web3-storage/access": "^9.3.0"
+    "@web3-storage/access": "^9.4.0"
   },
   "eslintConfig": {
     "extends": [

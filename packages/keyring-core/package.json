@@ -1,6 +1,6 @@
 {
   "name": "@w3ui/keyring-core",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "w3ui keyring core.",
   "main": "src/index.ts",
   "type": "module",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@ucanto/interface": "^4.2.3",
     "@ucanto/principal": "^4.2.3",
-    "@web3-storage/access": "^9.3.0"
+    "@web3-storage/access": "^9.4.0"
   },
   "eslintConfig": {
     "extends": [
