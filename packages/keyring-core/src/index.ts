@@ -90,7 +90,7 @@ export interface KeyringContextState {
 }
 
 export interface RegisterSpaceOptions {
-  handlePhrase: (phrase: string) => void
+  onPhrase: (phrase: string) => void
 }
 
 export interface KeyringContextActions {

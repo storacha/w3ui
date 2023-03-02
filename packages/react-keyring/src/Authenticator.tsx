@@ -117,7 +117,7 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
         setSubmitted(true)
         try {
           await createSpace()
-          await registerSpace(email, { handlePhrase: (phrase) => { setSpaceRegistrationPhrase(phrase) } })
+          await registerSpace(email, { onPhrase: (phrase) => { setSpaceRegistrationPhrase(phrase) } })
         } catch (error: any) {
           throw new Error('failed to register', { cause: error })
         } finally {

@@ -103,7 +103,7 @@ export function KeyringProvider ({
     return did
   }
 
-  const registerSpace = async (email: string, opts: RegisterSpaceOptions): Promise<void> => {
+  const registerSpace = async (email: string, opts?: RegisterSpaceOptions): Promise<void> => {
     const agent = await getAgent()
     const controller = new AbortController()
     setRegisterAbortController(controller)
