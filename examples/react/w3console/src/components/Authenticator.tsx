@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   Authenticator as AuthCore,
+  SpaceRegistrationPhrase,
   useAuthenticator
 } from '@w3ui/react-keyring'
 
@@ -33,8 +34,15 @@ export function AuthenticationSubmitted (): JSX.Element {
     <div className='authenticator'>
       <div className='bg-gray-400 px-24 py-16 rounded-md'>
         <h1 className='text-xl'>Verify your email address!</h1>
-        <p className='pt-2 pb-4'>
-          Click the link in the email we sent to {email} to sign in.
+        <p className='py-2'>
+          We've just sent an email to {email}.
+        </p>
+        <p className='py-2'>
+          Please verify that the phrase in the email matches the following words:
+        </p>
+        <SpaceRegistrationPhrase className='block font-mono font-lg bg-white/75 my-4 p-2'/>
+        <p className='pb-4'>
+          If it does, please click "Verify email address" to sign in.
         </p>
         <AuthCore.CancelButton className='w3ui-button w-full'>
           Cancel

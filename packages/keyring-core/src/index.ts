@@ -89,6 +89,10 @@ export interface KeyringContextState {
   agent?: Signer
 }
 
+export interface RegisterSpaceOptions {
+  onPhrase: (phrase: string) => void
+}
+
 export interface KeyringContextActions {
   /**
    * Load the user agent and all stored data from secure storage.
@@ -117,7 +121,7 @@ export interface KeyringContextActions {
    * storage. Use cancelRegisterSpace to abort. Automatically sets the
    * newly registered space as the current space.
    */
-  registerSpace: (email: string) => Promise<void>
+  registerSpace: (email: string, options?: RegisterSpaceOptions) => Promise<void>
   /**
    * Abort an ongoing account registration.
    */
