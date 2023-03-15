@@ -96,6 +96,7 @@ export function KeyringProvider ({
 
     try {
       await agent.authorize(email, { signal: controller.signal })
+      // TODO is there other state that needs to be initialized?
       setSpace(getCurrentSpace(agent))
       setSpaces(getSpaces(agent))
     } catch (error) {
@@ -119,13 +120,13 @@ export function KeyringProvider ({
     return did
   }
 
-  const registerSpace = async (email: string): Promise<void> => {
+  const registerSpace = async (): Promise<void> => {
     const agent = await getAgent()
     const controller = new AbortController()
     setRegisterAbortController(controller)
 
     try {
-      await agent.registerSpace(email, { signal: controller.signal })
+      await agent.registerSpace({ signal: controller.signal })
       setSpace(getCurrentSpace(agent))
       setSpaces(getSpaces(agent))
     } catch (error) {

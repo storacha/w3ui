@@ -127,7 +127,7 @@ export class RegisterForm extends window.HTMLElement {
         this.dispatchEvent(startEvent)
 
         this.toggleVerification(true)
-        await agent.registerSpace(email, { signal: controller.signal })
+        await agent.registerSpace({ signal: controller.signal })
 
         // Fire sign in success event
         const successEvent = new window.CustomEvent(

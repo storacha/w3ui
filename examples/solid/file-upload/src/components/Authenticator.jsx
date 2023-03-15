@@ -11,7 +11,7 @@ function Authenticator ({ children }) {
     setSubmitted(true)
     try {
       await createSpace()
-      await registerSpace(email())
+      await registerSpace()
     } catch (err) {
       throw new Error('failed to register', { cause: err })
     } finally {

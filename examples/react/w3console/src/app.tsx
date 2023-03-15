@@ -26,7 +26,7 @@ function SpaceRegistrar (): JSX.Element {
     e.preventDefault()
     setSubmitted(true)
     try {
-      await registerSpace(email)
+      await registerSpace()
     } catch (err) {
       console.log(err)
       throw new Error('failed to register', { cause: err })

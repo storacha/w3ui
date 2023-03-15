@@ -105,7 +105,7 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
     setRegisterAbortController(controller)
 
     try {
-      await agent.registerSpace(email, { signal: controller.signal })
+      await agent.registerSpace({ signal: controller.signal })
       setState('space', getCurrentSpace(agent))
       setState('spaces', getSpaces(agent))
     } catch (error) {

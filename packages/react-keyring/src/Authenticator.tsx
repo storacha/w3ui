@@ -110,7 +110,7 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
         setSubmitted(true)
         try {
           await createSpace()
-          await registerSpace(email)
+          await registerSpace()
         } catch (error: any) {
           throw new Error('failed to register', { cause: error })
         } finally {

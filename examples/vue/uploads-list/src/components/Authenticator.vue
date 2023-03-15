@@ -28,7 +28,7 @@ export default defineComponent({
       this.submitted = true
       try {
         await this.createSpace()
-        await this.registerSpace(this.email)
+        await this.registerSpace()
       } catch (err) {
         throw new Error('failed to register', { cause: err })
       } finally {
