@@ -31,7 +31,8 @@
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/react-keyring",
   "dependencies": {
     "@w3ui/keyring-core": "workspace:^",
-    "ariakit-react-utils": "0.17.0-next.27"
+    "ariakit-react-utils": "0.17.0-next.27",
+    "use-local-storage-state": "^18.2.1"
   },
   "devDependencies": {
     "@testing-library/react": "^13.4.0",

@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext } from 'react'
+import useLocalStorageState from 'use-local-storage-state'
 import {
   createAgent,
   Space,
@@ -72,7 +73,7 @@ export function KeyringProvider ({
   connection
 }: KeyringProviderProps): JSX.Element {
   const [agent, setAgent] = useState<Agent>()
-  const [account, setAccount] = useState<stringgit >()
+  const [account, setAccount] = useLocalStorageState<string>('w3ui-account-email')
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
   const [issuer, setIssuer] = useState<Signer>()

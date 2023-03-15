@@ -495,9 +495,11 @@ importers:
       '@w3ui/keyring-core': workspace:^
       '@web3-storage/access': ^9.4.0
       ariakit-react-utils: 0.17.0-next.27
+      use-local-storage-state: ^18.2.1
     dependencies:
       '@w3ui/keyring-core': link:../keyring-core
       ariakit-react-utils: 0.17.0-next.27
+      use-local-storage-state: 18.2.1
     devDependencies:
       '@testing-library/react': 13.4.0
       '@testing-library/user-event': 14.4.3
@@ -12846,6 +12848,14 @@ packages:
       querystringify: 2.2.0
       requires-port: 1.0.0
     dev: true
+
+  /use-local-storage-state/18.2.1:
+    resolution: {integrity: sha512-JgFWmMIIsN3uIQ2hSDhYGiYdfykMFVPNX/vz5JX/9V1igJSUjEe30CgswH076YqBx4Njea1NJ6B4farIlnSLuA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+    dev: false
 
   /use/3.1.1:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}

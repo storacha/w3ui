@@ -88,9 +88,9 @@ export interface KeyringContextState {
    */
   agent?: Signer
   /**
-   * The account this device is authorized to act as.
+   * The account this device is authorized to act as. Currently just an email address.
    */
-  account?: DID
+  account?: string
 }
 
 export interface KeyringContextActions {
