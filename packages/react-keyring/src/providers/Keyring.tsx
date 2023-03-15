@@ -39,6 +39,7 @@ export const keyringContextDefaultValue: KeyringContextValue = [
     loadAgent: async () => {},
     unloadAgent: async () => {},
     resetAgent: async () => {},
+    authorize: async () => {},
     createSpace: async () => {
       throw new Error('missing keyring context provider')
     },
@@ -86,6 +87,22 @@ export function KeyringProvider ({
       return a
     }
     return agent
+  }
+
+  const authorize = async (email: string): Promise<void> => {
+    const agent = await getAgent()
+    const controller = new AbortController()
+    setRegisterAbortController(controller)
+
+    try {
+      await agent.authorize(email, { signal: controller.signal })
+      setSpace(getCurrentSpace(agent))
+      setSpaces(getSpaces(agent))
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        throw error
+      }
+    }
   }
 
   const cancelRegisterSpace = (): void => {
