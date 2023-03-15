@@ -194,6 +194,7 @@ export function KeyringProvider ({
     agent: issuer
   }
   const actions = {
+    authorize,
     loadAgent,
     unloadAgent,
     resetAgent,
