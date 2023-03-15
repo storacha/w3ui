@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/uploads-list-core",
   "dependencies": {
-    "@ucanto/interface": "^4.2.3",
+    "@ucanto/interface": "^6.2.0",
     "@web3-storage/upload-client": "^6.0.0"
   },
   "eslintConfig": {

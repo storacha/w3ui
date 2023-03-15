@@ -240,8 +240,8 @@ importers:
       '@ipld/dag-ucan': ^3.2.0
       '@preact/preset-vite': ^2.4.0
       '@types/blueimp-md5': ^2.18.0
-      '@ucanto/core': ^4.1.0
-      '@ucanto/interface': ^4.1.0
+      '@ucanto/core': ^5.2.0
+      '@ucanto/interface': ^6.2.0
       '@w3ui/keyring-core': workspace:^
       '@w3ui/react-keyring': workspace:^
       '@w3ui/react-uploader': workspace:^
@@ -269,8 +269,8 @@ importers:
     devDependencies:
       '@preact/preset-vite': 2.5.0_preact@10.11.3+vite@4.0.3
       '@types/blueimp-md5': 2.18.0
-      '@ucanto/core': 4.2.3
-      '@ucanto/interface': 4.2.3
+      '@ucanto/core': 5.2.0
+      '@ucanto/interface': 6.2.0
       autoprefixer: 10.4.13_postcss@8.4.21
       postcss: 8.4.21
       tailwindcss: 3.2.4_postcss@8.4.21
@@ -462,12 +462,12 @@ importers:
 
   packages/keyring-core:
     specifiers:
-      '@ucanto/interface': ^4.2.3
-      '@ucanto/principal': ^4.2.3
+      '@ucanto/interface': ^6.2.0
+      '@ucanto/principal': ^5.1.0
       '@web3-storage/access': file:../../../w3protocol/packages/access-client
     dependencies:
-      '@ucanto/interface': 4.2.3
-      '@ucanto/principal': 4.2.3
+      '@ucanto/interface': 6.2.0
+      '@ucanto/principal': 5.1.0
       '@web3-storage/access': file:../w3protocol/packages/access-client
 
   packages/react:
@@ -490,8 +490,8 @@ importers:
     specifiers:
       '@testing-library/react': ^13.4.0
       '@testing-library/user-event': ^14.4.3
-      '@ucanto/interface': ^4.2.3
-      '@ucanto/principal': ^4.2.3
+      '@ucanto/interface': ^6.2.0
+      '@ucanto/principal': ^5.1.0
       '@w3ui/keyring-core': workspace:^
       '@web3-storage/access': ^9.4.0
       ariakit-react-utils: 0.17.0-next.27
@@ -501,8 +501,8 @@ importers:
     devDependencies:
       '@testing-library/react': 13.4.0
       '@testing-library/user-event': 14.4.3
-      '@ucanto/interface': 4.2.3
-      '@ucanto/principal': 4.2.3
+      '@ucanto/interface': 6.2.0
+      '@ucanto/principal': 5.1.0
       '@web3-storage/access': 9.4.0
 
   packages/react-uploader:
@@ -580,20 +580,20 @@ importers:
 
   packages/uploader-core:
     specifiers:
-      '@ucanto/interface': ^4.2.3
+      '@ucanto/interface': ^6.2.0
       '@web3-storage/upload-client': ^6.0.0
       multiformats: ^11.0.1
     dependencies:
-      '@ucanto/interface': 4.2.3
+      '@ucanto/interface': 6.2.0
       '@web3-storage/upload-client': 6.0.0
       multiformats: 11.0.1
 
   packages/uploads-list-core:
     specifiers:
-      '@ucanto/interface': ^4.2.3
+      '@ucanto/interface': ^6.2.0
       '@web3-storage/upload-client': ^6.0.0
     dependencies:
-      '@ucanto/interface': 4.2.3
+      '@ucanto/interface': 6.2.0
       '@web3-storage/upload-client': 6.0.0
 
   packages/vitest-environment-w3ui:
@@ -3520,7 +3520,6 @@ packages:
 
   /@noble/ed25519/1.7.3:
     resolution: {integrity: sha512-iR8GBkDt0Q3GyaVcIu7mSsVIqnFbkbRzGLWlvhwunacoLwt4J3swfKhfaM6rN6WY+TBGoYT1GtT1mIh2/jGbRQ==}
-    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -5333,15 +5332,14 @@ packages:
       '@ucanto/interface': 4.2.3
       multiformats: 11.0.1
 
-  /@ucanto/core/5.1.0:
-    resolution: {integrity: sha512-vunFhsBgeioZhLGmLqpEeydXeCVNoYEClQLivMMa5jZP0B7GnBoMSYKc95n8iX6n6mYb3mKFpWQ0BGKJUxrK/A==}
+  /@ucanto/core/5.2.0:
+    resolution: {integrity: sha512-Eblo2LfJyojRKmBk5/w25u1hhSCs6K3zUH/zNknwTrJg7CJYxw0hgsGcXrlkQf1TnSRzJVFEduK1ZzYCV55/Uw==}
     dependencies:
       '@ipld/car': 5.1.0
       '@ipld/dag-cbor': 9.0.0
       '@ipld/dag-ucan': 3.2.0
       '@ucanto/interface': 6.2.0
       multiformats: 11.0.1
-    dev: false
 
   /@ucanto/interface/4.2.3:
     resolution: {integrity: sha512-IoccqMc2/vqaPT6U061ylC138mQ3pLp6coqjXTDmlL9OHmskLcEeQh5Mxe0AYHWMhO1ZuB0LRIysBXk7xoK25Q==}
@@ -5354,7 +5352,6 @@ packages:
     dependencies:
       '@ipld/dag-ucan': 3.2.0
       multiformats: 11.0.1
-    dev: false
 
   /@ucanto/principal/4.2.3:
     resolution: {integrity: sha512-S02cKaMcIQhxk9uJfUCUb+f98zEEFsC+5BZC6aBoYVCEpXwVZD6+hc9xI0yIQl8zJyQVA3nnUUpLfLynsSox2A==}
@@ -5373,7 +5370,6 @@ packages:
       '@ucanto/interface': 6.2.0
       multiformats: 11.0.1
       one-webcrypto: 1.0.3
-    dev: false
 
   /@ucanto/server/4.2.3:
     resolution: {integrity: sha512-lmDC0d9mVGYfiqwzpiTG6CFZpGVw1GnFx9EOtozKPa+v2nzwqDAkwYAQwNrJ2nbJWQQeFi7/Jiaec9EmdPEpsg==}
@@ -5392,12 +5388,12 @@ packages:
       '@ucanto/interface': 4.2.3
       multiformats: 11.0.1
 
-  /@ucanto/transport/5.1.0:
-    resolution: {integrity: sha512-Um/ba0DmTM1icZW08pxg7hyV1BYXGMyWEeVAnrM3W/WnrYd+JTEFoaPrbPce//Dkmrfk8uGjuIIgjpPT1eAfUA==}
+  /@ucanto/transport/5.1.1:
+    resolution: {integrity: sha512-5g2Xiofqalvmaw/UPRTdxV2be+KE3TMbFhG4ZNNPkDIBpdBduVENcLQPJ9ksD29Bc2ArIefXALxGzyGLgUPCBg==}
     dependencies:
       '@ipld/car': 5.1.0
       '@ipld/dag-cbor': 9.0.0
-      '@ucanto/core': 5.1.0
+      '@ucanto/core': 5.2.0
       '@ucanto/interface': 6.2.0
       multiformats: 11.0.1
     dev: false
@@ -5416,7 +5412,7 @@ packages:
     dependencies:
       '@ipld/car': 5.1.0
       '@ipld/dag-cbor': 9.0.0
-      '@ucanto/core': 5.1.0
+      '@ucanto/core': 5.2.0
       '@ucanto/interface': 6.2.0
       multiformats: 11.0.1
     dev: false
@@ -13610,27 +13606,6 @@ packages:
   /zod/3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
 
-  file:../ucanto/packages/core:
-    resolution: {directory: ../ucanto/packages/core, type: directory}
-    name: '@ucanto/core'
-    version: 5.1.0
-    dependencies:
-      '@ipld/car': 5.1.0
-      '@ipld/dag-cbor': 9.0.0
-      '@ipld/dag-ucan': 3.2.0
-      '@ucanto/interface': file:../ucanto/packages/interface
-      multiformats: 11.0.1
-    dev: false
-
-  file:../ucanto/packages/interface:
-    resolution: {directory: ../ucanto/packages/interface, type: directory}
-    name: '@ucanto/interface'
-    version: 6.1.0
-    dependencies:
-      '@ipld/dag-ucan': 3.2.0
-      multiformats: 11.0.1
-    dev: false
-
   file:../w3protocol/packages/access-client:
     resolution: {directory: ../w3protocol/packages/access-client, type: directory}
     name: '@web3-storage/access'
@@ -13641,10 +13616,10 @@ packages:
       '@ipld/dag-cbor': 9.0.0
       '@ipld/dag-ucan': 3.2.0
       '@ucanto/client': 5.1.0
-      '@ucanto/core': file:../ucanto/packages/core
+      '@ucanto/core': 5.2.0
       '@ucanto/interface': 6.2.0
       '@ucanto/principal': 5.1.0
-      '@ucanto/transport': 5.1.0
+      '@ucanto/transport': 5.1.1
       '@ucanto/validator': 6.1.0
       '@web3-storage/capabilities': file:../w3protocol/packages/capabilities
       bigint-mod-arith: 3.1.2
@@ -13672,9 +13647,9 @@ packages:
     name: '@web3-storage/capabilities'
     version: 3.2.0
     dependencies:
-      '@ucanto/core': 5.1.0
+      '@ucanto/core': 5.2.0
       '@ucanto/interface': 6.2.0
       '@ucanto/principal': 5.1.0
-      '@ucanto/transport': 5.1.0
+      '@ucanto/transport': 5.1.1
       '@ucanto/validator': 6.1.0
     dev: false

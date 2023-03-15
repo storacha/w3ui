@@ -31,8 +31,8 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/keyring-core",
   "dependencies": {
-    "@ucanto/interface": "^4.2.3",
-    "@ucanto/principal": "^4.2.3",
+    "@ucanto/interface": "^6.2.0",
+    "@ucanto/principal": "^5.1.0",
     "@web3-storage/access": "file:../../../w3protocol/packages/access-client"
   },
   "eslintConfig": {

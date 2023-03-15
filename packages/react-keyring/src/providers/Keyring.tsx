@@ -33,7 +33,8 @@ export const keyringContextDefaultValue: KeyringContextValue = [
   {
     space: undefined,
     spaces: [],
-    agent: undefined
+    agent: undefined,
+    account: undefined
   },
   {
     loadAgent: async () => {},
@@ -71,6 +72,7 @@ export function KeyringProvider ({
   connection
 }: KeyringProviderProps): JSX.Element {
   const [agent, setAgent] = useState<Agent>()
+  const [account, setAccount] = useState<DID>()
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
   const [issuer, setIssuer] = useState<Signer>()
@@ -97,6 +99,7 @@ export function KeyringProvider ({
     try {
       await agent.authorize(email, { signal: controller.signal })
       // TODO is there other state that needs to be initialized?
+      setAccount(agent.account)
       setSpace(getCurrentSpace(agent))
       setSpaces(getSpaces(agent))
     } catch (error) {
@@ -191,7 +194,8 @@ export function KeyringProvider ({
   const state = {
     space,
     spaces,
-    agent: issuer
+    agent: issuer,
+    account
   }
   const actions = {
     authorize,

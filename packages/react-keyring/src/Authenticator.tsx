@@ -100,7 +100,7 @@ AuthenticatorRootOptions<T>
 export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
   createComponent((props) => {
     const [state, actions] = useKeyring()
-    const { createSpace, registerSpace } = actions
+    const { authorize } = actions
     const [email, setEmail] = useState('')
     const [submitted, setSubmitted] = useState(false)
 
@@ -109,15 +109,14 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
         e.preventDefault()
         setSubmitted(true)
         try {
-          await createSpace()
-          await registerSpace()
+          await authorize(email)
         } catch (error: any) {
           throw new Error('failed to register', { cause: error })
         } finally {
           setSubmitted(false)
         }
       },
-      [email, setSubmitted, createSpace, registerSpace]
+      [email, setSubmitted, authorize]
     )
 
     const value = useMemo<AuthenticatorContextValue>(
