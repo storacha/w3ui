@@ -88,7 +88,7 @@ export interface KeyringContextActions {
    * storage. Use cancelRegisterSpace to abort. Automatically sets the
    * newly registered space as the current space.
    */
-  registerSpace: () => Promise<void>
+  registerSpace: (email: string) => Promise<void>
   /**
    * Abort an ongoing account registration.
    */

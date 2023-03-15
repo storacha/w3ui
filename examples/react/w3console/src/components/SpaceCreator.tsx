@@ -38,7 +38,7 @@ export function SpaceCreator ({
       await createSpace(name)
       // ignore this because the Space UI should handle helping the user recover
       // from space registration failure
-      void registerSpace()
+      void registerSpace(email)
     } catch (error) {
       /* eslint-disable no-console */
       console.error(error)

@@ -19,5 +19,5 @@ test('createSpace', async () => {
 
 test('registerSpace fails if no current space is set', async () => {
   const agent = await createAgent()
-  await expect(agent.registerSpace()).rejects.toThrowError()
+  await expect(agent.registerSpace('foo@bar.net')).rejects.toThrowError()
 })

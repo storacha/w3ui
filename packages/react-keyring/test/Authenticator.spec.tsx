@@ -63,5 +63,5 @@ test('Form', async () => {
   await user.click(submitButton)
 
   expect(createSpace).toHaveBeenCalledOnce()
-  expect(registerSpace).toHaveBeenCalledOnce()
+  expect(registerSpace).toHaveBeenCalledWith(myEmail)
 })
