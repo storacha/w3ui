@@ -14,6 +14,7 @@ import type {
 } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Abilities } from '@web3-storage/access/types'
+import { authorizeWithSocket } from '@web3-storage/access/agent'
 import type {
   Capability,
   Delegation,
@@ -98,7 +99,7 @@ export function KeyringProvider ({
     setRegisterAbortController(controller)
 
     try {
-      await agent.authorize(email, { signal: controller.signal })
+      await authorizeWithSocket(agent, email, { signal: controller.signal })
       // TODO is there other state that needs to be initialized?
       setAccount(email)
       setSpace(getCurrentSpace(agent))
