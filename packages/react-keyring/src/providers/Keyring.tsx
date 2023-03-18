@@ -130,7 +130,10 @@ export function KeyringProvider ({
     setRegisterAbortController(controller)
 
     try {
-      await agent.registerSpace(email, { signal: controller.signal })
+      await agent.registerSpace(email, {
+        signal: controller.signal,
+        provider: agent.connection.id.did()
+      })
       setSpace(getCurrentSpace(agent))
       setSpaces(getSpaces(agent))
     } catch (error) {
