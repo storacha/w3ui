@@ -111,6 +111,7 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
         try {
           await authorize(email)
         } catch (error: any) {
+          console.error('failed to register:', error)
           throw new Error('failed to register', { cause: error })
         } finally {
           setSubmitted(false)
