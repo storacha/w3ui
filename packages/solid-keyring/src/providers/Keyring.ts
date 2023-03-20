@@ -89,7 +89,7 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
     return a
   }
 
-  const authorize = async (email: `{string}@{string}`): Promise<void> => {
+  const authorize = async (email: '{string}@{string}'): Promise<void> => {
     const agent = await getAgent()
     const controller = new AbortController()
     setRegisterAbortController(controller)
@@ -100,9 +100,9 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
       setState('account', email)
       const newSpaces = getSpaces(agent)
       setState('spaces', newSpaces)
-      const newCurrentSpace = getCurrentSpaceInAgent(agent) || newSpaces[0]
-      if (newCurrentSpace) {
-        setCurrentSpace(newCurrentSpace.did() as DID<'key'>)
+      const newCurrentSpace = getCurrentSpaceInAgent(agent) ?? newSpaces[0]
+      if (newCurrentSpace != null) {
+        await setCurrentSpace(newCurrentSpace.did() as DID<'key'>)
       }
     } catch (error) {
       if (!controller.signal.aborted) {

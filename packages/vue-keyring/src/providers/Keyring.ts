@@ -92,7 +92,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
     }
 
     provide(KeyringProviderInjectionKey.authorize,
-      async (email: `{string}@{string}`): Promise<void> => {
+      async (email: '{string}@{string}'): Promise<void> => {
         const agent = await getAgent()
         const controller = new AbortController()
         registerAbortController = controller
@@ -103,8 +103,8 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
           state.account = email
           const newSpaces = getSpaces(agent)
           state.spaces = newSpaces
-          const newCurrentSpace = getCurrentSpaceInAgent(agent) || newSpaces[0]
-          if (newCurrentSpace) {
+          const newCurrentSpace = getCurrentSpaceInAgent(agent) ?? newSpaces[0]
+          if (newCurrentSpace != null) {
             state.space = newCurrentSpace
           }
         } catch (error) {

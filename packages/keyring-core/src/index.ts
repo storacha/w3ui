@@ -111,7 +111,7 @@ export interface KeyringContextActions {
   /**
    * Authorize this device to act as the account linked to email.
    */
-  authorize: (email: `{string}@{string}`) => Promise<void>
+  authorize: (email: '{string}@{string}') => Promise<void>
   /**
    * Create a new space with the passed name and set it as the current space.
    */

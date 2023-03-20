@@ -93,7 +93,7 @@ export function KeyringProvider ({
     return agent
   }
 
-  const authorize = async (email: `{string}@{string}`): Promise<void> => {
+  const authorize = async (email: '{string}@{string}'): Promise<void> => {
     const agent = await getAgent()
     const controller = new AbortController()
     setRegisterAbortController(controller)
@@ -104,9 +104,9 @@ export function KeyringProvider ({
       setAccount(email)
       const newSpaces = getSpaces(agent)
       setSpaces(newSpaces)
-      const newCurrentSpace = getCurrentSpaceInAgent(agent) || newSpaces[0]
-      if (newCurrentSpace) {
-        setCurrentSpace(newCurrentSpace.did() as DID<'key'>)
+      const newCurrentSpace = getCurrentSpaceInAgent(agent) ?? newSpaces[0]
+      if (newCurrentSpace != null) {
+        await setCurrentSpace(newCurrentSpace.did() as DID<'key'>)
       }
     } catch (error) {
       if (!controller.signal.aborted) {

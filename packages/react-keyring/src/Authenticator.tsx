@@ -68,7 +68,7 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
       throw new Error('missing keyring context provider')
     },
     addSpace: async () => {},
-    authorize: async () => {},
+    authorize: async () => {}
   }
 ])
 
@@ -110,8 +110,9 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
         e.preventDefault()
         setSubmitted(true)
         try {
-          await authorize(email as `{string}@{string}`)
+          await authorize(email as '{string}@{string}')
         } catch (error: any) {
+          // eslint-disable-next-line no-console
           console.error('failed to register:', error)
           throw new Error('failed to register', { cause: error })
         } finally {
