@@ -3,7 +3,7 @@ import useLocalStorageState from 'use-local-storage-state'
 import {
   createAgent,
   Space,
-  getCurrentSpace,
+  getCurrentSpace as getCurrentSpaceInAgent,
   getSpaces,
   CreateDelegationOptions
 } from '@w3ui/keyring-core'
@@ -86,7 +86,7 @@ export function KeyringProvider ({
       const a = await createAgent({ servicePrincipal, connection })
       setAgent(a)
       setIssuer(a.issuer)
-      setSpace(getCurrentSpace(a))
+      setSpace(getCurrentSpaceInAgent(a))
       setSpaces(getSpaces(a))
       return a
     }
@@ -102,8 +102,12 @@ export function KeyringProvider ({
       await authorizeWithSocket(agent, email, { signal: controller.signal })
       // TODO is there other state that needs to be initialized?
       setAccount(email)
-      setSpace(getCurrentSpace(agent))
-      setSpaces(getSpaces(agent))
+      const newSpaces = getSpaces(agent)
+      setSpaces(newSpaces)
+      const newCurrentSpace = getCurrentSpaceInAgent(agent) || newSpaces[0]?.did()
+      if (newCurrentSpace) {
+        setCurrentSpace(newCurrentSpace)
+      }
     } catch (error) {
       if (!controller.signal.aborted) {
         throw error
@@ -121,7 +125,7 @@ export function KeyringProvider ({
     const agent = await getAgent()
     const { did } = await agent.createSpace(name)
     await agent.setCurrentSpace(did)
-    setSpace(getCurrentSpace(agent))
+    setSpace(getCurrentSpaceInAgent(agent))
     return did
   }
 
@@ -135,7 +139,7 @@ export function KeyringProvider ({
         signal: controller.signal,
         provider: agent.connection.id.did()
       })
-      setSpace(getCurrentSpace(agent))
+      setSpace(getCurrentSpaceInAgent(agent))
       setSpaces(getSpaces(agent))
     } catch (error) {
       if (!controller.signal.aborted) {
@@ -147,7 +151,7 @@ export function KeyringProvider ({
   const setCurrentSpace = async (did: DID): Promise<void> => {
     const agent = await getAgent()
     await agent.setCurrentSpace(did)
-    setSpace(getCurrentSpace(agent))
+    setSpace(getCurrentSpaceInAgent(agent))
   }
 
   const loadAgent = async (): Promise<void> => {
