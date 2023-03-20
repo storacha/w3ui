@@ -464,11 +464,11 @@ importers:
     specifiers:
       '@ucanto/interface': ^6.2.0
       '@ucanto/principal': ^5.1.0
-      '@web3-storage/access': file:../../../w3protocol/packages/access-client
+      '@web3-storage/access': 11.0.0-rc.0
     dependencies:
       '@ucanto/interface': 6.2.0
       '@ucanto/principal': 5.1.0
-      '@web3-storage/access': file:../w3protocol/packages/access-client
+      '@web3-storage/access': 11.0.0-rc.0
 
   packages/react:
     specifiers:
@@ -493,7 +493,7 @@ importers:
       '@ucanto/interface': ^6.2.0
       '@ucanto/principal': ^5.1.0
       '@w3ui/keyring-core': workspace:^
-      '@web3-storage/access': file:../../../w3protocol/packages/access-client
+      '@web3-storage/access': 11.0.0-rc.0
       ariakit-react-utils: 0.17.0-next.27
       use-local-storage-state: ^18.2.1
     dependencies:
@@ -505,7 +505,7 @@ importers:
       '@testing-library/user-event': 14.4.3
       '@ucanto/interface': 6.2.0
       '@ucanto/principal': 5.1.0
-      '@web3-storage/access': file:../w3protocol/packages/access-client
+      '@web3-storage/access': 11.0.0-rc.0
 
   packages/react-uploader:
     specifiers:
@@ -5331,7 +5331,7 @@ packages:
       '@ipld/dag-cbor': 9.0.0
       '@ipld/dag-ucan': 3.2.0
       '@ucanto/interface': 4.2.3
-      multiformats: 11.0.1
+      multiformats: 11.0.2
 
   /@ucanto/core/5.2.0:
     resolution: {integrity: sha512-Eblo2LfJyojRKmBk5/w25u1hhSCs6K3zUH/zNknwTrJg7CJYxw0hgsGcXrlkQf1TnSRzJVFEduK1ZzYCV55/Uw==}
@@ -5405,7 +5405,7 @@ packages:
       '@ipld/dag-cbor': 8.0.1
       '@ucanto/core': 4.2.3
       '@ucanto/interface': 4.2.3
-      multiformats: 11.0.1
+      multiformats: 11.0.2
 
   /@ucanto/validator/6.1.0:
     resolution: {integrity: sha512-vZ40paByLgosllG+YfuI4eD7m3KyYG1ebEa9jZEkLDYjWh7WWBtYvBn40pziIiLfBCzum2zU1uP1SMOf63EqqQ==}
@@ -5541,6 +5541,39 @@ packages:
       web-streams-polyfill: 3.2.1
     dev: false
 
+  /@web3-storage/access/11.0.0-rc.0:
+    resolution: {integrity: sha512-y3hwtlj8QhHHmK6XvzWRusm8E83jh3GkHon80wTCE0iB/BFlTNkOBeb+C5FhImC1vSFseBBG+FxLZffwfsnrYA==}
+    hasBin: true
+    dependencies:
+      '@ipld/car': 5.1.0
+      '@ipld/dag-cbor': 9.0.0
+      '@ipld/dag-ucan': 3.2.0
+      '@ucanto/client': 5.1.0
+      '@ucanto/core': 5.2.0
+      '@ucanto/interface': 6.2.0
+      '@ucanto/principal': 5.1.0
+      '@ucanto/transport': 5.1.1
+      '@ucanto/validator': 6.1.0
+      '@web3-storage/capabilities': 4.0.0
+      bigint-mod-arith: 3.1.2
+      conf: 10.2.0
+      inquirer: 9.1.4
+      isomorphic-ws: 5.0.0_ws@8.12.0
+      kysely: 0.23.4
+      multiformats: 11.0.2
+      one-webcrypto: 1.0.3
+      ora: 6.1.2
+      p-defer: 4.0.0
+      p-wait-for: 5.0.0
+      type-fest: 3.4.0
+      uint8arrays: 4.0.3
+      varint: 6.0.0
+      ws: 8.12.0
+      zod: 3.20.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   /@web3-storage/access/9.4.0:
     resolution: {integrity: sha512-GwrSHhOigNI009DRmRtJjqQ3JS/a+rlU7wXM7k5+FwMR9Kqr/Ayid+Ida1tN7NPEIKBqfe9wfXbVMowi86YNYw==}
     hasBin: true
@@ -5591,6 +5624,15 @@ packages:
       '@ucanto/principal': 4.2.3
       '@ucanto/transport': 4.2.3
       '@ucanto/validator': 4.2.3
+
+  /@web3-storage/capabilities/4.0.0:
+    resolution: {integrity: sha512-O+WmApepwaNFNsOj8f66HrIgDl/VGsGLn4iJMyqZdiTxVupNXfFsSVI2iBGEaJlNI+RDzISejXnGtScy1abxGQ==}
+    dependencies:
+      '@ucanto/core': 5.2.0
+      '@ucanto/interface': 6.2.0
+      '@ucanto/principal': 5.1.0
+      '@ucanto/transport': 5.1.1
+      '@ucanto/validator': 6.1.0
 
   /@web3-storage/upload-client/6.0.0:
     resolution: {integrity: sha512-oJ1/cLBSap25j2ZfC1RNOW9IisOnWMX2ay7sAWY9KPDiWe/coBXDOQB3vXxtPWSIBID6+SOSGaHh3+kXv8b4yg==}
@@ -13616,49 +13658,3 @@ packages:
 
   /zod/3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
-
-  file:../w3protocol/packages/access-client:
-    resolution: {directory: ../w3protocol/packages/access-client, type: directory}
-    name: '@web3-storage/access'
-    version: 10.0.0
-    hasBin: true
-    dependencies:
-      '@ipld/car': 5.1.0
-      '@ipld/dag-cbor': 9.0.0
-      '@ipld/dag-ucan': 3.2.0
-      '@ucanto/client': 5.1.0
-      '@ucanto/core': 5.2.0
-      '@ucanto/interface': 6.2.0
-      '@ucanto/principal': 5.1.0
-      '@ucanto/transport': 5.1.1
-      '@ucanto/validator': 6.1.0
-      '@web3-storage/capabilities': file:../w3protocol/packages/capabilities
-      bigint-mod-arith: 3.1.2
-      conf: 10.2.0
-      inquirer: 9.1.4
-      isomorphic-ws: 5.0.0_ws@8.12.0
-      kysely: 0.23.4
-      multiformats: 11.0.2
-      one-webcrypto: 1.0.3
-      ora: 6.1.2
-      p-defer: 4.0.0
-      p-wait-for: 5.0.0
-      type-fest: 3.4.0
-      uint8arrays: 4.0.3
-      varint: 6.0.0
-      ws: 8.12.0
-      zod: 3.20.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
-  file:../w3protocol/packages/capabilities:
-    resolution: {directory: ../w3protocol/packages/capabilities, type: directory}
-    name: '@web3-storage/capabilities'
-    version: 3.2.0
-    dependencies:
-      '@ucanto/core': 5.2.0
-      '@ucanto/interface': 6.2.0
-      '@ucanto/principal': 5.1.0
-      '@ucanto/transport': 5.1.1
-      '@ucanto/validator': 6.1.0
