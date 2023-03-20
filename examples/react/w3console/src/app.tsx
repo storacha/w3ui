@@ -140,7 +140,12 @@ function SpaceSection (props: SpaceSectionProps): JSX.Element {
             </div>
           </>
         )}
-        {!registered && !share && <SpaceRegistrar />}
+        {(space && !registered) && !share && <SpaceRegistrar />}
+        {!space && (
+          <div className="text-center">
+            <h1 className="text-xl">Select a space from the dropdown on the left to get started.</h1>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -206,7 +211,7 @@ export function SpaceEnsurer ({
         <p>
           Give it a name and hit create!
         </p>
-        <SpaceCreatorForm className='mt-4'/>
+        <SpaceCreatorForm className='mt-4' />
       </div>
     </div>
   )
