@@ -47,7 +47,7 @@ export function SpaceCreatorForm ({
         setSubmitted(false)
       }
     } else {
-      throw new Error('cannot create space, no account found, are you logged in?')
+      throw new Error('cannot create space, no account found, have you authorized your email?')
     }
   }
   return (
