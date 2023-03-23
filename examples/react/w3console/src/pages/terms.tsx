@@ -13,7 +13,11 @@ export default function Terms () {
         <a href="https://github.com/web3-storage/w3cli">w3cli</a>, and the 
         <a href="https://github.com/web3-storage/w3protocol">underlying APIs and services</a> 
         for uploading data (collectively, the “w3up beta”). By using the {serviceName} 
-        w3up beta, you consent to the general {serviceName} Terms of Service
+        w3up beta, you consent to the general {serviceName} 
+        {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:nft.storage' ?
+          <a href="https://nft.storage/terms">Terms of Service</a> :
+          <a href="https://web3.storage/terms">Terms of Service</a>
+        }
         {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:nft.storage' &&
           ', meaning you will only upload NFT data (i.e., off-chain NFT metadata and assets) via your account'
         }
