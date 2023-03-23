@@ -1,5 +1,31 @@
 # Changelog
 
+## [4.0.0](https://github.com/web3-storage/w3ui/compare/solid-uploads-list-v3.0.0...solid-uploads-list-v4.0.0) (2023-03-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* use new account model ([#400](https://github.com/web3-storage/w3ui/issues/400))
+* core and framework components have changed considerably. Please read the updated doucmentation.
+
+### Features
+
+* consume access and upload client ([#159](https://github.com/web3-storage/w3ui/issues/159)) ([e36d842](https://github.com/web3-storage/w3ui/commit/e36d842b1695032355ab29646c3dce6a33880517))
+* solid uploads list component and example ([1edb547](https://github.com/web3-storage/w3ui/commit/1edb547647191d0cf41bf2a4a44821d45d8543e0))
+* use keyring modules ([083a9ce](https://github.com/web3-storage/w3ui/commit/083a9ce3c64b91cb3017308bdf71f046ec93bce0))
+* use new account model ([#400](https://github.com/web3-storage/w3ui/issues/400)) ([66dd20b](https://github.com/web3-storage/w3ui/commit/66dd20b3a95fc496da1aeb40342c8f691d147c7e))
+
+
+### Bug Fixes
+
+* get solid examples working again ([#199](https://github.com/web3-storage/w3ui/issues/199)) ([78ad7e9](https://github.com/web3-storage/w3ui/commit/78ad7e91dd83eff4e62f09100ef75b1c97671e3f))
+* pull in nully value fix ([c3dd98f](https://github.com/web3-storage/w3ui/commit/c3dd98f860d63f9c653c4c2ca17d10e027c58a0a))
+* remove wallet modules ([17ae732](https://github.com/web3-storage/w3ui/commit/17ae7326b08b0129a64de4235d795a808e750514))
+* update dependencies ([996871f](https://github.com/web3-storage/w3ui/commit/996871fc433659a56100e529a969fbb9c054e103))
+* update dependencies ([e94f90d](https://github.com/web3-storage/w3ui/commit/e94f90d08e575f16ca4a91c6032bc3af6a613fcf))
+* update dependency versions ([4c75a3f](https://github.com/web3-storage/w3ui/commit/4c75a3fc277f47fc7f9856df78e65b2284a02e80))
+* uploads listings ([0763446](https://github.com/web3-storage/w3ui/commit/0763446f1d6d70b1c3adef8221b35396b133c01e))
+
 ## [3.0.0](https://github.com/web3-storage/w3ui/compare/solid-uploads-list-v2.0.2...solid-uploads-list-v3.0.0) (2023-03-23)
 
 
