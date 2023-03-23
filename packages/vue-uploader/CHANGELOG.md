@@ -1,5 +1,31 @@
 # Changelog
 
+## [5.0.0](https://github.com/web3-storage/w3ui/compare/vue-uploader-v4.0.0...vue-uploader-v5.0.0) (2023-03-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* use new account model ([#400](https://github.com/web3-storage/w3ui/issues/400))
+* core and framework components have changed considerably. Please read the updated doucmentation.
+* The uploader-core API has been augmented with a new method to support chunked CAR uploads `uploadCarChunks`. The static `encode*` functions are now exported directly from the `*-uploader` modules instead of being injected by the provider and have different signatures to allow for streaming DAG generation. The `uploadCar` method of the provider has been replaced with the more friendly `uploadFile` and `uploadDirectory` functions (and `uploadCarChunks` to allow for direct CAR uploads).
+
+### Features
+
+* add CAR splitting ([#66](https://github.com/web3-storage/w3ui/issues/66)) ([1c57dba](https://github.com/web3-storage/w3ui/commit/1c57dba9ef51845927432acd3836d4c576eb39fe))
+* consume access and upload client ([#159](https://github.com/web3-storage/w3ui/issues/159)) ([e36d842](https://github.com/web3-storage/w3ui/commit/e36d842b1695032355ab29646c3dce6a33880517))
+* use keyring modules ([083a9ce](https://github.com/web3-storage/w3ui/commit/083a9ce3c64b91cb3017308bdf71f046ec93bce0))
+* use new account model ([#400](https://github.com/web3-storage/w3ui/issues/400)) ([66dd20b](https://github.com/web3-storage/w3ui/commit/66dd20b3a95fc496da1aeb40342c8f691d147c7e))
+* vue uploader component, example and docs ([779f777](https://github.com/web3-storage/w3ui/commit/779f7771cead66b251815e3e167badc037b85597))
+
+
+### Bug Fixes
+
+* remove wallet modules ([17ae732](https://github.com/web3-storage/w3ui/commit/17ae7326b08b0129a64de4235d795a808e750514))
+* update dependencies ([996871f](https://github.com/web3-storage/w3ui/commit/996871fc433659a56100e529a969fbb9c054e103))
+* update dependencies ([e94f90d](https://github.com/web3-storage/w3ui/commit/e94f90d08e575f16ca4a91c6032bc3af6a613fcf))
+* update dependency versions ([4c75a3f](https://github.com/web3-storage/w3ui/commit/4c75a3fc277f47fc7f9856df78e65b2284a02e80))
+* uploads listing ([#104](https://github.com/web3-storage/w3ui/issues/104)) ([dc2139f](https://github.com/web3-storage/w3ui/commit/dc2139f5e00c9195c480ce5c98a78b4296713ac7))
+
 ## [4.0.0](https://github.com/web3-storage/w3ui/compare/vue-uploader-v3.0.1...vue-uploader-v4.0.0) (2023-03-23)
 
 
