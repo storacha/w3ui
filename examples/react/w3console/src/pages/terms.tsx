@@ -15,13 +15,13 @@ export default function Terms () {
         for uploading data (collectively, the “w3up beta”). By using the {serviceName} 
         w3up beta, you consent to the general {serviceName} Terms of Service
         {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:nft.storage' &&
-          , meaning you will only upload NFT data (i.e., off-chain NFT metadata and assets) via your account
+          ', meaning you will only upload NFT data (i.e., off-chain NFT metadata and assets) via your account'
         }
         .
       </p>
       <p className='max-w-xl leading-relaxed'>
         {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:web3.storage' &&
-          Registering for and uploading data to the web3.storage w3up beta is currently free. 
+          'Registering for and uploading data to the web3.storage w3up beta is currently free. '
         }
         At the end of the preview period, accounts registered through the {serviceName} w3up beta 
         (“w3up account(s)”) will ultimately be integrated with the broader account system of {serviceName}.
