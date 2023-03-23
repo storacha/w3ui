@@ -10,7 +10,7 @@ export default function Terms () {
         and will eventually be used as the primary upload API for {serviceName}. 
         {serviceName} includes <a href="https://github.com/web3-storage/w3up-client">w3up-client</a>, 
         <a href="https://github.com/web3-storage/w3ui">w3ui</a>, 
-        <a href="https://github.com/web3-storage/w3cli">w3cli, and the 
+        <a href="https://github.com/web3-storage/w3cli">w3cli</a>, and the 
         <a href="https://github.com/web3-storage/w3protocol">underlying APIs and services</a> 
         for uploading data (collectively, the “w3up beta”). By using the {serviceName} 
         w3up beta, you consent to the general {serviceName} Terms of Service
