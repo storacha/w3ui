@@ -10,6 +10,6 @@
   "packages/vue-uploads-list": "3.0.0",
   "packages/solid-keyring": "3.0.0",
   "packages/solid-uploader": "4.0.0",
-  "packages/solid-uploads-list": "3.0.0",
+  "packages/solid-uploads-list": "3.0.1",
   "examples/react/w3console": "1.1.0"
 }
