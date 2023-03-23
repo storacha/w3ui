@@ -1,15 +1,15 @@
 {
-  "packages/react-uploader": "3.1.0",
-  "packages/react-uploads-list": "2.2.0",
-  "packages/uploader-core": "4.1.0",
-  "packages/uploads-list-core": "2.1.0",
+  "packages/react-uploader": "4.0.0",
+  "packages/react-uploads-list": "3.0.0",
+  "packages/uploader-core": "5.0.0",
+  "packages/uploads-list-core": "3.0.0",
   "packages/vue-uploader": "4.0.0",
   "packages/solid-uploader": "3.0.2",
   "packages/solid-uploads-list": "2.0.2",
-  "packages/vue-uploads-list": "2.0.1",
-  "packages/keyring-core": "2.2.1",
-  "packages/solid-keyring": "2.1.1",
-  "packages/react-keyring": "3.0.1",
-  "packages/vue-keyring": "2.0.2",
-  "examples/react/w3console": "0.0.0"
+  "packages/vue-uploads-list": "3.0.0",
+  "packages/keyring-core": "3.0.0",
+  "packages/solid-keyring": "3.0.0",
+  "packages/react-keyring": "4.0.0",
+  "packages/vue-keyring": "3.0.0",
+  "examples/react/w3console": "1.1.0"
 }
