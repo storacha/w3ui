@@ -13,12 +13,18 @@ export default function Terms () {
         <a href="https://github.com/web3-storage/w3cli">w3cli, and the 
         <a href="https://github.com/web3-storage/w3protocol">underlying APIs and services</a> 
         for uploading data (collectively, the “w3up beta”). By using the {serviceName} 
-        w3up beta, you consent to the general {serviceName} Terms of Service.
+        w3up beta, you consent to the general {serviceName} Terms of Service
+        {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:nft.storage' &&
+          , meaning you will only upload NFT data (i.e., off-chain NFT metadata and assets) via your account
+        }
+        .
       </p>
       <p className='max-w-xl leading-relaxed'>
-        Registering for and uploading data to the web3.storage w3up beta is currently free. 
-        At the end of the preview period, accounts registered through the web3.storage w3up beta 
-        (“w3up account(s)”) will ultimately be integrated with the broader account system of web3.storage.
+        {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:web3.storage' &&
+          Registering for and uploading data to the web3.storage w3up beta is currently free. 
+        }
+        At the end of the preview period, accounts registered through the {serviceName} w3up beta 
+        (“w3up account(s)”) will ultimately be integrated with the broader account system of {serviceName}.
       </p>
       <h2 className='text-lg my-4 font-bold'>
         Accounts Linked to Email Addresses
@@ -33,7 +39,7 @@ export default function Terms () {
         account linked to the same email.
       </p>
       <p className='max-w-xl leading-relaxed'>
-        If you intend to separate uploaded data between web3.storage and NFT.Storage during the w3up beta period (e.g., 
+        If you intend to separate uploaded data between web3.storage and NFT.Storage using w3up during the w3up beta period (e.g., 
         you want your NFT data to be stored for free on NFT.Storage and non-NFT data to be stored for payment on web3.storage), 
         please register for the {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:nft.storage' ? 'web3.storage' : 'NFT.Storage'} w3up beta separately.
       </p>
