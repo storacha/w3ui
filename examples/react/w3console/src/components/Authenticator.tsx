@@ -24,7 +24,7 @@ export function AuthenticationForm (): JSX.Element {
           type='submit'
           disabled={submitted}
         >
-          Register
+          Register / authenticate
         </button>
       </AuthCore.Form>
       <p className='text-xs text-white/80 italic max-w-xs text-left mt-6'>
