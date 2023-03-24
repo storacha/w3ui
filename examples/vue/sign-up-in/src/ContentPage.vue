@@ -28,7 +28,6 @@ export default {
       try {
         await this.authorize(this.email)
       } catch (err) {
-        console.error(err)
         throw new Error('failed to authorize', { cause: err })
       } finally {
         this.submitted = false
