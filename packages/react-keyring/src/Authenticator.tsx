@@ -122,12 +122,18 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
       [email, setSubmitted, authorize]
     )
 
+    const cancelRegisterSpace = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      setSubmitted(false)
+      actions.cancelRegisterSpace()
+    }
+
     const value = useMemo<AuthenticatorContextValue>(
       () => [
-        { ...state, email, submitted, handleRegisterSubmit },
+        { ...state, email, submitted, handleRegisterSubmit, cancelRegisterSpace },
         { ...actions, setEmail }
       ],
-      [state, actions, email, submitted, handleRegisterSubmit]
+      [state, actions, email, submitted, handleRegisterSubmit, cancelRegisterSpace]
     )
     return (
       <AgentLoader>
