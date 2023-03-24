@@ -11,6 +11,7 @@ export default defineComponent({
     account: { from: KeyringProviderInjectionKey.account },
     createSpace: { from: KeyringProviderInjectionKey.createSpace },
     registerSpace: { from: KeyringProviderInjectionKey.registerSpace },
+    authorize: { from: KeyringProviderInjectionKey.authorize },
     cancelAuthorize: { from: KeyringProviderInjectionKey.cancelAuthorize },
   },
   setup: function(){

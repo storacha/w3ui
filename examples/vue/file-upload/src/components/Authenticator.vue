@@ -11,6 +11,7 @@ export default defineComponent({
     account: { from: KeyringProviderInjectionKey.account },
     createSpace: { from: KeyringProviderInjectionKey.createSpace },
     registerSpace: { from: KeyringProviderInjectionKey.registerSpace },
+    authorize: { from: KeyringProviderInjectionKey.authorize },
     cancelAuthorize: { from: KeyringProviderInjectionKey.cancelAuthorize }
   },
   setup: function(){
@@ -62,6 +63,6 @@ export default defineComponent({
       <label htmlFor="email" className="db mb2">Email address:</label>
       <input id="email" className="db pa2 w-100" type="email" v-model="email" required />
     </div>
-    <button type="submit" className="ph3 pv2" :disabled="submitted">Register</button>
+    <button type="submit" className="ph3 pv2" :disabled="submitted">Authorize</button>
   </form>
 </template>

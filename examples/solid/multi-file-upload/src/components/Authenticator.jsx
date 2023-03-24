@@ -22,19 +22,19 @@ function Authenticator ({ children }) {
 
   return (
     <Switch>
-      <Match when={keyring.space?.registered()}>
+      <Match when={keyring.account}>
         {children}
       </Match>
       <Match when={submitted()}>
         <div>
           <h1 className='near-white'>Verify your email address!</h1>
-          <p>Click the link in the email we sent to {account} to sign in.</p>
+          <p>Click the link in the email we sent to {keyring.account} to sign in.</p>
           <form onSubmit={e => { e.preventDefault(); cancelAuthorize() }}>
             <button type='submit' className='ph3 pv2'>Cancel</button>
           </form>
         </div>
       </Match>
-      <Match when={!account && !submitted()}>
+      <Match when={!keyring.account && !submitted()}>
         <form onSubmit={handleRegisterSubmit}>
           <div className='mb3'>
             <label htmlFor='email' className='db mb2'>Email address:</label>
