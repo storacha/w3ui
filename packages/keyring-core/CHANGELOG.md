@@ -1,5 +1,31 @@
 # Changelog
 
+## [4.1.1](https://github.com/web3-storage/w3ui/compare/keyring-core-v4.1.0...keyring-core-v4.1.1) (2023-03-30)
+
+
+### Bug Fixes
+
+* email type ([#492](https://github.com/web3-storage/w3ui/issues/492)) ([c09011b](https://github.com/web3-storage/w3ui/commit/c09011b95866f1531b213612baaa4de46109c8b9))
+* types location ([#491](https://github.com/web3-storage/w3ui/issues/491)) ([30f5efa](https://github.com/web3-storage/w3ui/commit/30f5efafc7f0387f83342fce1f3d88f3de11dd51))
+
+## [4.1.0](https://github.com/web3-storage/w3ui/compare/keyring-core-v4.0.0...keyring-core-v4.1.0) (2023-03-30)
+
+
+### Features
+
+* use new faster auth function ([#483](https://github.com/web3-storage/w3ui/issues/483)) ([372f249](https://github.com/web3-storage/w3ui/commit/372f249c8ee253e7b5a291530ce54ee615ce0568))
+
+## [4.0.0](https://github.com/web3-storage/w3ui/compare/keyring-core-v3.0.0...keyring-core-v4.0.0) (2023-03-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* update examples for new authorize flow ([#474](https://github.com/web3-storage/w3ui/issues/474))
+
+### Bug Fixes
+
+* update examples for new authorize flow ([#474](https://github.com/web3-storage/w3ui/issues/474)) ([0925c21](https://github.com/web3-storage/w3ui/commit/0925c213c68c17f7edf606c0e55d22cec85b719a))
+
 ## [3.0.0](https://github.com/web3-storage/w3ui/compare/keyring-core-v2.2.1...keyring-core-v3.0.0) (2023-03-23)
 
 
