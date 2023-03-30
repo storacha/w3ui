@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.1.0](https://github.com/web3-storage/w3ui/compare/solid-keyring-v4.0.0...solid-keyring-v4.1.0) (2023-03-30)
+
+
+### Features
+
+* use new faster auth function ([#483](https://github.com/web3-storage/w3ui/issues/483)) ([372f249](https://github.com/web3-storage/w3ui/commit/372f249c8ee253e7b5a291530ce54ee615ce0568))
+
+## [4.0.0](https://github.com/web3-storage/w3ui/compare/solid-keyring-v3.0.0...solid-keyring-v4.0.0) (2023-03-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* update examples for new authorize flow ([#474](https://github.com/web3-storage/w3ui/issues/474))
+
+### Bug Fixes
+
+* update examples for new authorize flow ([#474](https://github.com/web3-storage/w3ui/issues/474)) ([0925c21](https://github.com/web3-storage/w3ui/commit/0925c213c68c17f7edf606c0e55d22cec85b719a))
+
 ## [3.0.0](https://github.com/web3-storage/w3ui/compare/solid-keyring-v2.1.1...solid-keyring-v3.0.0) (2023-03-23)
 
 
