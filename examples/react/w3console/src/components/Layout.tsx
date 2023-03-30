@@ -18,7 +18,6 @@ export const DefaultLayout: LayoutComponent = ({ sidebar = <div></div>, children
               <a className='text-xs block text-center mt-2' href='/terms'>Terms</a>
               <a className='text-xs block text-center mt-2' href='/docs'>Docs</a>
               <a className='text-xs block text-center mt-2' href='https://github.com/web3-storage/w3ui/issues'>Support</a>
-
             </div>
           </div>
         </div>
