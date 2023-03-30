@@ -15,7 +15,7 @@ import type {
 } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Abilities } from '@web3-storage/access/types'
-import { authorizeWithSocket } from '@web3-storage/access/agent'
+import { authorizeWaitAndClaim } from '@web3-storage/access/agent'
 import type {
   Capability,
   Delegation,
@@ -49,7 +49,7 @@ export const keyringContextDefaultValue: KeyringContextValue = [
     },
     setCurrentSpace: async () => {},
     registerSpace: async () => {},
-    cancelRegisterSpace: () => {},
+    cancelAuthorize: () => {},
     getProofs: async () => [],
     createDelegation: async () => {
       throw new Error('missing keyring context provider')
@@ -100,7 +100,7 @@ export function KeyringProvider ({
     setRegisterAbortController(controller)
 
     try {
-      await authorizeWithSocket(agent, email, { signal: controller.signal })
+      await authorizeWaitAndClaim(agent, email, { signal: controller.signal })
       // TODO is there other state that needs to be initialized?
       setAccount(email)
       const newSpaces = getSpaces(agent)
@@ -116,7 +116,7 @@ export function KeyringProvider ({
     }
   }
 
-  const cancelRegisterSpace = (): void => {
+  const cancelAuthorize = (): void => {
     if (registerAbortController != null) {
       registerAbortController.abort()
     }
@@ -132,21 +132,11 @@ export function KeyringProvider ({
 
   const registerSpace = async (email: string, opts: RegisterSpaceOpts = {}): Promise<void> => {
     const agent = await getAgent()
-    const controller = new AbortController()
-    setRegisterAbortController(controller)
-
-    try {
-      await agent.registerSpace(email, {
-        signal: controller.signal,
-        provider: opts.provider ?? (agent.connection.id.did() as DID<'web'>)
-      })
-      setSpace(getCurrentSpaceInAgent(agent))
-      setSpaces(getSpaces(agent))
-    } catch (error) {
-      if (!controller.signal.aborted) {
-        throw error
-      }
-    }
+    await agent.registerSpace(email, {
+      provider: opts.provider ?? (agent.connection.id.did() as DID<'web'>)
+    })
+    setSpace(getCurrentSpaceInAgent(agent))
+    setSpaces(getSpaces(agent))
   }
 
   const setCurrentSpace = async (did: DID): Promise<void> => {
@@ -165,6 +155,7 @@ export function KeyringProvider ({
     setSpaces([])
     setIssuer(undefined)
     setAgent(undefined)
+    setAccount(undefined)
   }
 
   const resetAgent = async (): Promise<void> => {
@@ -209,12 +200,12 @@ export function KeyringProvider ({
   }
   const actions = {
     authorize,
+    cancelAuthorize,
     loadAgent,
     unloadAgent,
     resetAgent,
     createSpace,
     registerSpace,
-    cancelRegisterSpace,
     setCurrentSpace,
     getProofs,
     createDelegation,
