@@ -55,7 +55,7 @@ export default function Terms () {
         </h2>
 
         {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:web3.storage' &&
-          <div>
+          <>
             <p className='my-2 w-4/5 leading-relaxed'>
               At the end of the preview period, your web3.storage w3up beta account will be integrated with the broader web3.storage
               account system. You acknowledge that once the preview period ends, all data uploaded through the w3up beta will be combined
@@ -66,7 +66,7 @@ export default function Terms () {
               Please refer to the web3.storage website for <Link href="https://web3.storage/pricing/">information on pricing</Link>. If you exceed
               the Free Tier data limits of web3.storage and do not intend to pay, please do not use the w3up beta for long-term storage.
             </p>
-          </div>
+          </>
         }
         {import.meta.env.VITE_W3UP_PROVIDER == 'did:web:nft.storage' &&
           <p className='my-2 w-4/5 leading-relaxed'>
