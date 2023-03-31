@@ -1,3 +1,10 @@
+import type {
+  UploaderContextState,
+  UploaderContextActions,
+  CARMetadata,
+  ProgressStatus,
+  ServiceConfig,
+} from '@w3ui/uploader-core'
 import {
   defineComponent,
   provide,
@@ -5,15 +12,11 @@ import {
   inject,
   Ref,
   shallowReactive,
-  computed
+  computed,
 } from 'vue'
 import {
   uploadFile,
   uploadDirectory,
-  UploaderContextState,
-  UploaderContextActions,
-  CARMetadata,
-  ServiceConfig
 } from '@w3ui/uploader-core'
 import { KeyringProviderInjectionKey } from '@w3ui/vue-keyring'
 import { add as storeAdd } from '@web3-storage/capabilities/store'
@@ -23,6 +26,7 @@ interface UploaderProviderInjectionKeysType {
   uploadFile: InjectionKey<UploaderContextActions['uploadFile']>
   uploadDirectory: InjectionKey<UploaderContextActions['uploadDirectory']>
   storedDAGShards: InjectionKey<Ref<UploaderContextState['storedDAGShards']>>
+  progressStatus: InjectionKey<Ref<UploaderContextState['progressStatus']>>
 }
 
 /**
@@ -31,7 +35,8 @@ interface UploaderProviderInjectionKeysType {
 export const UploaderProviderInjectionKey: UploaderProviderInjectionKeysType = {
   uploadFile: Symbol('w3ui uploader uploadFile') as InjectionKey<UploaderContextActions['uploadFile']>,
   uploadDirectory: Symbol('w3ui uploader uploadDirectory') as InjectionKey<UploaderContextActions['uploadDirectory']>,
-  storedDAGShards: Symbol('w3ui uploader storedDAGShards') as InjectionKey<Ref<UploaderContextState['storedDAGShards']>>
+  storedDAGShards: Symbol('w3ui uploader storedDAGShards') as InjectionKey<Ref<UploaderContextState['storedDAGShards']>>,
+  progressStatus: Symbol('w3ui uploader progressStatus') as InjectionKey<Ref<UploaderContextState['progressStatus']>>
 }
 
 export interface UploaderProviderProps extends ServiceConfig {}
@@ -46,12 +51,18 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
     const getProofs = inject(KeyringProviderInjectionKey.getProofs)
 
     const state = shallowReactive<UploaderContextState>({
-      storedDAGShards: []
+      storedDAGShards: [],
+      progressStatus: undefined
     })
 
     provide(
       UploaderProviderInjectionKey.storedDAGShards,
       computed(() => state.storedDAGShards)
+    )
+
+    provide(
+      UploaderProviderInjectionKey.progressStatus,
+      computed(() => state.progressStatus)
     )
 
     const actions: UploaderContextActions = {
@@ -73,13 +84,18 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
           ])
         }
 
-        return await uploadFile(conf, file, {
+        const result = await uploadFile(conf, file, {
           onShardStored: (meta) => {
             storedShards.push(meta)
             state.storedDAGShards = [...storedShards]
           },
+          onUploadProgress: (status: ProgressStatus) => {
+            state.progressStatus = status
+          },
           connection
         })
+        state.progressStatus = undefined
+        return result
       },
       async uploadDirectory (files: File[]) {
         if (space?.value == null) throw new Error('missing space')
@@ -99,13 +115,18 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
           ])
         }
 
-        return await uploadDirectory(conf, files, {
+        const result = await uploadDirectory(conf, files, {
           onShardStored: (meta) => {
             storedShards.push(meta)
             state.storedDAGShards = [...storedShards]
           },
+          onUploadProgress: (status: ProgressStatus) => {
+            state.progressStatus = status
+          },
           connection
         })
+        state.progressStatus = undefined
+        return result
       }
     }
 

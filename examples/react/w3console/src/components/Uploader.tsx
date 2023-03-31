@@ -1,4 +1,4 @@
-import type { OnUploadComplete } from '@w3ui/react-uploader'
+import type { OnUploadComplete, ProgressStatus } from '@w3ui/react-uploader'
 
 import { Link, Version } from 'multiformats'
 import { CloudArrowUpIcon } from '@heroicons/react/24/outline'
@@ -10,15 +10,29 @@ import {
 } from '@w3ui/react-uploader'
 import { gatewayHost } from '../components/services'
 
+function Loader ({ progressStatus }: { progressStatus: ProgressStatus }): JSX.Element {
+  const { total, loaded } = progressStatus
+  const percentComplete = Math.floor((loaded / total) * 100)
+  return (
+    <div className='relative w-80 h-4 border border-solid border-white'>
+      <div className='bg-white h-full' style={{width: `${percentComplete}%`}}>
+      </div>
+    </div>
+  )
+}
+
 export const Uploading = ({
   file,
-  storedDAGShards
+  storedDAGShards,
+  progressStatus
 }: {
   file?: File
   storedDAGShards?: CARMetadata[]
+  progressStatus?: ProgressStatus
 }): JSX.Element => (
   <div className='flex flex-col items-center'>
     <h1 className='font-bold text-sm uppercase text-gray-400'>Uploading {file?.name}</h1>
+    {progressStatus && <Loader progressStatus={progressStatus} />}
     {storedDAGShards?.map(({ cid, size }) => (
       <p className='text-xs' key={cid.toString()}>
         shard {cid.toString()} ({humanFileSize(size)}) uploaded
@@ -132,7 +146,7 @@ const UploaderContents = (): JSX.Element => {
             </button>
           </div>
         </>
-        )
+      )
       : <></>
   } else {
     return (
@@ -144,11 +158,11 @@ const UploaderContents = (): JSX.Element => {
 }
 
 const UploaderConsole = (): JSX.Element => {
-  const [{ status, file, error, dataCID, storedDAGShards }] =
+  const [{ status, file, error, dataCID, storedDAGShards, progressStatus }] =
     useUploaderComponent()
   switch (status) {
     case Status.Uploading: {
-      return <Uploading file={file} storedDAGShards={storedDAGShards} />
+      return <Uploading file={file} storedDAGShards={storedDAGShards} progressStatus={progressStatus} />
     }
     case Status.Succeeded: {
       return (

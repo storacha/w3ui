@@ -1,11 +1,14 @@
+import type {
+  CARMetadata,
+  ProgressStatus,
+  ServiceConfig,
+  UploaderContextActions,
+  UploaderContextState,
+} from '@w3ui/uploader-core'
 import React, { useContext, createContext, useState } from 'react'
 import {
   uploadFile,
   uploadDirectory,
-  UploaderContextState,
-  UploaderContextActions,
-  CARMetadata,
-  ServiceConfig
 } from '@w3ui/uploader-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { add as storeAdd } from '@web3-storage/capabilities/store'
@@ -46,10 +49,11 @@ export function UploaderProvider ({
 }: UploaderProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [storedDAGShards, setStoredDAGShards] = useState<
-  UploaderContextState['storedDAGShards']
+    UploaderContextState['storedDAGShards']
   >([])
+  const [progressStatus, setProgressStatus] = useState<ProgressStatus | undefined>()
 
-  const state = { storedDAGShards }
+  const state = { storedDAGShards, progressStatus }
   const actions: UploaderContextActions = {
     async uploadFile (file: Blob) {
       if (space == null) throw new Error('missing space')
@@ -68,13 +72,18 @@ export function UploaderProvider ({
         ])
       }
 
-      return await uploadFile(conf, file, {
+      const result = await uploadFile(conf, file, {
         onShardStored: (meta) => {
           storedShards.push(meta)
           setStoredDAGShards([...storedShards])
         },
+        onUploadProgress: (status: ProgressStatus) => {
+          setProgressStatus(status)
+        },
         connection
       })
+      setProgressStatus(undefined)
+      return result
     },
     async uploadDirectory (files: File[]) {
       if (space == null) throw new Error('missing space')
@@ -92,13 +101,18 @@ export function UploaderProvider ({
         ])
       }
 
-      return await uploadDirectory(conf, files, {
+      const result = await uploadDirectory(conf, files, {
         onShardStored: (meta) => {
           storedShards.push(meta)
           setStoredDAGShards([...storedShards])
         },
+        onUploadProgress: (status: ProgressStatus) => {
+          setProgressStatus(status)
+        },
         connection
       })
+      setProgressStatus(undefined)
+      return result
     }
   }
 

@@ -1,13 +1,15 @@
-import { Link, Version } from 'multiformats'
-import type { CARMetadata, Service } from '@web3-storage/upload-client/types'
+import type { CARMetadata, Service, ProgressFn, ProgressStatus, FetchOptions } from '@web3-storage/upload-client/types'
 import type { ConnectionView, Principal } from '@ucanto/interface'
+
+import { Link, Version } from 'multiformats'
 
 export { uploadFile, uploadDirectory } from '@web3-storage/upload-client'
 
-export type { CARMetadata, Service }
+export type { CARMetadata, Service, ProgressFn, ProgressStatus, FetchOptions }
 
 export interface UploaderContextState {
   storedDAGShards: CARMetadata[]
+  progressStatus?: ProgressStatus
 }
 
 export interface ServiceConfig {

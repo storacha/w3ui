@@ -1,8 +1,9 @@
 import type {
+  CARMetadata,
+  ProgressStatus,
+  ServiceConfig,
   UploaderContextState,
   UploaderContextActions,
-  CARMetadata,
-  ServiceConfig
 } from '@w3ui/uploader-core'
 
 import {
@@ -44,7 +45,8 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
 ) => {
   const [keyringState, keyringActions] = useKeyring()
   const [state, setState] = createStore<UploaderContextState>({
-    storedDAGShards: []
+    storedDAGShards: [],
+    progressStatus: undefined,
   })
 
   const actions: UploaderContextActions = {
@@ -62,16 +64,21 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
         proofs: await keyringActions.getProofs([
           { can: storeAdd.can, with: keyringState.space.did() },
           { can: uploadAdd.can, with: keyringState.space.did() }
-        ])
+        ]),
       }
 
-      return await uploadFile(conf, file, {
+      const result = await uploadFile(conf, file, {
         onShardStored: (meta) => {
           storedShards.push(meta)
           setState('storedDAGShards', [...storedShards])
         },
+        onUploadProgress: (status: ProgressStatus) => {
+          setState('progressStatus', status)
+        },
         connection: props.connection
       })
+      setState('progressStatus', undefined)
+      return result
     },
     async uploadDirectory (files: File[]) {
       if (keyringState.space == null) throw new Error('missing space')
@@ -88,15 +95,20 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
           { can: storeAdd.can, with: keyringState.space.did() },
           { can: uploadAdd.can, with: keyringState.space.did() }
         ]),
-        connection: props.connection
       }
 
-      return await uploadDirectory(conf, files, {
+      const result = await uploadDirectory(conf, files, {
         onShardStored: (meta) => {
           storedShards.push(meta)
           setState('storedDAGShards', [...storedShards])
-        }
+        },
+        onUploadProgress: (status: ProgressStatus) => {
+          setState('progressStatus', status)
+        },
+        connection: props.connection
       })
+      setState('progressStatus', undefined)
+      return result
     }
   }
 
