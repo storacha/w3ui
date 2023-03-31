@@ -1,7 +1,7 @@
 import type { OnUploadComplete, ProgressStatus } from '@w3ui/react-uploader'
 
 import { Link, Version } from 'multiformats'
-import { CloudArrowUpIcon } from '@heroicons/react/24/outline'
+import { CloudArrowUpIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
 import { CARMetadata } from '@w3ui/uploader-core'
 import {
   Status,
@@ -11,14 +11,18 @@ import {
 import { gatewayHost } from '../components/services'
 
 function Loader ({ progressStatus }: { progressStatus: ProgressStatus }): JSX.Element {
-  const { total, loaded } = progressStatus
-  const percentComplete = Math.floor((loaded / total) * 100)
-  return (
-    <div className='relative w-80 h-4 border border-solid border-white'>
-      <div className='bg-white h-full' style={{width: `${percentComplete}%`}}>
+  const { total, loaded, lengthComputable } = progressStatus
+  if (lengthComputable) {
+    const percentComplete = Math.floor((loaded / total) * 100)
+    return (
+      <div className='relative w-80 h-4 border border-solid border-white'>
+        <div className='bg-white h-full' style={{ width: `${percentComplete}%` }}>
+        </div>
       </div>
-    </div>
-  )
+    )
+  } else {
+    return <ArrowPathIcon className='animate-spin h-4 w-4' />
+  }
 }
 
 export const Uploading = ({
@@ -88,7 +92,7 @@ const UploaderForm = (): JSX.Element => {
   return (
     <UploaderCore.Form>
       <div className={`relative h-52 p-8 rounded-md bg-white/5 hover:bg-white/10 border-2 border-dashed border-gray-600 flex flex-col justify-center items-center`}>
-        {hasFile ? '' : <span className='mb-5'><CloudArrowUpIcon className='w-8 h-8 text-gray-600'/></span>}
+        {hasFile ? '' : <span className='mb-5'><CloudArrowUpIcon className='w-8 h-8 text-gray-600' /></span>}
         <label className={`${hasFile ? 'hidden' : 'block h-px w-px overflow-hidden absolute whitespace-nowrap'}`}>File:</label>
         <UploaderCore.Input className={`${hasFile ? 'hidden' : 'block absolute inset-0 cursor-pointer w-full opacity-0'}`} />
         <UploaderContents />
