@@ -1,4 +1,4 @@
-import type { OnUploadComplete, ProgressStatus } from '@w3ui/react-uploader'
+import type { OnUploadComplete, ProgressStatus, ProgressStatuses } from '@w3ui/react-uploader'
 
 import { Link, Version } from 'multiformats'
 import { CloudArrowUpIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
@@ -10,7 +10,7 @@ import {
 } from '@w3ui/react-uploader'
 import { gatewayHost } from '../components/services'
 
-function Loader ({ progressStatus }: { progressStatus: ProgressStatus }): JSX.Element {
+function StatusLoader ({ progressStatus }: { progressStatus: ProgressStatus }) {
   const { total, loaded, lengthComputable } = progressStatus
   if (lengthComputable) {
     const percentComplete = Math.floor((loaded / total) * 100)
@@ -25,18 +25,28 @@ function Loader ({ progressStatus }: { progressStatus: ProgressStatus }): JSX.El
   }
 }
 
+function Loader ({ progressStatuses }: { progressStatuses: ProgressStatuses }): JSX.Element {
+  return (
+    <div className='flex flex-col'>
+      {Object.values(progressStatuses).map(
+        status => <StatusLoader progressStatus={status} key={status.url} />
+      )}
+    </div>
+  )
+}
+
 export const Uploading = ({
   file,
   storedDAGShards,
-  progressStatus
+  progressStatuses
 }: {
   file?: File
   storedDAGShards?: CARMetadata[]
-  progressStatus?: ProgressStatus
+  progressStatuses: ProgressStatuses
 }): JSX.Element => (
   <div className='flex flex-col items-center'>
     <h1 className='font-bold text-sm uppercase text-gray-400'>Uploading {file?.name}</h1>
-    {progressStatus && <Loader progressStatus={progressStatus} />}
+    <Loader progressStatuses={progressStatuses} />
     {storedDAGShards?.map(({ cid, size }) => (
       <p className='text-xs' key={cid.toString()}>
         shard {cid.toString()} ({humanFileSize(size)}) uploaded
@@ -162,11 +172,12 @@ const UploaderContents = (): JSX.Element => {
 }
 
 const UploaderConsole = (): JSX.Element => {
-  const [{ status, file, error, dataCID, storedDAGShards, progressStatus }] =
+  const [{ status, file, error, dataCID, storedDAGShards, progressStatuses }] =
     useUploaderComponent()
+
   switch (status) {
     case Status.Uploading: {
-      return <Uploading file={file} storedDAGShards={storedDAGShards} progressStatus={progressStatus} />
+      return <Uploading file={file} storedDAGShards={storedDAGShards} progressStatuses={progressStatuses} />
     }
     case Status.Succeeded: {
       return (

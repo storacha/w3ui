@@ -1,6 +1,7 @@
 import type {
   CARMetadata,
   ProgressStatus,
+  ProgressStatuses,
   ServiceConfig,
   UploaderContextActions,
   UploaderContextState,
@@ -20,7 +21,10 @@ export type UploaderContextValue = [
 ]
 
 export const uploaderContextDefaultValue: UploaderContextValue = [
-  { storedDAGShards: [] },
+  {
+    storedDAGShards: [],
+    progressStatuses: {},
+  },
   {
     uploadFile: async () => {
       throw new Error('missing uploader context provider')
@@ -51,9 +55,9 @@ export function UploaderProvider ({
   const [storedDAGShards, setStoredDAGShards] = useState<
     UploaderContextState['storedDAGShards']
   >([])
-  const [progressStatus, setProgressStatus] = useState<ProgressStatus | undefined>()
+  const [progressStatuses, setProgressStatuses] = useState<ProgressStatuses>({})
 
-  const state = { storedDAGShards, progressStatus }
+  const state = { storedDAGShards, progressStatuses }
   const actions: UploaderContextActions = {
     async uploadFile (file: Blob) {
       if (space == null) throw new Error('missing space')
@@ -78,11 +82,11 @@ export function UploaderProvider ({
           setStoredDAGShards([...storedShards])
         },
         onUploadProgress: (status: ProgressStatus) => {
-          setProgressStatus(status)
+          setProgressStatuses(statuses => ({ ...statuses, [status.url || '']: status }))
         },
         connection
       })
-      setProgressStatus(undefined)
+      setProgressStatuses({})
       return result
     },
     async uploadDirectory (files: File[]) {
@@ -107,11 +111,11 @@ export function UploaderProvider ({
           setStoredDAGShards([...storedShards])
         },
         onUploadProgress: (status: ProgressStatus) => {
-          setProgressStatus(status)
+          setProgressStatuses(statuses => ({ ...statuses, [status.url || '']: status }))
         },
         connection
       })
-      setProgressStatus(undefined)
+      setProgressStatuses({})
       return result
     }
   }
