@@ -26,7 +26,7 @@ interface UploaderProviderInjectionKeysType {
   uploadFile: InjectionKey<UploaderContextActions['uploadFile']>
   uploadDirectory: InjectionKey<UploaderContextActions['uploadDirectory']>
   storedDAGShards: InjectionKey<Ref<UploaderContextState['storedDAGShards']>>
-  progressStatus: InjectionKey<Ref<UploaderContextState['progressStatus']>>
+  progressStatuses: InjectionKey<Ref<UploaderContextState['progressStatuses']>>
 }
 
 /**
@@ -36,7 +36,7 @@ export const UploaderProviderInjectionKey: UploaderProviderInjectionKeysType = {
   uploadFile: Symbol('w3ui uploader uploadFile') as InjectionKey<UploaderContextActions['uploadFile']>,
   uploadDirectory: Symbol('w3ui uploader uploadDirectory') as InjectionKey<UploaderContextActions['uploadDirectory']>,
   storedDAGShards: Symbol('w3ui uploader storedDAGShards') as InjectionKey<Ref<UploaderContextState['storedDAGShards']>>,
-  progressStatus: Symbol('w3ui uploader progressStatus') as InjectionKey<Ref<UploaderContextState['progressStatus']>>
+  progressStatuses: Symbol('w3ui uploader progressStatuses') as InjectionKey<Ref<UploaderContextState['progressStatuses']>>
 }
 
 export interface UploaderProviderProps extends ServiceConfig {}
@@ -52,7 +52,7 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
 
     const state = shallowReactive<UploaderContextState>({
       storedDAGShards: [],
-      progressStatus: undefined
+      progressStatuses: {}
     })
 
     provide(
@@ -61,8 +61,8 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
     )
 
     provide(
-      UploaderProviderInjectionKey.progressStatus,
-      computed(() => state.progressStatus)
+      UploaderProviderInjectionKey.progressStatuses,
+      computed(() => state.progressStatuses)
     )
 
     const actions: UploaderContextActions = {
@@ -90,11 +90,11 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
             state.storedDAGShards = [...storedShards]
           },
           onUploadProgress: (status: ProgressStatus) => {
-            state.progressStatus = status
+            state.progressStatuses = {...state.progressStatuses, [status.url || '']: status}
           },
           connection
         })
-        state.progressStatus = undefined
+        state.progressStatuses = {}
         return result
       },
       async uploadDirectory (files: File[]) {
@@ -121,11 +121,11 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
             state.storedDAGShards = [...storedShards]
           },
           onUploadProgress: (status: ProgressStatus) => {
-            state.progressStatus = status
+            state.progressStatuses = {...state.progressStatuses, [status.url || '']: status}
           },
           connection
         })
-        state.progressStatus = undefined
+        state.progressStatuses = {}
         return result
       }
     }
