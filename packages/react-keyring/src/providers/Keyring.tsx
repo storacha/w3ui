@@ -5,7 +5,8 @@ import {
   Space,
   getCurrentSpace as getCurrentSpaceInAgent,
   getSpaces,
-  CreateDelegationOptions
+  CreateDelegationOptions,
+  W3UI_ACCOUNT_LOCALSTORAGE_KEY
 } from '@w3ui/keyring-core'
 import type {
   KeyringContextState,
@@ -75,7 +76,7 @@ export function KeyringProvider ({
   connection
 }: KeyringProviderProps): JSX.Element {
   const [agent, setAgent] = useState<Agent>()
-  const [account, setAccount] = useLocalStorageState<string>('w3ui-account-email')
+  const [account, setAccount] = useLocalStorageState<string>(W3UI_ACCOUNT_LOCALSTORAGE_KEY)
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
   const [issuer, setIssuer] = useState<Signer>()
@@ -101,7 +102,6 @@ export function KeyringProvider ({
 
     try {
       await authorizeWaitAndClaim(agent, email, { signal: controller.signal })
-      // TODO is there other state that needs to be initialized?
       setAccount(email)
       const newSpaces = getSpaces(agent)
       setSpaces(newSpaces)

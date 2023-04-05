@@ -3,7 +3,7 @@ import type {
   KeyringContextState,
   KeyringContextActions,
   ServiceConfig,
-  CreateDelegationOptions
+  CreateDelegationOptions,
 } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Abilities } from '@web3-storage/access/types'
@@ -18,7 +18,12 @@ import {
   createComponent
 } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import { createAgent, getCurrentSpace as getCurrentSpaceInAgent, getSpaces } from '@w3ui/keyring-core'
+import {
+  createAgent,
+  getCurrentSpace as getCurrentSpaceInAgent,
+  getSpaces,
+  W3UI_ACCOUNT_LOCALSTORAGE_KEY
+} from '@w3ui/keyring-core'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -26,8 +31,6 @@ export type KeyringContextValue = [
   state: KeyringContextState,
   actions: KeyringContextActions
 ]
-
-const W3UI_ACCOUNT_LOCALSTORAGE_KEY = 'w3ui-account-email'
 
 const defaultState: KeyringContextState = {
   space: undefined,
@@ -98,7 +101,6 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
 
     try {
       await authorizeWaitAndClaim(agent, email, { signal: controller.signal })
-      // TODO is there other state that needs to be initialized?
       setState('account', email)
       window.localStorage.setItem(W3UI_ACCOUNT_LOCALSTORAGE_KEY, email)
       const newSpaces = getSpaces(agent)

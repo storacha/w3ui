@@ -1,3 +1,11 @@
+import type { Agent } from '@web3-storage/access'
+import type {
+  KeyringContextState,
+  KeyringContextActions,
+  ServiceConfig,
+} from '@w3ui/keyring-core'
+import type { Capability, DID, Proof } from '@ucanto/interface'
+
 import {
   defineComponent,
   provide,
@@ -6,16 +14,13 @@ import {
   Ref,
   shallowReactive
 } from 'vue'
-import { createAgent, getCurrentSpace as getCurrentSpaceInAgent, getSpaces } from '@w3ui/keyring-core'
-import type {
-  KeyringContextState,
-  KeyringContextActions,
-  ServiceConfig
+import {
+  createAgent,
+  getCurrentSpace as getCurrentSpaceInAgent,
+  getSpaces,
+  W3UI_ACCOUNT_LOCALSTORAGE_KEY
 } from '@w3ui/keyring-core'
-import { authorizeWithSocket } from '@web3-storage/access/agent'
-
-import type { Agent } from '@web3-storage/access'
-import type { Capability, DID, Proof } from '@ucanto/interface'
+import { authorizeWaitAndClaim } from '@web3-storage/access/agent'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -65,7 +70,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
       agent: undefined,
       space: undefined,
       spaces: [],
-      account: undefined
+      account: window.localStorage.getItem(W3UI_ACCOUNT_LOCALSTORAGE_KEY) ?? undefined
     })
     let agent: Agent | undefined
     let registerAbortController: AbortController
@@ -104,9 +109,9 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
         registerAbortController = controller
 
         try {
-          await authorizeWithSocket(agent, email, { signal: controller.signal })
-          // TODO is there other state that needs to be initialized?
+          await authorizeWaitAndClaim(agent, email, { signal: controller.signal })
           state.account = email
+          window.localStorage.setItem(W3UI_ACCOUNT_LOCALSTORAGE_KEY, email)
           const newSpaces = getSpaces(agent)
           state.spaces = newSpaces
           const newCurrentSpace = getCurrentSpaceInAgent(agent) ?? newSpaces[0]
