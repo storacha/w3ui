@@ -27,11 +27,13 @@ export type KeyringContextValue = [
   actions: KeyringContextActions
 ]
 
+const W3UI_ACCOUNT_LOCALSTORAGE_KEY = 'w3ui-account-email'
+
 const defaultState: KeyringContextState = {
   space: undefined,
   spaces: [],
   agent: undefined,
-  account: undefined
+  account: window.localStorage.getItem(W3UI_ACCOUNT_LOCALSTORAGE_KEY) ?? undefined
 }
 
 export const AuthContext = createContext<KeyringContextValue>([
@@ -98,6 +100,7 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
       await authorizeWaitAndClaim(agent, email, { signal: controller.signal })
       // TODO is there other state that needs to be initialized?
       setState('account', email)
+      window.localStorage.setItem(W3UI_ACCOUNT_LOCALSTORAGE_KEY, email)
       const newSpaces = getSpaces(agent)
       setState('spaces', newSpaces)
       const newCurrentSpace = getCurrentSpaceInAgent(agent) ?? newSpaces[0]

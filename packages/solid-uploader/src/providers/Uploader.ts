@@ -24,7 +24,10 @@ export type UploaderContextValue = [
 ]
 
 const UploaderContext = createContext<UploaderContextValue>([
-  { storedDAGShards: [] },
+  {
+    storedDAGShards: [],
+    progressStatuses: {}
+  },
   {
     uploadFile: async () => {
       throw new Error('missing uploader context provider')
@@ -35,7 +38,7 @@ const UploaderContext = createContext<UploaderContextValue>([
   }
 ])
 
-export interface UploaderProviderProps extends ServiceConfig {}
+export interface UploaderProviderProps extends ServiceConfig { }
 
 /**
  * Provider for actions and state to facilitate uploads to the service.
@@ -46,7 +49,7 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
   const [keyringState, keyringActions] = useKeyring()
   const [state, setState] = createStore<UploaderContextState>({
     storedDAGShards: [],
-    progressStatus: undefined,
+    progressStatuses: {},
   })
 
   const actions: UploaderContextActions = {
@@ -73,11 +76,11 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
           setState('storedDAGShards', [...storedShards])
         },
         onUploadProgress: (status: ProgressStatus) => {
-          setState('progressStatus', status)
+          setState('progressStatuses', { ...state.progressStatuses, [status.url || '']: status })
         },
         connection: props.connection
       })
-      setState('progressStatus', undefined)
+      setState('progressStatuses', {})
       return result
     },
     async uploadDirectory (files: File[]) {
@@ -103,11 +106,11 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
           setState('storedDAGShards', [...storedShards])
         },
         onUploadProgress: (status: ProgressStatus) => {
-          setState('progressStatus', status)
+          setState('progressStatuses', { ...state.progressStatuses, [status.url || '']: status })
         },
         connection: props.connection
       })
-      setState('progressStatus', undefined)
+      setState('progressStatuses', {})
       return result
     }
   }
