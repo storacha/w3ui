@@ -3,7 +3,7 @@ import type {
   KeyringContextState,
   KeyringContextActions,
   ServiceConfig,
-  CreateDelegationOptions,
+  CreateDelegationOptions
 } from '@w3ui/keyring-core'
 import type { Agent } from '@web3-storage/access'
 import type { Abilities } from '@web3-storage/access/types'

@@ -2,7 +2,7 @@ import type { Agent } from '@web3-storage/access'
 import type {
   KeyringContextState,
   KeyringContextActions,
-  ServiceConfig,
+  ServiceConfig
 } from '@w3ui/keyring-core'
 import type { Capability, DID, Proof } from '@ucanto/interface'
 

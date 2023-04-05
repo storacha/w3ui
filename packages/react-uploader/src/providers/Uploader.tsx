@@ -4,12 +4,12 @@ import type {
   ProgressStatuses,
   ServiceConfig,
   UploaderContextActions,
-  UploaderContextState,
+  UploaderContextState
 } from '@w3ui/uploader-core'
 import React, { useContext, createContext, useState } from 'react'
 import {
   uploadFile,
-  uploadDirectory,
+  uploadDirectory
 } from '@w3ui/uploader-core'
 import { useKeyring } from '@w3ui/react-keyring'
 import { add as storeAdd } from '@web3-storage/capabilities/store'
@@ -23,7 +23,7 @@ export type UploaderContextValue = [
 export const uploaderContextDefaultValue: UploaderContextValue = [
   {
     storedDAGShards: [],
-    progressStatuses: {},
+    progressStatuses: {}
   },
   {
     uploadFile: async () => {
@@ -53,7 +53,7 @@ export function UploaderProvider ({
 }: UploaderProviderProps): JSX.Element {
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [storedDAGShards, setStoredDAGShards] = useState<
-    UploaderContextState['storedDAGShards']
+  UploaderContextState['storedDAGShards']
   >([])
   const [progressStatuses, setProgressStatuses] = useState<ProgressStatuses>({})
 
@@ -82,7 +82,7 @@ export function UploaderProvider ({
           setStoredDAGShards([...storedShards])
         },
         onUploadProgress: (status: ProgressStatus) => {
-          setProgressStatuses(statuses => ({ ...statuses, [status.url || '']: status }))
+          setProgressStatuses(statuses => ({ ...statuses, [status.url ?? '']: status }))
         },
         connection
       })
@@ -111,7 +111,7 @@ export function UploaderProvider ({
           setStoredDAGShards([...storedShards])
         },
         onUploadProgress: (status: ProgressStatus) => {
-          setProgressStatuses(statuses => ({ ...statuses, [status.url || '']: status }))
+          setProgressStatuses(statuses => ({ ...statuses, [status.url ?? '']: status }))
         },
         connection
       })

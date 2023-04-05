@@ -3,7 +3,7 @@ import type {
   UploaderContextActions,
   CARMetadata,
   ProgressStatus,
-  ServiceConfig,
+  ServiceConfig
 } from '@w3ui/uploader-core'
 import {
   defineComponent,
@@ -12,11 +12,11 @@ import {
   inject,
   Ref,
   shallowReactive,
-  computed,
+  computed
 } from 'vue'
 import {
   uploadFile,
-  uploadDirectory,
+  uploadDirectory
 } from '@w3ui/uploader-core'
 import { KeyringProviderInjectionKey } from '@w3ui/vue-keyring'
 import { add as storeAdd } from '@web3-storage/capabilities/store'
@@ -90,7 +90,7 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
             state.storedDAGShards = [...storedShards]
           },
           onUploadProgress: (status: ProgressStatus) => {
-            state.progressStatuses = {...state.progressStatuses, [status.url || '']: status}
+            state.progressStatuses = { ...state.progressStatuses, [status.url ?? '']: status }
           },
           connection
         })
@@ -121,7 +121,7 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
             state.storedDAGShards = [...storedShards]
           },
           onUploadProgress: (status: ProgressStatus) => {
-            state.progressStatuses = {...state.progressStatuses, [status.url || '']: status}
+            state.progressStatuses = { ...state.progressStatuses, [status.url ?? '']: status }
           },
           connection
         })
