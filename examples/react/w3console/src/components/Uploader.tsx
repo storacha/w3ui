@@ -74,7 +74,7 @@ const UploaderForm = (): JSX.Element => {
   return (
     <UploaderCore.Form>
       <div className={`relative min-h-52 p-8 rounded-md bg-white/5 hover:bg-white/10 border-2 border-dashed border-gray-600 flex flex-col lg:flex-row-reverse justify-center items-center`}>
-        <div className='grow flex flex-col justify-center items-center text-center'>
+        <div className='grow flex flex-col justify-center items-center text-center w-full'>
           {hasFile ? '' : <span className='mb-5'><CloudArrowUpIcon className='w-8 h-8 text-gray-600' /></span>}
           <label className={`${hasFile ? 'hidden' : 'block h-px w-px overflow-hidden absolute whitespace-nowrap'}`}>File:</label>
           <UploaderCore.Input className={`${hasFile ? 'hidden' : 'block absolute inset-0 cursor-pointer w-full opacity-0'}`} />
