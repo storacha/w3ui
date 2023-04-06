@@ -14,7 +14,6 @@ function StatusLoader ({ progressStatus }) {
 }
 
 export default function Loader ({ progressStatuses, className = '' }) {
-  console.log("STATUSes", progressStatuses)
   return (
     <div className={`${className} flex flex-row`}>
       {Object.values(progressStatuses).map(
