@@ -81,23 +81,26 @@ const UploaderForm = (): JSX.Element => {
           <UploaderContents />
           {hasFile ? '' : <span>Drag files or Click to Browse</span>}
         </div>
-        <div className='flex flex-col space-y-4 mt-4 text-center lg:w-1/2 lg:text-left lg:mt-0'>
-          <div className=''>
-            <h4 className='text-sm mb-2'>🌎&nbsp;&nbsp;Public Data</h4>
-            <p className='text-xs'>
-              All data uploaded to w3up is available to anyone who requests it using the correct CID.
-              Do not store any private or sensitive information in an unencrypted form using w3up.
-            </p>
+        {status === Status.Idle ? (
+          <div className='flex flex-col space-y-4 mt-4 text-center lg:w-1/2 lg:text-left lg:mt-0'>
+            <div className=''>
+              <h4 className='text-sm mb-2'>🌎&nbsp;&nbsp;Public Data</h4>
+              <p className='text-xs'>
+                All data uploaded to w3up is available to anyone who requests it using the correct CID.
+                Do not store any private or sensitive information in an unencrypted form using w3up.
+              </p>
+            </div>
+            <div className=''>
+              <h4 className='text-sm mb-2'>♾️&nbsp;&nbsp;Permanent Data</h4>
+              <p className='text-xs'>
+                Removing files from w3up will remove them from the file listing for your account, but that
+                doesn’t prevent nodes on the decentralized storage network from retaining copies of the data
+                indefinitely. Do not use w3up for data that may need to be permanently deleted in the future.
+              </p>
+            </div>
           </div>
-          <div className=''>
-            <h4 className='text-sm mb-2'>♾️&nbsp;&nbsp;Permanent Data</h4>
-            <p className='text-xs'>
-              Removing files from w3up will remove them from the file listing for your account, but that
-              doesn’t prevent nodes on the decentralized storage network from retaining copies of the data
-              indefinitely. Do not use w3up for data that may need to be permanently deleted in the future.
-            </p>
-          </div>
-        </div>
+        ) : ''
+        }
       </div>
     </UploaderCore.Form>
   )
