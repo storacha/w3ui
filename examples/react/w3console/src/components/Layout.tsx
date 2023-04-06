@@ -3,115 +3,88 @@ import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
-interface LayoutComponentProps {
-  sidebar?: JSX.Element | JSX.Element[]
-  children: JSX.Element | JSX.Element[]
-}
-type LayoutComponent = (props: LayoutComponentProps) => JSX.Element
-
 const navLinks = [
   { name: 'Terms', href: '/terms' },
   { name: 'Docs', href: '/docs' },
   { name: 'Support', href: 'https://github.com/web3-storage/w3ui/issues' },
 ]
 
-export const DefaultLayout: LayoutComponent = ({ sidebar = <div></div>, children }) => {
+interface SidebarComponentProps {
+  sidebar?: JSX.Element | JSX.Element[]
+}
+
+function Sidebar ({ sidebar = <div></div> }: SidebarComponentProps): JSX.Element {
+  return (
+    <nav className='flex-none w-64 bg-gray-900 text-white px-4 pb-4 border-r border-gray-800 h-screen'>
+      <div className='flex flex-col justify-between h-full'>
+        {sidebar}
+        <div className='flex flex-col items-center'>
+          <a href='/'><Logo className='w-36 mb-2' /></a>
+          <div className='flex flex-row space-x-2'>
+            {navLinks.map(link => (
+              <a className='text-xs block text-center mt-2' href={link.href}>{link.name}</a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </nav>
+  )
+}
+
+interface LayoutComponentProps extends SidebarComponentProps {
+  children: JSX.Element | JSX.Element[]
+}
+
+export function DefaultLayout ({ sidebar = <div></div>, children }: LayoutComponentProps): JSX.Element {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <>
-      <div>
-        {/* Hamburger menu sidebar for smol screens */}
-        <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
+    <div className='flex min-h-full w-full text-white'>
+      {/* dialog sidebar for narrow browsers */}
+      <Transition.Root show={sidebarOpen} >
+        <Dialog onClose={() => setSidebarOpen(false)} as='div' className='relative z-50'>
+          <Transition.Child
+            as={Fragment}
+            enter="transition-opacity duration-200"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity duration-400"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0">
+            <div className="fixed inset-0 bg-black/70" aria-hidden="true" />
+          </Transition.Child>
+          <div className="fixed inset-0 flex justify-left">
             <Transition.Child
               as={Fragment}
-              enter="transition-opacity ease-linear duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="transition-opacity ease-linear duration-300"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-gray-900/80" />
+              enter="transition duration-200"
+              enterFrom="-translate-x-full"
+              enterTo="translate-x-0"
+              leave="transition duration-400"
+              leaveFrom="translate-x-0"
+              leaveTo="-translate-x-full">
+              <Dialog.Panel>
+                <XMarkIcon className='text-white w-6 h-6 fixed top-2 -right-8' onClick={() => setSidebarOpen(false)} />
+                <Sidebar sidebar={sidebar} />
+              </Dialog.Panel>
             </Transition.Child>
-
-            <div className="fixed inset-0 flex">
-              <Transition.Child
-                as={Fragment}
-                enter="transition ease-in-out duration-300 transform"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
-                leave="transition ease-in-out duration-300 transform"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full"
-              >
-                <Dialog.Panel className="relative flex w-full max-w-xs flex-1">
-                  <Transition.Child
-                    as={Fragment}
-                    enter="ease-in-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in-out duration-300"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <div className="absolute right-0 top-0 flex w-16 justify-center pt-5">
-                      <button type="button" className="-m-2.5 p-2.5" onClick={() => setSidebarOpen(false)}>
-                        <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
-                      </button>
-                    </div>
-                  </Transition.Child>
-                  <nav className='flex-none w-64 bg-gray-900 text-white px-4 pb-4 border-r border-gray-800 h-screen'>
-                    <div className='flex flex-col justify-between h-full'>
-                      {sidebar}
-                      <div className='flex flex-col items-center'>
-                        <a href='/'><Logo className='w-36 mb-2' /></a>
-                        <div className='flex flex-row space-x-2'>
-                          {navLinks.map(link => (
-                            <a className='text-xs block text-center mt-2' href={link.href}>{link.name}</a>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </nav>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </Dialog>
-        </Transition.Root>
-
-        {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-          <nav className='flex-none w-64 bg-gray-900 text-white px-4 pb-4 border-r border-gray-800 h-screen'>
-            <div className='flex flex-col justify-between h-full'>
-              {sidebar}
-              <div className='flex flex-col items-center'>
-                <a href='/'><Logo className='w-36 mb-2' /></a>
-                <div className='flex flex-row space-x-2'>
-                  {navLinks.map(link => (
-                    <a className='text-xs block text-center mt-2' href={link.href}>{link.name}</a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </nav>
-        </div>
-
-        <div className="lg:pl-72 text-white">
-          <div className="sticky top-0 z-40 flex justify-between h-16 shrink-0 items-center gap-x-4 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:hidden">
-            <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
-              <span className="sr-only">Open sidebar</span>
-              <Bars3Icon className="text-white h-6 w-6" aria-hidden="true" />
-            </button>
-            <a href='/'><Logo className='w-36 mb-2' /></a>
           </div>
-          <main className="grow bg-gray-dark p-4 h-screen overflow-scroll">
-            {children}
-          </main>
-        </div>
+        </Dialog>
+      </Transition.Root>
+
+      {/* static sidebar for wide browsers */}
+      <div className='hidden lg:block'>
+        <Sidebar sidebar={sidebar} />
       </div>
-    </>
+      <div className='w-full h-screen overflow-scroll'>
+        {/* top nav bar for narrow browsers, mainly to have a place to put the hamburger */}
+        <div className='lg:hidden flex justify-between pt-4 px-4'>
+          <Bars3Icon className='w-6 h-6' onClick={() => setSidebarOpen(true)} />
+          <a href='/'><Logo className='w-36 mb-2' /></a>
+        </div>
+        <main className='grow bg-gray-dark text-white p-4'>
+          {children}
+        </main>
+      </div>
+    </div>
   )
 }
