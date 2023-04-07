@@ -72,37 +72,34 @@ const UploaderForm = (): JSX.Element => {
   const [{ status, file }] = useUploaderComponent()
   const hasFile = file !== undefined
   return (
-    <UploaderCore.Form>
-      <div className={`relative min-h-52 p-8 rounded-md bg-white/5 hover:bg-white/10 border-2 border-dashed border-gray-600 flex flex-col lg:flex-row-reverse justify-center items-center`}>
-        <div className='grow flex flex-col justify-center items-center text-center w-full'>
+    <>
+      <UploaderCore.Form>
+        <div className={`relative h-52 p-8 rounded-md bg-white/5 hover:bg-white/10 border-2 border-dashed border-gray-600 flex flex-col justify-center items-center text-center`}>
           {hasFile ? '' : <span className='mb-5'><CloudArrowUpIcon className='w-8 h-8 text-gray-600' /></span>}
           <label className={`${hasFile ? 'hidden' : 'block h-px w-px overflow-hidden absolute whitespace-nowrap'}`}>File:</label>
           <UploaderCore.Input className={`${hasFile ? 'hidden' : 'block absolute inset-0 cursor-pointer w-full opacity-0'}`} />
           <UploaderContents />
           {hasFile ? '' : <span>Drag files or Click to Browse</span>}
         </div>
-        {status === Status.Idle ? (
-          <div className='flex flex-col space-y-4 mt-4 text-center lg:w-1/2 lg:text-left lg:mt-0'>
-            <div className=''>
-              <h4 className='text-sm mb-2'>🌎&nbsp;&nbsp;Public Data</h4>
-              <p className='text-xs'>
-                All data uploaded to w3up is available to anyone who requests it using the correct CID.
-                Do not store any private or sensitive information in an unencrypted form using w3up.
-              </p>
-            </div>
-            <div className=''>
-              <h4 className='text-sm mb-2'>♾️&nbsp;&nbsp;Permanent Data</h4>
-              <p className='text-xs'>
-                Removing files from w3up will remove them from the file listing for your account, but that
-                doesn’t prevent nodes on the decentralized storage network from retaining copies of the data
-                indefinitely. Do not use w3up for data that may need to be permanently deleted in the future.
-              </p>
-            </div>
-          </div>
-        ) : ''
-        }
+      </UploaderCore.Form>
+      <div className='flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mt-4 text-center lg:text-left'>
+        <div className=''>
+          <h4 className='text-sm mb-2'>🌎&nbsp;&nbsp;Public Data</h4>
+          <p className='text-xs'>
+            All data uploaded to w3up is available to anyone who requests it using the correct CID.
+            Do not store any private or sensitive information in an unencrypted form using w3up.
+          </p>
+        </div>
+        <div className=''>
+          <h4 className='text-sm mb-2'>♾️&nbsp;&nbsp;Permanent Data</h4>
+          <p className='text-xs'>
+            Removing files from w3up will remove them from the file listing for your account, but that
+            doesn’t prevent nodes on the decentralized storage network from retaining copies of the data
+            indefinitely. Do not use w3up for data that may need to be permanently deleted in the future.
+          </p>
+        </div>
       </div>
-    </UploaderCore.Form>
+    </>
   )
 }
 
