@@ -190,7 +190,7 @@ export function getSpaces (agent: Agent): Space[] {
   return spaces
 }
 
-export interface CreateAgentOptions extends ServiceConfig { }
+export interface CreateAgentOptions extends ServiceConfig {}
 
 /**
  * Create an agent for managing identity. It uses RSA keys that are stored in
@@ -199,8 +199,9 @@ export interface CreateAgentOptions extends ServiceConfig { }
 export async function createAgent (
   options: CreateAgentOptions = {}
 ): Promise<Agent> {
-  const dbName = `${DB_NAME}${options.servicePrincipal != null ? '@' + options.servicePrincipal.did() : ''
-    }`
+  const dbName = `${DB_NAME}${
+    options.servicePrincipal != null ? '@' + options.servicePrincipal.did() : ''
+  }`
   const store = new StoreIndexedDB(dbName, {
     dbVersion: 1,
     dbStoreName: DB_STORE_NAME
