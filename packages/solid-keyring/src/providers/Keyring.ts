@@ -3,12 +3,10 @@ import type {
   KeyringContextState,
   KeyringContextActions,
   ServiceConfig,
-  CreateDelegationOptions
+  CreateDelegationOptions,
+  Agent,
+  Abilities
 } from '@w3ui/keyring-core'
-import type { Agent } from '@web3-storage/access'
-import type { Abilities } from '@web3-storage/access/types'
-import { authorizeWaitAndClaim } from '@web3-storage/access/agent'
-
 import type { Delegation, Capability, DID, Principal } from '@ucanto/interface'
 
 import {
@@ -19,6 +17,7 @@ import {
 } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import {
+  authorize as accessAuthorize,
   createAgent,
   getCurrentSpace as getCurrentSpaceInAgent,
   getSpaces,
@@ -100,7 +99,7 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
     setRegisterAbortController(controller)
 
     try {
-      await authorizeWaitAndClaim(agent, email, { signal: controller.signal })
+      await accessAuthorize(agent, email, { signal: controller.signal })
       setState('account', email)
       window.localStorage.setItem(W3UI_ACCOUNT_LOCALSTORAGE_KEY, email)
       const newSpaces = getSpaces(agent)

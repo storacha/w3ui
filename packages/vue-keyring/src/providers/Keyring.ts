@@ -1,5 +1,5 @@
-import type { Agent } from '@web3-storage/access'
 import type {
+  Agent,
   KeyringContextState,
   KeyringContextActions,
   ServiceConfig
@@ -15,12 +15,12 @@ import {
   shallowReactive
 } from 'vue'
 import {
+  authorize as accessAuthorize,
   createAgent,
   getCurrentSpace as getCurrentSpaceInAgent,
   getSpaces,
   W3UI_ACCOUNT_LOCALSTORAGE_KEY
 } from '@w3ui/keyring-core'
-import { authorizeWaitAndClaim } from '@web3-storage/access/agent'
 
 export { KeyringContextState, KeyringContextActions }
 
@@ -109,7 +109,7 @@ export const KeyringProvider = defineComponent<KeyringProviderProps>({
         registerAbortController = controller
 
         try {
-          await authorizeWaitAndClaim(agent, email, { signal: controller.signal })
+          await accessAuthorize(agent, email, { signal: controller.signal })
           state.account = email
           window.localStorage.setItem(W3UI_ACCOUNT_LOCALSTORAGE_KEY, email)
           const newSpaces = getSpaces(agent)
