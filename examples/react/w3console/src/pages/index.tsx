@@ -1,5 +1,4 @@
-import type { ChangeEvent } from 'react'
-import type { Space } from '@w3ui/keyring-core'
+import type { Space } from '@w3ui/react-keyring'
 
 import { useEffect, useState } from 'react'
 import { DIDKey } from '@ucanto/interface'
