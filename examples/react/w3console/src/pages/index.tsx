@@ -12,10 +12,11 @@ import { SpaceShare } from '../share'
 import { Uploader } from '../components/Uploader'
 import { UploadsList } from '../components/UploadsList'
 import { SpaceFinder } from '../components/SpaceFinder'
-import { SpaceCreatorForm, SpaceCreator } from '../components/SpaceCreator'
+import { SpaceCreator } from '../components/SpaceCreator'
 import { AuthenticationEnsurer } from '../components/Authenticator'
 import { DefaultLayout } from '../components/Layout'
 import Loader from '../components/Loader'
+import { SpaceEnsurer } from '../components/SpaceEnsurer'
 
 function SpaceRegistrar (): JSX.Element {
   const [{ account }, { registerSpace }] = useKeyring()
@@ -142,32 +143,6 @@ function SpaceSelector (props: any): JSX.Element {
           void setSelected(space.did())
         }}
       />
-    </div>
-  )
-}
-
-
-export function SpaceEnsurer ({
-  children
-}: {
-  children: JSX.Element | JSX.Element[]
-}): JSX.Element {
-  const [{ spaces, account }] = useKeyring()
-  if (spaces && spaces.length > 0) {
-    return <>{children}</>
-  }
-  return (
-    <div className="flex flex-col justify-center items-center h-screen">
-      <div className="text-gray-200 text-center">
-        <h1 className="my-4 text-lg">Welcome {account}!</h1>
-        <p>
-          To get started with w3up you'll need to create a space.
-        </p>
-        <p>
-          Give it a name and hit create!
-        </p>
-        <SpaceCreatorForm className='mt-4' />
-      </div>
     </div>
   )
 }
