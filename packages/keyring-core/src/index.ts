@@ -1,5 +1,3 @@
-import { Agent } from '@web3-storage/access/agent'
-import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
 import type { Abilities, AgentMeta, Service } from '@web3-storage/access/types'
 import type {
   Capability,
@@ -11,7 +9,12 @@ import type {
   Delegation,
   UCANOptions
 } from '@ucanto/interface'
+import { Agent, authorizeWaitAndClaim } from '@web3-storage/access/agent'
+import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
 import * as RSASigner from '@ucanto/principal/rsa'
+
+export { Agent, Abilities, AgentMeta, Service }
+export const authorize = authorizeWaitAndClaim
 
 const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
@@ -115,7 +118,11 @@ export interface KeyringContextActions {
   /**
    * Authorize this device to act as the account linked to email.
    */
-  authorize: (email: '{string}@{string}') => Promise<void>
+  authorize: (email: `${string}@${string}`) => Promise<void>
+  /**
+   * Abort an ongoing account authorization.
+   */
+  cancelAuthorize: () => void
   /**
    * Create a new space with the passed name and set it as the current space.
    */
@@ -125,15 +132,10 @@ export interface KeyringContextActions {
    */
   setCurrentSpace: (did: DID) => Promise<void>
   /**
-   * Register the current space, verify the email address and store in secure
-   * storage. Use cancelRegisterSpace to abort. Automatically sets the
+   * Register the current space and store in secure storage. Automatically sets the
    * newly registered space as the current space.
    */
   registerSpace: (email: string, opts?: RegisterSpaceOpts) => Promise<void>
-  /**
-   * Abort an ongoing account registration.
-   */
-  cancelRegisterSpace: () => void
   /**
    * Get all the proofs matching the capabilities. Proofs are delegations with
    * an audience matching the agent DID.
