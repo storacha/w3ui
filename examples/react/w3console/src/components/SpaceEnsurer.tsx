@@ -5,10 +5,10 @@ export function SpaceEnsurer ({
   children
 }: {
   children: JSX.Element | JSX.Element[];
-}): JSX.Element {
+}): JSX.Element | JSX.Element[]{
   const [{ spaces, account }] = useKeyring();
   if (spaces && spaces.length > 0) {
-    return <>{children}</>;
+    return children;
   }
   return (
     <div className="flex flex-col justify-center items-center h-screen">
