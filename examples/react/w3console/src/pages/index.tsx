@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { DIDKey } from '@ucanto/interface'
 import { useKeyring } from '@w3ui/react-keyring'
 
-import { SpaceCreator } from '../components/SpaceCreator'
 import { AuthenticationEnsurer } from '../components/Authenticator'
 import { DefaultLayout } from '../components/Layout'
 import { SpaceEnsurer } from '../components/SpaceEnsurer'
@@ -29,7 +28,6 @@ export default function Home (): JSX.Element {
               setSelected={viewSpace}
               spaces={spaces}
             />
-            <SpaceCreator className='mb-8 self-center' />
           </div>
         }>
           <SpaceSection viewSpace={viewSpace} share={share} setShare={setShare} />
