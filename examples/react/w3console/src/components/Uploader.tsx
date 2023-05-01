@@ -1,8 +1,12 @@
-import type { OnUploadComplete, ProgressStatus, ProgressStatuses } from '@w3ui/react-uploader'
+import type {
+  OnUploadComplete,
+  ProgressStatus,
+  ProgressStatuses,
+  CARMetadata,
+  CID
+} from '@w3ui/react-uploader'
 
-import { Link, Version } from 'multiformats'
 import { CloudArrowUpIcon, ArrowPathIcon } from '@heroicons/react/24/outline'
-import { CARMetadata } from '@w3ui/uploader-core'
 import {
   Status,
   Uploader as UploaderCore,
@@ -66,7 +70,7 @@ export const Errored = ({ error }: { error: any }): JSX.Element => (
 
 interface DoneProps {
   file?: File
-  dataCID?: Link<unknown, number, number, Version>
+  dataCID?: CID
   storedDAGShards?: CARMetadata[]
 }
 

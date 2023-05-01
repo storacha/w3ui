@@ -9,6 +9,7 @@ export type { CARMetadata, Service, ProgressFn, ProgressStatus, FetchOptions }
 
 export type ProgressStatuses = Record<string, ProgressStatus>
 
+export type CID = Link<unknown, number, number, Version>
 export interface UploaderContextState {
   storedDAGShards: CARMetadata[]
   progressStatuses: ProgressStatuses
@@ -23,11 +24,11 @@ export interface UploaderContextActions {
   /**
    * Upload a single file to the current space.
    */
-  uploadFile: (file: Blob) => Promise<Link<unknown, number, number, Version>>
+  uploadFile: (file: Blob) => Promise<CID>
   /**
    * Upload a directory of files to the current space.
    */
   uploadDirectory: (
     files: File[]
-  ) => Promise<Link<unknown, number, number, Version>>
+  ) => Promise<CID>
 }
