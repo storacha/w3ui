@@ -13,10 +13,10 @@ function StatusLoader ({ progressStatus }) {
   }
 }
 
-export default function Loader ({ progressStatuses, className = '' }) {
+export default function Loader ({ uploadProgress, className = '' }) {
   return (
     <div className={`${className} flex flex-row`}>
-      {Object.values(progressStatuses).map(
+      {Object.values(uploadProgress).map(
         status => <StatusLoader progressStatus={status} key={status.url} />
       )}
     </div>

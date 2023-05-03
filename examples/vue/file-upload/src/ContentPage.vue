@@ -6,7 +6,7 @@ export default {
   inject: {
     uploadFile: { from: UploaderProviderInjectionKey.uploadFile },
     storedDAGShards: { from: UploaderProviderInjectionKey.storedDAGShards },
-    progressStatuses: { from: UploaderProviderInjectionKey.progressStatuses }
+    uploadProgress: { from: UploaderProviderInjectionKey.uploadProgress }
 
   },
   data () {
@@ -42,7 +42,7 @@ export default {
 
 <template>
   <div v-if="status === 'uploading'" className="flex items-center">
-    <Loader className="mr3 flex-none" :progressStatuses="progressStatuses" />
+    <Loader className="mr3 flex-none" :uploadProgress="uploadProgress" />
     <div className="flex-auto">
       <p className="truncate">Uploading DAG for {{file.name}}</p>
       <p className="f6 code truncate">{{dataCid}}</p>

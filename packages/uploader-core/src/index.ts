@@ -7,12 +7,12 @@ export { uploadFile, uploadDirectory } from '@web3-storage/upload-client'
 
 export type { CARMetadata, Service, ProgressFn, ProgressStatus, FetchOptions }
 
-export type ProgressStatuses = Record<string, ProgressStatus>
+export type UploadProgress = Record<string, ProgressStatus>
 
 export type CID = Link<unknown, number, number, Version>
 export interface UploaderContextState {
   storedDAGShards: CARMetadata[]
-  progressStatuses: ProgressStatuses
+  uploadProgress: UploadProgress
 }
 
 export interface ServiceConfig {

@@ -5,7 +5,7 @@ import './spinner.css'
 import Loader from './components/Loader'
 
 export function ContentPage () {
-  const [{ storedDAGShards, progressStatuses }, uploader] = useUploader()
+  const [{ storedDAGShards, uploadProgress }, uploader] = useUploader()
   const [file, setFile] = useState({})
   const [dataCid, setDataCid] = useState('')
   const [status, setStatus] = useState('')
@@ -28,7 +28,7 @@ export function ContentPage () {
   }
 
   if (status === 'uploading') {
-    return <Uploading file={file} storedDAGShards={storedDAGShards} progressStatuses={progressStatuses} />
+    return <Uploading file={file} storedDAGShards={storedDAGShards} uploadProgress={uploadProgress} />
   }
 
   if (status === 'done') {
@@ -46,9 +46,9 @@ export function ContentPage () {
   )
 }
 
-const Uploading = ({ file, storedDAGShards, progressStatuses }) => (
+const Uploading = ({ file, storedDAGShards, uploadProgress }) => (
   <div className='flex items-center'>
-    <Loader className='mr3' progressStatuses={progressStatuses} />
+    <Loader className='mr3' uploadProgress={uploadProgress} />
     <div className='flex-auto'>
       <p className='truncate'>Uploading DAG for {file.name}</p>
       {storedDAGShards.map(({ cid, size }) => (

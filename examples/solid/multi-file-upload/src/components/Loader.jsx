@@ -17,7 +17,7 @@ function StatusLoader ({ progressStatus }) {
 export default function Loader ({ progress, className = '' }) {
   return (
     <div className={`${className} flex flex-row`}>
-      <For each={Object.values(progress.progressStatuses)}>
+      <For each={Object.values(progress.uploadProgress)}>
         {(status) => <StatusLoader progressStatus={status} key={status.url} />}
       </For>
     </div>

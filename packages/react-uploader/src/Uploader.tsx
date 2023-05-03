@@ -70,7 +70,7 @@ const UploaderComponentContext = createContext<UploaderComponentContextValue>([
   {
     status: Status.Idle,
     storedDAGShards: [],
-    progressStatuses: {}
+    uploadProgress: {}
   },
   {
     setFile: () => {

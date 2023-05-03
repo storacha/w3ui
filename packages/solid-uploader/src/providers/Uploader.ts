@@ -26,7 +26,7 @@ export type UploaderContextValue = [
 const UploaderContext = createContext<UploaderContextValue>([
   {
     storedDAGShards: [],
-    progressStatuses: {}
+    uploadProgress: {}
   },
   {
     uploadFile: async () => {
@@ -49,7 +49,7 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
   const [keyringState, keyringActions] = useKeyring()
   const [state, setState] = createStore<UploaderContextState>({
     storedDAGShards: [],
-    progressStatuses: {}
+    uploadProgress: {}
   })
 
   const actions: UploaderContextActions = {
@@ -76,11 +76,11 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
           setState('storedDAGShards', [...storedShards])
         },
         onUploadProgress: (status: ProgressStatus) => {
-          setState('progressStatuses', { ...state.progressStatuses, [status.url ?? '']: status })
+          setState('uploadProgress', { ...state.uploadProgress, [status.url ?? '']: status })
         },
         connection: props.connection
       })
-      setState('progressStatuses', {})
+      setState('uploadProgress', {})
       return result
     },
     async uploadDirectory (files: File[]) {
@@ -106,11 +106,11 @@ export const UploaderProvider: ParentComponent<UploaderProviderProps> = (
           setState('storedDAGShards', [...storedShards])
         },
         onUploadProgress: (status: ProgressStatus) => {
-          setState('progressStatuses', { ...state.progressStatuses, [status.url ?? '']: status })
+          setState('uploadProgress', { ...state.uploadProgress, [status.url ?? '']: status })
         },
         connection: props.connection
       })
-      setState('progressStatuses', {})
+      setState('uploadProgress', {})
       return result
     }
   }

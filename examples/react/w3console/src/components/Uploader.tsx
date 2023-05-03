@@ -1,7 +1,7 @@
 import type {
   OnUploadComplete,
   ProgressStatus,
-  ProgressStatuses,
+  UploadProgress,
   CARMetadata,
   CID
 } from '@w3ui/react-uploader'
@@ -29,10 +29,10 @@ function StatusLoader ({ progressStatus }: { progressStatus: ProgressStatus }) {
   }
 }
 
-function Loader ({ progressStatuses }: { progressStatuses: ProgressStatuses }): JSX.Element {
+function Loader ({ uploadProgress }: { uploadProgress: UploadProgress }): JSX.Element {
   return (
     <div className='flex flex-col'>
-      {Object.values(progressStatuses).map(
+      {Object.values(uploadProgress).map(
         status => <StatusLoader progressStatus={status} key={status.url} />
       )}
     </div>
@@ -42,15 +42,15 @@ function Loader ({ progressStatuses }: { progressStatuses: ProgressStatuses }): 
 export const Uploading = ({
   file,
   storedDAGShards,
-  progressStatuses
+  uploadProgress
 }: {
   file?: File
   storedDAGShards?: CARMetadata[]
-  progressStatuses: ProgressStatuses
+  uploadProgress: UploadProgress
 }): JSX.Element => (
   <div className='flex flex-col items-center w-full'>
     <h1 className='font-bold text-sm uppercase text-gray-400'>Uploading {file?.name}</h1>
-    <Loader progressStatuses={progressStatuses} />
+    <Loader uploadProgress={uploadProgress} />
     {storedDAGShards?.map(({ cid, size }) => (
       <p className='text-xs max-w-full overflow-hidden text-ellipsis' key={cid.toString()}>
         shard {cid.toString()} ({humanFileSize(size)}) uploaded
@@ -195,12 +195,12 @@ const UploaderContents = (): JSX.Element => {
 }
 
 const UploaderConsole = (): JSX.Element => {
-  const [{ status, file, error, dataCID, storedDAGShards, progressStatuses }] =
+  const [{ status, file, error, dataCID, storedDAGShards, uploadProgress }] =
     useUploaderComponent()
 
   switch (status) {
     case Status.Uploading: {
-      return <Uploading file={file} storedDAGShards={storedDAGShards} progressStatuses={progressStatuses} />
+      return <Uploading file={file} storedDAGShards={storedDAGShards} uploadProgress={uploadProgress} />
     }
     case Status.Succeeded: {
       return (
