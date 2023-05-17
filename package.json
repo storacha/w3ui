@@ -62,5 +62,13 @@
     "vitest": "^0.27.3",
     "vitest-environment-w3ui": "workspace:^",
     "vue": "^3.2.45"
+  },
+  "dependencies": {
+    "@alanshaw/pail": "^0.3.3",
+    "@web3-storage/clock": "^0.3.0",
+    "@web3-storage/upload-client": "^9.0.0",
+    "@web3-storage/w3up-client": "^6.0.0",
+    "p-retry": "^5.1.2",
+    "w3console": "link:examples/react/w3console"
   }
 }

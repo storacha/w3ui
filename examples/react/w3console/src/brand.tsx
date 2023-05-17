@@ -29,3 +29,11 @@ export const Web3StorageLogo = () => (
 )
 
 export const Logo = import.meta.env.VITE_W3UP_PROVIDER == 'did:web:nft.storage' ? NFTStorageLogo : Web3StorageLogo
+
+export const Web3BucketLogo = ({ className = '' }: { className?: string }) => (
+  <img className={className} src='w3bucket.svg' />
+)
+
+export const UploadsIcon = ({ className = '' }: { className?: string }) => (
+  <img className={className} src='uploads.svg' />
+)

@@ -14,6 +14,7 @@
     "@heroicons/react": "^2.0.17",
     "@ipld/car": "^5.1.0",
     "@ipld/dag-ucan": "^3.2.0",
+    "@w3ui/keyring-core": "workspace:^",
     "@w3ui/react-keyring": "workspace:^",
     "@w3ui/react-uploader": "workspace:^",
     "@w3ui/react-uploads-list": "workspace:^",
