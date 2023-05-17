@@ -16,7 +16,8 @@ import {
 } from 'vue'
 import {
   uploadFile,
-  uploadDirectory
+  uploadDirectory,
+  uploadCAR
 } from '@w3ui/uploader-core'
 import { KeyringProviderInjectionKey } from '@w3ui/vue-keyring'
 import { add as storeAdd } from '@web3-storage/capabilities/store'
@@ -116,6 +117,37 @@ export const UploaderProvider = defineComponent<UploaderProviderProps>({
         }
 
         const result = await uploadDirectory(conf, files, {
+          onShardStored: (meta) => {
+            storedShards.push(meta)
+            state.storedDAGShards = [...storedShards]
+          },
+          onUploadProgress: (status: ProgressStatus) => {
+            state.uploadProgress = { ...state.uploadProgress, [status.url ?? '']: status }
+          },
+          connection
+        })
+        state.uploadProgress = {}
+        return result
+      },
+      async uploadCAR (car: Blob) {
+        if (space?.value == null) throw new Error('missing space')
+        if (agent?.value == null) throw new Error('missing agent')
+        if (getProofs == null) throw new Error('missing getProofs')
+
+        const storedShards: CARMetadata[] = []
+        state.storedDAGShards = storedShards
+
+        const conf = {
+          issuer: agent.value,
+          with: space.value.did(),
+          audience: servicePrincipal,
+          proofs: await getProofs([
+            { can: storeAdd.can, with: space.value.did() },
+            { can: uploadAdd.can, with: space.value.did() }
+          ])
+        }
+
+        const result = await uploadCAR(conf, car, {
           onShardStored: (meta) => {
             storedShards.push(meta)
             state.storedDAGShards = [...storedShards]
