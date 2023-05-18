@@ -192,9 +192,10 @@ importers:
 
   examples/react/w3console:
     specifiers:
+      '@alanshaw/pail': ^0.3.3
       '@headlessui/react': ^1.7.13
       '@heroicons/react': ^2.0.17
-      '@ipld/car': ^5.1.0
+      '@ipld/car': ^5.1.1
       '@ipld/dag-ucan': ^3.2.0
       '@preact/preset-vite': ^2.4.0
       '@types/blueimp-md5': ^2.18.0
@@ -204,8 +205,10 @@ importers:
       '@w3ui/react-keyring': workspace:^
       '@w3ui/react-uploader': workspace:^
       '@w3ui/react-uploads-list': workspace:^
+      '@web3-storage/clock': ^0.3.0
       autoprefixer: ^10.4.13
       blueimp-md5: ^2.19.0
+      multiformats: ^11.0.1
       postcss: ^8.4.21
       preact: ^10.11.3
       react-router-dom: ^6.9.0
@@ -213,6 +216,7 @@ importers:
       typescript: ^4.9.3
       vite: ^4.0.0
     dependencies:
+      '@alanshaw/pail': 0.3.3
       '@headlessui/react': 1.7.14
       '@heroicons/react': 2.0.18
       '@ipld/car': 5.1.1
@@ -221,7 +225,9 @@ importers:
       '@w3ui/react-keyring': link:../../../packages/react-keyring
       '@w3ui/react-uploader': link:../../../packages/react-uploader
       '@w3ui/react-uploads-list': link:../../../packages/react-uploads-list
+      '@web3-storage/clock': 0.3.0
       blueimp-md5: 2.19.0
+      multiformats: 11.0.2
       preact: 10.14.1
       react-router-dom: 6.11.2
     devDependencies:

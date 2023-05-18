@@ -9,6 +9,7 @@ import { SpaceEnsurer } from '../components/SpaceEnsurer'
 import { BucketSection } from '../components/BucketSection'
 import { SpaceSelector } from './SpaceSelector'
 import Modules from '../components/Modules'
+import { BucketProvider } from '../providers/BucketProvider'
 
 export default function Bucket (): JSX.Element {
   const [share, setShare] = useState(false)
@@ -22,20 +23,22 @@ export default function Bucket (): JSX.Element {
   return (
     <AuthenticationEnsurer>
       <SpaceEnsurer>
-        <DefaultLayout sidebar={
-          <div class='flex-grow flex flex-col'>
-            <SpaceSelector
-              selected={space}
-              setSelected={viewSpace}
-              spaces={spaces}
-            />
-            <div className='pt-4'>
-              <Modules />
+        <BucketProvider>
+          <DefaultLayout sidebar={
+            <div class='flex-grow flex flex-col'>
+              <SpaceSelector
+                selected={space}
+                setSelected={viewSpace}
+                spaces={spaces}
+              />
+              <div className='pt-4'>
+                <Modules />
+              </div>
             </div>
-          </div>
-        }>
-          <BucketSection viewSpace={viewSpace} share={share} setShare={setShare} />
-        </DefaultLayout>
+          }>
+            <BucketSection viewSpace={viewSpace} share={share} setShare={setShare} />
+          </DefaultLayout>
+        </BucketProvider>
       </SpaceEnsurer>
     </AuthenticationEnsurer>
   )

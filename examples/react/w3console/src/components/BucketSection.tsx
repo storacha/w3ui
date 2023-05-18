@@ -4,6 +4,7 @@ import md5 from 'blueimp-md5'
 import { SpaceShare } from '../share'
 import { BucketList } from './BucketList'
 import { SpaceRegistrar } from './SpaceRegistrar'
+import { useBucket } from '../providers/BucketProvider'
 
 interface BucketSectionProps {
   viewSpace: (did: string) => void
@@ -13,6 +14,7 @@ interface BucketSectionProps {
 export function BucketSection (props: BucketSectionProps): JSX.Element {
   const { viewSpace, share, setShare } = props
   const [{ space }] = useKeyring()
+  const [{ entries, loading }, { put, setPrefix }] = useBucket()
   const registered = Boolean(space?.registered())
   return (
     <div>
@@ -47,7 +49,7 @@ export function BucketSection (props: BucketSectionProps): JSX.Element {
         {registered && !share && (
           <>
             <div className='mt-8'>
-              <BucketList />
+              <BucketList entries={entries} loading={loading} onPrefixChange={setPrefix} />
             </div>
           </>
         )}

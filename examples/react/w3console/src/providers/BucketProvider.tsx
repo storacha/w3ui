@@ -1,13 +1,16 @@
 import { useContext, createContext, useState, useEffect } from 'react'
 import type { ServiceConfig } from '@w3ui/keyring-core'
 import { useKeyring } from '@w3ui/react-keyring'
+import { useUploader } from '@w3ui/react-uploader'
 import * as Pail from '@alanshaw/pail/crdt'
+import { EventData } from '@alanshaw/pail/crdt'
 import { AnyLink } from '@alanshaw/pail/link'
-import { ShardBlock, ShardValueEntry } from '@alanshaw/pail/shard'
+import { ShardValueEntry } from '@alanshaw/pail/shard'
 import { EventLink } from '@alanshaw/pail/clock'
 import * as RemoteClock from '@web3-storage/clock/client'
+import { CarBufferWriter } from '@ipld/car'
+import { UnknownLink, Block } from 'multiformats'
 import { BlockFetcher, GatewayBlockFetcher, MemoryBlockstore, withCache } from './blocks'
-import { EventData } from '@alanshaw/pail/crdt'
 
 const LIMIT = 25
 
@@ -26,7 +29,7 @@ export interface BucketContextState {
 
 export interface BucketContextActions {
   put (key: string, value: AnyLink): Promise<void>
-  delete (key: string): Promise<void>
+  del (key: string): Promise<void>
   setPrefix (prefix: string): Promise<void>
   setOffset (offset: number): Promise<void>
   setLimit (limit: number): Promise<void>
@@ -44,7 +47,7 @@ export const bucketContextDefaultValue: BucketContextValue = [
     put: async () => {
       throw new Error('missing bucket context provider')
     },
-    delete: async () => {
+    del: async () => {
       throw new Error('missing bucket context provider')
     },
     setPrefix: async () => {
@@ -75,6 +78,7 @@ export function BucketProvider ({ children }: BucketProviderProps): JSX.Element 
   const blocks = withCache(new GatewayBlockFetcher(), blocksCache)
 
   const [{ space, agent }, { getProofs }] = useKeyring()
+  const [, { uploadCAR }] = useUploader()
   const [head, setHead] = useState<EventLink<EventData>[]>([])
   const [loading, setLoading] = useState(false)
   const [prefix, setPrefix] = useState('')
@@ -122,7 +126,10 @@ export function BucketProvider ({ children }: BucketProviderProps): JSX.Element 
         for (const block of result.additions) {
           await blocksCache.put(block)
         }
-        // TODO: persist blocks to w3up
+
+        // upload the created blocks
+        const car = buildCAR(result.event.cid, [result.event, ...result.additions])
+        await uploadCAR(car)
 
         // advance the remote
         const proofs = await getProofs([{ can: 'clock/advance', with: space.did() }])
@@ -145,7 +152,7 @@ export function BucketProvider ({ children }: BucketProviderProps): JSX.Element 
         setLoading(false)
       }
     },
-    async delete () {
+    async del () {
       throw new Error('not implemented')
     },
     async setPrefix (prefix) {
@@ -203,6 +210,18 @@ async function collectEntries (blocks: BlockFetcher, head: EventLink<EventData>[
     i++
   }
   return entries
+}
+
+function buildCAR (root: UnknownLink, blocks: Block[]) {
+  // @ts-expect-error @ipld/car not know Link
+  const headerLen = CarBufferWriter.headerLength({ roots: [root] })
+  // @ts-expect-error @ipld/car not know Link
+  const blocksLen = blocks.reduce((len, b) => len + CarBufferWriter.blockLength(b), 0)
+  // @ts-expect-error @ipld/car not know Link
+  const writer = CarBufferWriter.createWriter(new Uint8Array(headerLen + blocksLen), { roots: [root] })
+  // @ts-expect-error @ipld/car not know Link
+  for (const b of blocks) writer.write(b)
+  return new Blob([writer.close()])
 }
 
 /**
