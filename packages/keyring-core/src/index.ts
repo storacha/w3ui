@@ -7,7 +7,8 @@ import type {
   ConnectionView,
   Principal,
   Delegation,
-  UCANOptions
+  UCANOptions,
+  Ability
 } from '@ucanto/interface'
 import { Agent, authorizeWaitAndClaim } from '@web3-storage/access/agent'
 import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
@@ -19,6 +20,14 @@ export const authorize = authorizeWaitAndClaim
 const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
 export const W3UI_ACCOUNT_LOCALSTORAGE_KEY = 'w3ui-account-email'
+
+export const AuthorizeCapabilities: Array<{ can: Ability }> = [
+  { can: 'space/*' },
+  { can: 'store/*' },
+  { can: 'provider/add' },
+  { can: 'upload/*' },
+  { can: 'clock/*' },
+]
 
 /**
  * A Space is the core organizational structure of web3-storage,

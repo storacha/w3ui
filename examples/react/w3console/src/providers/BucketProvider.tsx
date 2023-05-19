@@ -12,7 +12,10 @@ import { CarBufferWriter } from '@ipld/car'
 import { UnknownLink, Block } from 'multiformats'
 import { BlockFetcher, GatewayBlockFetcher, MemoryBlockstore, withCache } from './blocks'
 
-const LIMIT = 25
+export const LIMIT = 25
+
+const blocksCache = new MemoryBlockstore() // TODO: cache in IDB?
+const blocks = withCache(new GatewayBlockFetcher(), blocksCache)
 
 export type BucketContextValue = [
   state: BucketContextState,
@@ -33,6 +36,7 @@ export interface BucketContextActions {
   setPrefix (prefix: string): Promise<void>
   setOffset (offset: number): Promise<void>
   setLimit (limit: number): Promise<void>
+  sync (remote?: string): Promise<void>
 }
 
 export const bucketContextDefaultValue: BucketContextValue = [
@@ -58,6 +62,9 @@ export const bucketContextDefaultValue: BucketContextValue = [
     },
     setLimit: async () => {
       throw new Error('missing bucket context provider')
+    },
+    sync: async () => {
+      throw new Error('missing bucket context provider')
     }
   }
 ]
@@ -74,9 +81,6 @@ export interface BucketProviderProps extends ServiceConfig {
  * Provider for actions and state to facilitate bucket management.
  */
 export function BucketProvider ({ children }: BucketProviderProps): JSX.Element | null {
-  const blocksCache = new MemoryBlockstore() // TODO: cache in IDB?
-  const blocks = withCache(new GatewayBlockFetcher(), blocksCache)
-
   const [{ space, agent }, { getProofs }] = useKeyring()
   const [, { uploadCAR }] = useUploader()
   const [head, setHead] = useState<EventLink<EventData>[]>([])
@@ -191,6 +195,32 @@ export function BucketProvider ({ children }: BucketProviderProps): JSX.Element 
         setLoading(false)
       }
     },
+    async sync () {
+      if (!agent || !space) throw new Error('missing agent and/or space')
+      setLoading(true)
+      try {
+        const proofs = await getProofs([{ can: 'clock/head', with: space.did() }])
+        const receipt = await RemoteClock.head({ issuer: agent, with: space.did(), proofs })
+        if (receipt.out.error) return console.error(receipt.out.error)
+
+        const head = receipt.out.ok.head as EventLink<EventData>[]
+        const entries = []
+        for await (const entry of Pail.entries(blocks, head)) {
+          entries.push(entry)
+          if (entries.length === LIMIT) break
+        }
+
+        setHead(head)
+        setEntries(entries)
+        setPrefix('')
+        setOffset(0)
+        setLimit(LIMIT)
+      } catch (err) {
+        console.error('failed to set prefix', err)
+      } finally {
+        setLoading(false)
+      }
+    }
   }
 
   return (

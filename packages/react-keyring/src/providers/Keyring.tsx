@@ -6,6 +6,7 @@ import type {
   ServiceConfig,
   RegisterSpaceOpts
 } from '@w3ui/keyring-core'
+import { AuthorizeCapabilities } from '@w3ui/keyring-core'
 import type {
   Capability,
   Delegation,
@@ -102,7 +103,10 @@ export function KeyringProvider ({
     setRegisterAbortController(controller)
 
     try {
-      await accessAuthorize(agent, email, { signal: controller.signal })
+      await accessAuthorize(agent, email, {
+        capabilities: AuthorizeCapabilities,
+        signal: controller.signal
+      })
       setAccount(email)
       const newSpaces = getSpaces(agent)
       setSpaces(newSpaces)

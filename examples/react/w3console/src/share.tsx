@@ -7,6 +7,7 @@ import { importDAG } from '@ucanto/core/delegation'
 import type { PropsWithChildren } from 'react'
 import type { Delegation, DIDKey } from '@ucanto/interface'
 import { DidIcon } from './components/DidIcon'
+import { AuthorizeCapabilities } from '@w3ui/keyring-core'
 
 function Header(props: PropsWithChildren): JSX.Element {
   return (
@@ -64,7 +65,8 @@ export function SpaceShare({
     }
 
     try {
-      const delegation = await createDelegation(audience, ['*'], {
+      // @ts-expect-error
+      const delegation = await createDelegation(audience, ['space/*', 'store/*', 'upload/*', 'clock/*'], {
         expiration: Infinity,
       })
       const blob = await toCarBlob(delegation)
