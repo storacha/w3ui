@@ -1,5 +1,5 @@
 # Docs: https://devenv.sh/basics/
-{ pkgs, ... }: {
+{ pkgs, latest, ... }: {
 
   languages = {
     # Docs: https://devenv.sh/languages/
@@ -18,7 +18,7 @@
 
     # remove whichever you don't need
     yarn
-    nodePackages.pnpm
+    latest.nodePackages.pnpm
   ];
 
   scripts = {
@@ -26,7 +26,7 @@
     # yd.exec = ''yarn dev'';
   };
 
-  difftastic.enable = true; # https://devenv.sh/integrations/difftastic/
+  difftastic.enable = true; #  https://devenv.sh/integrations/difftastic/
 
   pre-commit.hooks = {
     # Docs: https://devenv.sh/pre-commit-hooks/
