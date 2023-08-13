@@ -17,8 +17,9 @@ If you are here to suggest a feature, first create an issue if it does not alrea
 If you have been assigned to fix an issue or develop a new feature, please follow these steps to get started:
 
 - Fork this repository.
-- Install dependencies by running `$ npm install`.
-- Build packages `$ npm run build`.
+- Optional (if using nix and direnv), you can install all needed deps for building: `$ direnv allow`
+- Install dependencies by running `$ pnpm install`
+- Build packages `$ pnpm build`
 - Implement your changes and tests to files in the `src/` directory and corresponding test files.
 - To run examples, follow their individual directions.
 - Document your changes in the appropriate doc page.
@@ -33,7 +34,7 @@ We have very precise rules over how our git commit messages can be formatted. Th
 
 ### Commit Message Format
 
-Each commit message consists of a **header**, a **body** and a **footer**. The header has a special
+Each commit message consists of a **header**, a **body** and a **footer**. The header has a special  
 format that includes a **type**, a **scope** and a **subject**:
 
 ```
@@ -55,12 +56,12 @@ Must be one of the following:
 - **feat**: A new feature
 - **fix**: A bug fix
 - **docs**: Documentation only changes
-- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing  
   semi-colons, etc)
 - **refactor**: A code change that neither fixes a bug nor adds a feature
 - **perf**: A code change that improves performance
 - **test**: Adding missing or correcting existing tests
-- **chore**: Changes to the build process or auxiliary tools and libraries such as documentation
+- **chore**: Changes to the build process or auxiliary tools and libraries such as documentation  
   generation
 
 ### Scope
@@ -91,11 +92,15 @@ The footer should contain any information about **Breaking Changes** and is also
 
 Here is an example of the release type that will be done based on a commit messages:
 
-| Commit message                                                                                                                                                                                   | Release type               |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
-| `fix(pencil): stop graphite breaking when too much pressure applied`                                                                                                                             | Patch Release              |
-| `feat(pencil): add 'graphiteWidth' option`                                                                                                                                                       | ~~Minor~~ Feature Release  |
-| `perf(pencil): remove graphiteWidth option`<br><br>`BREAKING CHANGE: The graphiteWidth option has been removed.`<br>`The default graphite width of 10mm is always used for performance reasons.` | ~~Major~~ Breaking Release |
+| Commit message                                                       | Release type            |
+| -------------------------------------------------------------------- | ----------------------- |
+| `fix(pencil): stop graphite breaking when too much pressure applied` | Patch Release           |
+| `feat(pencil): add 'graphiteWidth' option`                           | ~Minor~ Feature Release |
+
+| `perf(pencil): remove graphiteWidth option`
+
+`BREAKING CHANGE: The graphiteWidth option has been removed.`  
+`The default graphite width of 10mm is always used for performance reasons.` | ~Major~ Breaking Release |
 
 ### Revert
 
