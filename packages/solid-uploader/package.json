@@ -1,6 +1,6 @@
 {
   "name": "@w3ui/solid-uploader",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Solid adapter for w3ui uploader.",
   "main": "src/index.ts",
   "publishConfig": {
@@ -34,7 +34,7 @@
     "multiformats": "^11.0.1"
   },
   "peerDependencies": {
-    "solid-js": "^1.7.8"
+    "solid-js": "^1.7.11"
   },
   "eslintConfig": {
     "extends": [

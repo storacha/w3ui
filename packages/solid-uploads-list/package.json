@@ -33,7 +33,7 @@
     "@web3-storage/capabilities": "^7.0.0"
   },
   "peerDependencies": {
-    "solid-js": "^1.7.8"
+    "solid-js": "^1.7.11"
   },
   "devDependencies": {
     "@ucanto/interface": "^8.0.0"
