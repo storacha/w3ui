@@ -1,5 +1,5 @@
 {
-  "separate-pull-requests": true,
+  "separate-pull-requests": false,
   "packages": {
     "packages/react-keyring": {},
     "packages/react-uploader": {},
