@@ -4,7 +4,9 @@ import type {
   KeyringContextState,
   KeyringContextActions,
   ServiceConfig,
-  RegisterSpaceOpts
+  RegisterSpaceOpts,
+  Email,
+  Plan
 } from '@w3ui/keyring-core'
 import type {
   Capability,
@@ -12,7 +14,7 @@ import type {
   DID,
   Principal,
   Proof,
-  Signer
+  Signer,
 } from '@ucanto/interface'
 
 import React, { createContext, useState, useContext } from 'react'
@@ -23,11 +25,12 @@ import {
   Space,
   getCurrentSpace as getCurrentSpaceInAgent,
   getSpaces,
+  getPlan as getPlanWithAgent,
   CreateDelegationOptions,
   W3UI_ACCOUNT_LOCALSTORAGE_KEY
 } from '@w3ui/keyring-core'
 
-export { KeyringContextState, KeyringContextActions }
+export { Plan, KeyringContextState, KeyringContextActions }
 
 export type KeyringContextValue = [
   state: KeyringContextState,
@@ -56,7 +59,8 @@ export const keyringContextDefaultValue: KeyringContextValue = [
     createDelegation: async () => {
       throw new Error('missing keyring context provider')
     },
-    addSpace: async () => {}
+    addSpace: async () => {},
+    getPlan: async () => ({ error: { name: 'KeyringContextMissing', message: 'missing keyring context provider' } })
   }
 ]
 
@@ -161,7 +165,6 @@ export function KeyringProvider ({
 
   const resetAgent = async (): Promise<void> => {
     const agent = await getAgent()
-    // @ts-expect-error TODO expose store from access client
     await Promise.all([agent.store.reset(), unloadAgent()])
   }
 
@@ -193,6 +196,11 @@ export function KeyringProvider ({
     await agent.importSpaceFromDelegation(proof)
   }
 
+  const getPlan = async (email: Email) => {
+    const agent = await getAgent()
+    return getPlanWithAgent(agent, email)
+  }
+
   const state = {
     space,
     spaces,
@@ -210,7 +218,8 @@ export function KeyringProvider ({
     setCurrentSpace,
     getProofs,
     createDelegation,
-    addSpace
+    addSpace,
+    getPlan,
   }
 
   return (

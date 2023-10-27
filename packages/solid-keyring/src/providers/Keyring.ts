@@ -5,7 +5,8 @@ import type {
   ServiceConfig,
   CreateDelegationOptions,
   Agent,
-  Abilities
+  Abilities,
+  Email
 } from '@w3ui/keyring-core'
 import type { Delegation, Capability, DID, Principal } from '@ucanto/interface'
 
@@ -21,6 +22,7 @@ import {
   createAgent,
   getCurrentSpace as getCurrentSpaceInAgent,
   getSpaces,
+  getPlan as getPlanWithAgent,
   W3UI_ACCOUNT_LOCALSTORAGE_KEY
 } from '@w3ui/keyring-core'
 
@@ -55,7 +57,8 @@ export const AuthContext: Context<KeyringContextValue> = createContext<KeyringCo
       throw new Error('missing keyring context provider')
     },
     addSpace: async () => {},
-    authorize: async () => {}
+    authorize: async () => {},
+    getPlan: async () => ({ error: { name: 'KeyringContextMissing', message: 'missing keyring context provider' } })
   }
 ])
 
@@ -158,13 +161,17 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
 
   const resetAgent = async (): Promise<void> => {
     const agent = await getAgent()
-    // @ts-expect-error TODO: expose store in access client
     await Promise.all([agent.store.reset(), unloadAgent()])
   }
 
   const getProofs = async (caps: Capability[]): Promise<Delegation[]> => {
     const agent = await getAgent()
     return agent.proofs(caps)
+  }
+
+  const getPlan = async (email: Email) => {
+    const agent = await getAgent()
+    return getPlanWithAgent(agent, email)
   }
 
   const createDelegation = async (
@@ -201,7 +208,8 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
     createDelegation,
     addSpace,
     authorize,
-    cancelAuthorize
+    cancelAuthorize,
+    getPlan
   }
 
   return createComponent(AuthContext.Provider, {

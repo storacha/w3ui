@@ -184,7 +184,7 @@ function buildConfigs(opts: {
     globals: opts.globals,
   }
 
-  return [esm(options), cjs(options), umdDev(options), umdProd(options)]
+  return [esm(options)]
 }
 
 function esm({ input, packageDir, external, banner }: Options): RollupOptions {
