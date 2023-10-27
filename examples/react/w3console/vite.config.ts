@@ -24,6 +24,11 @@ patchedPreactPlugin[0].config = () => ({
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  esbuild: {
+    supported: {
+      'top-level-await': true,
+    },
+  },
   base: '',
   plugins: [patchedPreactPlugin],
   server: {
