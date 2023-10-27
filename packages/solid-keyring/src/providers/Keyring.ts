@@ -6,7 +6,8 @@ import type {
   CreateDelegationOptions,
   Agent,
   Abilities,
-  Email
+  Email,
+  PlanGetResult
 } from '@w3ui/keyring-core'
 import type { Delegation, Capability, DID, Principal } from '@ucanto/interface'
 
@@ -169,9 +170,9 @@ export const KeyringProvider: ParentComponent<KeyringProviderProps> = (
     return agent.proofs(caps)
   }
 
-  const getPlan = async (email: Email) => {
+  const getPlan = async (email: Email): Promise<PlanGetResult> => {
     const agent = await getAgent()
-    return getPlanWithAgent(agent, email)
+    return await getPlanWithAgent(agent, email)
   }
 
   const createDelegation = async (

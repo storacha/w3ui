@@ -207,7 +207,7 @@ export const KeyringProvider: Component<KeyringProviderProps> = defineComponent<
       KeyringProviderInjectionKey.getPlan,
       async (email: Email) => {
         const agent = await getAgent()
-        return getPlanWithAgent(agent, email)
+        return await getPlanWithAgent(agent, email)
       }
     )
 

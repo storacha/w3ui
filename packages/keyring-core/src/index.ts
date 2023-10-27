@@ -22,7 +22,7 @@ const DB_NAME = 'w3ui'
 const DB_STORE_NAME = 'keyring'
 export const W3UI_ACCOUNT_LOCALSTORAGE_KEY = 'w3ui-account-email'
 export type Agent = AccessAgent & { store: StoreIndexedDB }
-
+export type PlanGetResult = Ucanto.Result<PlanGetSuccess, PlanGetFailure | Ucanto.Failure>
 /**
  * A Space is the core organizational structure of web3-storage,
  * similar to a bucket in S3 but with some special properties.
@@ -105,7 +105,7 @@ export interface RegisterSpaceOpts {
 }
 
 export type Email = `${string}@${string}`
-export type Plan = {
+export interface Plan {
   product?: DID
 }
 
@@ -164,9 +164,9 @@ export interface KeyringContextActions {
    */
   addSpace: (proof: Delegation) => Promise<void>
   /**
-   * Get the plan 
+   * Get the plan
    */
-  getPlan: (email: Email) => Promise<Ucanto.Result<PlanGetSuccess, PlanGetFailure | Ucanto.Failure>>
+  getPlan: (email: Email) => Promise<PlanGetResult>
 }
 
 export type CreateDelegationOptions = Omit<UCANOptions, 'audience'> & {
@@ -207,7 +207,7 @@ export function getSpaces (agent: Agent): Space[] {
  * Get plan of the account identified by the given email.
  */
 export async function getPlan (agent: Agent, email: Email): Promise<Ucanto.Result<PlanGetSuccess, PlanGetFailure | Ucanto.Failure>> {
-  return getAccountPlan(agent, DidMailto.fromEmail(email))
+  return await getAccountPlan(agent, DidMailto.fromEmail(email))
 }
 
 export interface CreateAgentOptions extends ServiceConfig {}

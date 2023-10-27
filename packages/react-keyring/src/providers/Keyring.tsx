@@ -6,7 +6,8 @@ import type {
   ServiceConfig,
   RegisterSpaceOpts,
   Email,
-  Plan
+  Plan,
+  PlanGetResult
 } from '@w3ui/keyring-core'
 import type {
   Capability,
@@ -14,7 +15,7 @@ import type {
   DID,
   Principal,
   Proof,
-  Signer,
+  Signer
 } from '@ucanto/interface'
 
 import React, { createContext, useState, useContext } from 'react'
@@ -196,9 +197,9 @@ export function KeyringProvider ({
     await agent.importSpaceFromDelegation(proof)
   }
 
-  const getPlan = async (email: Email) => {
+  const getPlan = async (email: Email): Promise<PlanGetResult> => {
     const agent = await getAgent()
-    return getPlanWithAgent(agent, email)
+    return await getPlanWithAgent(agent, email)
   }
 
   const state = {
@@ -219,7 +220,7 @@ export function KeyringProvider ({
     getProofs,
     createDelegation,
     addSpace,
-    getPlan,
+    getPlan
   }
 
   return (
