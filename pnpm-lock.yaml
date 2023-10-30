@@ -683,8 +683,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       '@web3-storage/upload-client':
-        specifier: ^10.1.0
-        version: 10.1.0
+        specifier: ^11.1.0
+        version: 11.1.0
       multiformats:
         specifier: ^11.0.1
         version: 11.0.2
@@ -695,8 +695,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       '@web3-storage/upload-client':
-        specifier: ^10.1.0
-        version: 10.1.0
+        specifier: ^11.1.0
+        version: 11.1.0
 
   packages/vitest-environment-w3ui:
     dependencies:
@@ -2707,11 +2707,11 @@ packages:
       cborg: 1.10.1
       multiformats: 11.0.2
 
-  /@ipld/dag-pb@4.0.3:
-    resolution: {integrity: sha512-bOe+Z2ZJs9pmP/aIUBYMTdXq0i5z1x71qXeOIIhZvnKFLuzTIbbW0u5b7OfTGzUEbSv1dkUZBIXa7G/+OA8dnA==}
+  /@ipld/dag-pb@4.0.6:
+    resolution: {integrity: sha512-wOij3jfDKZsb9yjhQeHp+TQy0pu1vmUkGv324xciFFZ7xGbDfAGTQW03lSA5aJ/7HBBNYgjEE0nvHmNW1Qjfag==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
-      multiformats: 11.0.2
+      multiformats: 12.1.3
     dev: false
 
   /@ipld/dag-ucan@3.3.2:
@@ -2729,16 +2729,16 @@ packages:
       '@ipld/dag-json': 10.0.1
       multiformats: 11.0.2
 
-  /@ipld/unixfs@2.1.1:
-    resolution: {integrity: sha512-g3gr/3XvfQs4x2VFjlICae09ul5fbWCKRInN6Vgeot2+GH0h/krr3PqZCIo4dy4Ou2mQOsIddxUvG8UZ4p9SbQ==}
+  /@ipld/unixfs@2.1.2:
+    resolution: {integrity: sha512-yZC2Ih0smcFLNVperNK1eg9fJYOyml3havbvVgUvLkb2M8UDmPGdVnv40SLv/4e4YY6Dg6iSheXEdj4txvmN9w==}
     dependencies:
-      '@ipld/dag-pb': 4.0.3
-      '@multiformats/murmur3': 2.1.3
-      '@perma/map': 1.0.2
+      '@ipld/dag-pb': 4.0.6
+      '@multiformats/murmur3': 2.1.7
+      '@perma/map': 1.0.3
       '@web-std/stream': 1.0.1
       actor: 2.3.1
       multiformats: 11.0.2
-      protobufjs: 7.2.3
+      protobufjs: 7.2.5
       rabin-rs: 2.1.0
     dev: false
 
@@ -2820,11 +2820,11 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@multiformats/murmur3@2.1.3:
-    resolution: {integrity: sha512-YvLK1IrLnRckPsvXhOkZjaIGNonsEdD1dL3NPSaLilV/WjVYeBgnNZXTUsaPzFXGrIFM7motx+yCmmqzXO6gtQ==}
+  /@multiformats/murmur3@2.1.7:
+    resolution: {integrity: sha512-Yf0UpAaONjed+8PTt5NM/GG4Z4Ai4m1qfT7bqevjnkwRQ12K+0jxtRomirz+VJx4PokpA2St1ZSD1iMkZTqPRQ==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
-      multiformats: 11.0.2
+      multiformats: 12.1.3
       murmurhash3js-revisited: 3.0.0
     dev: false
 
@@ -2861,9 +2861,10 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@perma/map@1.0.2:
-    resolution: {integrity: sha512-hujwGOY6yTYnpf5YAtpD5MJAI1kcsVPqyN0lxG8Sampf/InO3jmX/MlJCHCGFPpPqB5JyO5WNnL+tUs1Umqe0A==}
+  /@perma/map@1.0.3:
+    resolution: {integrity: sha512-Bf5njk0fnJGTFE2ETntq0N1oJ6YdCPIpTDn3R3KYZJQdeYSOCNL7mBrFlGnbqav8YQhJA/p81pvHINX9vAtHkQ==}
     dependencies:
+      '@multiformats/murmur3': 2.1.7
       murmurhash3js-revisited: 3.0.0
     dev: false
 
@@ -3722,17 +3723,6 @@ packages:
       - typescript
     dev: false
 
-  /@web3-storage/capabilities@10.2.0:
-    resolution: {integrity: sha512-TlYul1LG/rqCJook8phEFVOvi+CKv0gC+y0DsPJuXDuneLw1R/pWcTH/2OZ9Vh0FfmdhTI9YJEMnYYtcKYBpyA==}
-    dependencies:
-      '@ucanto/core': 9.0.0
-      '@ucanto/interface': 9.0.0
-      '@ucanto/principal': 9.0.0
-      '@ucanto/transport': 9.0.0
-      '@ucanto/validator': 9.0.0
-      '@web3-storage/data-segment': 3.2.0
-    dev: false
-
   /@web3-storage/capabilities@11.1.0:
     resolution: {integrity: sha512-wRd/uuynLyuBfvRngXoYUsL4JpY8vO8SmFMD8gQ1bRduvHvNOa8EiOf4sdc63cJJr70xLhiYzWdtymBl/pAnWA==}
     dependencies:
@@ -3755,18 +3745,18 @@ packages:
     engines: {node: '>=16.15'}
     dev: false
 
-  /@web3-storage/upload-client@10.1.0:
-    resolution: {integrity: sha512-KuA5Z3smikO5In5dHdraHpzU/ok3N8MsSqsZ+S+/Zi0YB0Bafebm//7cC3NLy9ByfYwACk+lQckCJGytKJCw7g==}
+  /@web3-storage/upload-client@11.1.0:
+    resolution: {integrity: sha512-MzGhOv6+Y/feV6F0J7/TslHwrRM/oJvGIob/ZRwYmRfRk8qnOf4nmRbfVyc4cyG2Dsfyjhlv+mtF6qOaVwiT2Q==}
     dependencies:
       '@ipld/car': 5.2.4
       '@ipld/dag-cbor': 9.0.6
       '@ipld/dag-ucan': 3.4.0
-      '@ipld/unixfs': 2.1.1
+      '@ipld/unixfs': 2.1.2
       '@ucanto/client': 9.0.0
       '@ucanto/interface': 9.0.0
       '@ucanto/transport': 9.0.0
-      '@web3-storage/capabilities': 10.2.0
-      fr32-sha2-256-trunc254-padded-binary-tree-multihash: 1.1.4
+      '@web3-storage/capabilities': 11.1.0
+      fr32-sha2-256-trunc254-padded-binary-tree-multihash: 3.1.0
       ipfs-utils: 9.0.14
       multiformats: 12.1.3
       p-retry: 5.1.2
@@ -5637,8 +5627,8 @@ packages:
   /fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
 
-  /fast-fifo@1.2.0:
-    resolution: {integrity: sha512-NcvQXt7Cky1cNau15FWy64IjuO8X0JijhTBBrJj1YlxlDfRkJXNaK9RFUjwpfDPzMdv7wB38jr53l9tkNLxnWg==}
+  /fast-fifo@1.3.2:
+    resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
     dev: false
 
   /fast-glob@3.2.12:
@@ -5752,8 +5742,8 @@ packages:
       combined-stream: 1.0.8
       mime-types: 2.1.35
 
-  /fr32-sha2-256-trunc254-padded-binary-tree-multihash@1.1.4:
-    resolution: {integrity: sha512-+IpghzGszM7ebMuYzoILYvQMHXgtyZbIwlx2VYY4yLsT4SVU02ur6g7LCoLAxaD9GIv2oTAdiuHUxBH1liEQ7g==}
+  /fr32-sha2-256-trunc254-padded-binary-tree-multihash@3.1.0:
+    resolution: {integrity: sha512-rpE+Ex1Hke2lPMonENYjqNJSF00fQqDMlECV8KvCLUlkv+l/PkLeZfo2/VFu909hOJQfGXHk/TXrANic0Z/Ymg==}
     dev: false
 
   /fraction.js@4.2.0:
@@ -6117,8 +6107,8 @@ packages:
       it-to-stream: 1.0.0
       merge-options: 3.0.4
       nanoid: 3.3.6
-      native-fetch: 3.0.0(node-fetch@2.6.11)
-      node-fetch: 2.6.11
+      native-fetch: 3.0.0(node-fetch@2.7.0)
+      node-fetch: 2.7.0
       react-native-fetch-api: 3.0.0
       stream-to-it: 0.2.4
     transitivePeerDependencies:
@@ -6400,7 +6390,7 @@ packages:
     resolution: {integrity: sha512-pLULMZMAB/+vbdvbZtebC0nWBTbG581lk6w8P7DfIIIKUfa8FbY7Oi0FxZcFPbxvISs7A9E+cMpLDBc1XhpAOA==}
     dependencies:
       buffer: 6.0.3
-      fast-fifo: 1.2.0
+      fast-fifo: 1.3.2
       get-iterator: 1.0.2
       p-defer: 3.0.0
       p-fifo: 1.0.0
@@ -6904,12 +6894,12 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /native-fetch@3.0.0(node-fetch@2.6.11):
+  /native-fetch@3.0.0(node-fetch@2.7.0):
     resolution: {integrity: sha512-G3Z7vx0IFb/FQ4JxvtqGABsOTIqRWvgQz6e+erkB+JJD6LrszQtMozEHI4EkmgZQvnGHrpLVzUWk7t4sJCIkVw==}
     peerDependencies:
       node-fetch: '*'
     dependencies:
-      node-fetch: 2.6.11
+      node-fetch: 2.7.0
     dev: false
 
   /natural-compare-lite@1.4.0:
@@ -6925,8 +6915,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /node-fetch@2.6.11:
-    resolution: {integrity: sha512-4I6pdBY1EthSqDmJkiNk3JIT8cswwR9nfeW/cPdUagJYEQG7R95WRH74wpz7ma8Gh/9dI9FP+OU+0E4FvtA55w==}
+  /node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
     peerDependencies:
       encoding: ^0.1.0
@@ -7136,7 +7126,7 @@ packages:
   /p-fifo@1.0.0:
     resolution: {integrity: sha512-IjoCxXW48tqdtDFz6fqo5q1UfFVjjVZe8TC1QRflvNUJtNfCUhxOUw6MOVZhDPjqhSzc26xKdugsO17gmzd5+A==}
     dependencies:
-      fast-fifo: 1.2.0
+      fast-fifo: 1.3.2
       p-defer: 3.0.0
     dev: false
 
@@ -7456,8 +7446,8 @@ packages:
       react-is: 16.13.1
     dev: true
 
-  /protobufjs@7.2.3:
-    resolution: {integrity: sha512-TtpvOqwB5Gdz/PQmOjgsrGH1nHjAQVCN7JG4A6r1sXRWESL5rNMAiRcBQlCAdKxZcAbstExQePYG8xof/JVRgg==}
+  /protobufjs@7.2.5:
+    resolution: {integrity: sha512-gGXRSXvxQ7UiPgfw8gevrfRWcTlSbOFg+p/N+JVJEK5VhueL2miT6qTymqAmjr1Q5WbOCyJbyrk6JfWKwlFn6A==}
     engines: {node: '>=12.0.0'}
     requiresBuild: true
     dependencies:
