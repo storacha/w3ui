@@ -7,7 +7,7 @@ import type {
   Plan,
   PlanGetResult,
   ServiceConfig,
-  Space,
+  Space
 } from '@w3ui/keyring-core'
 import type {
   Capability,
@@ -16,6 +16,7 @@ import type {
   DIDKey,
   Principal,
   Proof,
+  Signer
 } from '@ucanto/interface'
 
 import React, { createContext, useState, useContext } from 'react'
@@ -39,6 +40,7 @@ export const keyringContextDefaultValue: KeyringContextValue = [
   {
     space: undefined,
     spaces: [],
+    agent: undefined,
     client: undefined,
     account: undefined
   },
@@ -79,6 +81,7 @@ export function KeyringProvider ({
   connection
 }: KeyringProviderProps): JSX.Element {
   const [client, setClient] = useState<Client>()
+  const [agent, setAgent] = useState<Signer>()
   const [account, setAccount] = useLocalStorageState<string>(W3UI_ACCOUNT_LOCALSTORAGE_KEY)
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
@@ -89,6 +92,7 @@ export function KeyringProvider ({
     if (client == null) {
       const client = await createClient({ servicePrincipal, connection })
       setClient(client)
+      setAgent(client.agent.issuer)
       setSpace(client.currentSpace())
       setSpaces(client.spaces())
       return client
@@ -137,6 +141,7 @@ export function KeyringProvider ({
     const c = await getClient()
     const account = useAccount(c, { email })
     const space = c.currentSpace()
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (account && space) {
       await account.provision(space.did() as DIDKey)
       setSpace(c.currentSpace())
@@ -164,7 +169,7 @@ export function KeyringProvider ({
 
   const resetAgent = async (): Promise<void> => {
     const c = await getClient()
-    // @ts-ignore store is there but the type doesn't expose it - TODO add store to Agent type
+    // @ts-expect-error store is there but the type doesn't expose it - TODO add store to Agent type
     await Promise.all([c.agent.store.reset(), unloadAgent()])
   }
 
@@ -204,6 +209,7 @@ export function KeyringProvider ({
   const state = {
     space,
     spaces,
+    agent,
     client,
     account
   }

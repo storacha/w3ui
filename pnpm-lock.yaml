@@ -562,8 +562,8 @@ importers:
         specifier: ^12.0.0
         version: 12.0.0
       '@web3-storage/w3up-client':
-        specifier: 10.0.0
-        version: 10.0.0(typescript@4.9.5)
+        specifier: 10.1.0
+        version: 10.1.0(typescript@4.9.5)
 
   packages/react-keyring:
     dependencies:
@@ -3785,6 +3785,11 @@ packages:
     engines: {node: '>=16.15'}
     dev: false
 
+  /@web3-storage/did-mailto@2.1.0:
+    resolution: {integrity: sha512-TRmfSXj1IhtX3ESurSNOylZSBKi0z/VJNoMLpof+AVRdovgZjjocpiePQTs2pfHKqHTHfJXc9AboWyK4IKTWMw==}
+    engines: {node: '>=16.15'}
+    dev: false
+
   /@web3-storage/filecoin-client@3.1.0:
     resolution: {integrity: sha512-hR+uEpYpKNv4kcpx1PpAFC2p+hJ27XwVPnP6bc7ZC5p/JMjIAwa2TBm479WdncH/v2uJDqn06J4ux9vYNEFkfw==}
     dependencies:
@@ -3817,8 +3822,8 @@ packages:
       - encoding
     dev: false
 
-  /@web3-storage/w3up-client@10.0.0(typescript@4.9.5):
-    resolution: {integrity: sha512-kQW1gl1zr8IX5bGwiNd4XTAXd8hUCx/YIXDFO9UACrZtyxoady3vdLs2r3fKbHmhhmBc6NIlpb9gTkkTTqu51g==}
+  /@web3-storage/w3up-client@10.1.0(typescript@4.9.5):
+    resolution: {integrity: sha512-Dqf/tfWTFeDegS738wqWuT6SDSjmpFWAYCWkgFDWbyCU+RY5OKR7XSDBjNrbPxavlnfKJrfMVl61GSEDK2uM0w==}
     dependencies:
       '@ipld/dag-ucan': 3.4.0
       '@ucanto/client': 9.0.0
@@ -3828,7 +3833,7 @@ packages:
       '@ucanto/transport': 9.0.0
       '@web3-storage/access': 17.0.0(typescript@4.9.5)
       '@web3-storage/capabilities': 11.4.0
-      '@web3-storage/did-mailto': 2.0.2
+      '@web3-storage/did-mailto': 2.1.0
       '@web3-storage/filecoin-client': 3.1.0
       '@web3-storage/upload-client': 12.0.0
     transitivePeerDependencies:

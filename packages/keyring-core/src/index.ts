@@ -5,7 +5,8 @@ import type {
   Proof,
   Principal,
   Delegation,
-  UCANOptions
+  UCANOptions,
+  Signer
 } from '@ucanto/interface'
 import { StoreIndexedDB, getAccountPlan } from '@web3-storage/access'
 import * as Ucanto from '@ucanto/interface'
@@ -31,6 +32,10 @@ export interface KeyringContextState {
    * Spaces available to this agent.
    */
   spaces: Space[]
+  /**
+   * The current user agent (this device).
+   */
+  agent?: Signer
   /**
    * The w3up client representing the current user agent (this device).
    */
@@ -141,7 +146,6 @@ export async function createClient (
   })
 }
 
-// @ts-expect-error remove once new w3up ships
 export const useAccount = (client: Client, { email }: { email?: string }): W3Account.Account | undefined => {
   const accounts = Object.values(W3Account.list(client))
   return accounts.find((account) => account.toEmail() === email)
