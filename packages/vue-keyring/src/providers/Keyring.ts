@@ -19,6 +19,7 @@ import {
 import {
   createClient,
   getPlan as getPlanWithClient,
+  login,
   useAccount,
   W3UI_ACCOUNT_LOCALSTORAGE_KEY
 } from '@w3ui/keyring-core'
@@ -120,7 +121,7 @@ export const KeyringProvider: Component<KeyringProviderProps> = defineComponent<
         registerAbortController = controller
 
         try {
-          await c.authorize(email, { signal: controller.signal })
+          await login(c, email)
           state.account = email
           window.localStorage.setItem(W3UI_ACCOUNT_LOCALSTORAGE_KEY, email)
           const newSpaces = c.spaces()

@@ -9,6 +9,7 @@ import type {
   Signer
 } from '@ucanto/interface'
 import type { ServiceConfig } from './service'
+import type { EmailAddress } from '@web3-storage/w3up-client/types'
 import { StoreIndexedDB, getAccountPlan } from '@web3-storage/access'
 import * as Ucanto from '@ucanto/interface'
 import { fromEmail as mailtoDidFromEmail } from '@web3-storage/did-mailto'
@@ -150,4 +151,8 @@ export async function createClient (
 export const useAccount = (client: Client, { email }: { email?: string }): W3Account.Account | undefined => {
   const accounts = Object.values(W3Account.list(client))
   return accounts.find((account) => account.toEmail() === email)
+}
+
+export async function login (client: Client, email: EmailAddress): Promise<Ucanto.Result<W3Account.Account, Ucanto.Failure>> {
+  return await W3Account.login(client, email)
 }

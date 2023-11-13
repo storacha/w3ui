@@ -26,7 +26,8 @@ import {
   CreateDelegationOptions,
   W3UI_ACCOUNT_LOCALSTORAGE_KEY,
   createClient,
-  useAccount
+  useAccount,
+  login
 } from '@w3ui/keyring-core'
 
 export { Plan, KeyringContextState, KeyringContextActions }
@@ -106,8 +107,7 @@ export function KeyringProvider ({
     setRegisterAbortController(controller)
 
     try {
-      await c.authorize(email, { signal: controller.signal })
-
+      await login(c, email)
       setAccount(email)
       const newSpaces = c.spaces()
       setSpaces(newSpaces)
