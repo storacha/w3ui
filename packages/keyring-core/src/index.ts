@@ -8,13 +8,14 @@ import type {
   UCANOptions,
   Signer
 } from '@ucanto/interface'
+import type { ServiceConfig } from './service'
 import { StoreIndexedDB, getAccountPlan } from '@web3-storage/access'
 import * as Ucanto from '@ucanto/interface'
 import { fromEmail as mailtoDidFromEmail } from '@web3-storage/did-mailto'
 import { Client, create as createW3UPClient } from '@web3-storage/w3up-client'
 import * as W3Account from '@web3-storage/w3up-client/account'
 import { Space } from '@web3-storage/w3up-client/space'
-import { createServiceConf, ServiceConfig } from './service'
+import { createServiceConf } from './service'
 
 export { Abilities, AgentMeta, Service, Client, Space, ServiceConfig }
 
