@@ -33,7 +33,7 @@
     "@w3ui/keyring-core": "workspace:^"
   },
   "peerDependencies": {
-    "solid-js": "^1.7.8"
+    "solid-js": "^1.7.11"
   },
   "eslintConfig": {
     "extends": [
