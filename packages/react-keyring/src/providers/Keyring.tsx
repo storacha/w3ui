@@ -83,7 +83,7 @@ export function KeyringProvider ({
 }: KeyringProviderProps): JSX.Element {
   const [client, setClient] = useState<Client>()
   const [agent, setAgent] = useState<Signer>()
-  const [account, setAccount] = useLocalStorageState<string>(W3UI_ACCOUNT_LOCALSTORAGE_KEY)
+  const [account, setAccount, { removeItem: unsetAccount }] = useLocalStorageState<string>(W3UI_ACCOUNT_LOCALSTORAGE_KEY)
   const [space, setSpace] = useState<Space>()
   const [spaces, setSpaces] = useState<Space[]>([])
   const [registerAbortController, setRegisterAbortController] =
@@ -164,7 +164,7 @@ export function KeyringProvider ({
     setSpace(undefined)
     setSpaces([])
     setClient(undefined)
-    setAccount(undefined)
+    unsetAccount()
   }
 
   const resetAgent = async (): Promise<void> => {
