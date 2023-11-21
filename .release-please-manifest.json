@@ -1,14 +1,14 @@
 {
   "packages/keyring-core": "6.0.0",
-  "packages/uploader-core": "6.1.0",
-  "packages/uploads-list-core": "4.1.0",
-  "packages/react-keyring": "6.2.1",
+  "packages/uploader-core": "7.0.0",
+  "packages/uploads-list-core": "5.0.0",
+  "packages/react-keyring": "7.0.0",
   "packages/react-uploader": "5.2.0",
   "packages/react-uploads-list": "4.2.0",
   "packages/vue-keyring": "6.0.0",
   "packages/vue-uploader": "5.0.1",
   "packages/vue-uploads-list": "4.0.1",
-  "packages/solid-keyring": "5.0.1",
+  "packages/solid-keyring": "6.0.0",
   "packages/solid-uploader": "5.0.1",
   "packages/solid-uploads-list": "4.0.1",
   "examples/react/w3console": "2.0.1"
