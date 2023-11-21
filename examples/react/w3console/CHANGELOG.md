@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/web3-storage/w3ui/compare/w3console-v2.0.1...w3console-v2.1.0) (2023-11-21)
+
+
+### Features
+
+* add support for getting an account's plan ([#564](https://github.com/web3-storage/w3ui/issues/564)) ([11023a4](https://github.com/web3-storage/w3ui/commit/11023a4a0a8a3ecf061befd4480ede23ea45d143))
+* use two env vars to configure service not four ([#562](https://github.com/web3-storage/w3ui/issues/562)) ([29beb37](https://github.com/web3-storage/w3ui/commit/29beb3708634123ce63619aa78de35835752f2c4))
+
+
+### Bug Fixes
+
+* correctly clear local storage ([#582](https://github.com/web3-storage/w3ui/issues/582)) ([6593030](https://github.com/web3-storage/w3ui/commit/65930308728d0c8f5edff010afac144c51681067))
+
 ## [2.0.1](https://github.com/web3-storage/w3ui/compare/w3console-v2.0.0...w3console-v2.0.1) (2023-09-01)
 
 
