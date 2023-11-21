@@ -661,10 +661,10 @@ importers:
   packages/solid-uploader:
     dependencies:
       '@w3ui/solid-keyring':
-        specifier: workspace:>=6
+        specifier: workspace:^
         version: link:../solid-keyring
       '@w3ui/uploader-core':
-        specifier: workspace:>=7
+        specifier: workspace:^
         version: link:../uploader-core
       '@web3-storage/capabilities':
         specifier: ^11.1.0
@@ -679,10 +679,10 @@ importers:
   packages/solid-uploads-list:
     dependencies:
       '@w3ui/solid-keyring':
-        specifier: workspace:>=6
+        specifier: workspace:^
         version: link:../solid-keyring
       '@w3ui/uploads-list-core':
-        specifier: workspace:>=5
+        specifier: workspace:^
         version: link:../uploads-list-core
       '@web3-storage/capabilities':
         specifier: ^11.1.0
@@ -741,10 +741,10 @@ importers:
   packages/vue-uploader:
     dependencies:
       '@w3ui/uploader-core':
-        specifier: workspace:>=7
+        specifier: workspace:^
         version: link:../uploader-core
       '@w3ui/vue-keyring':
-        specifier: workspace:>=6
+        specifier: workspace:^
         version: link:../vue-keyring
       '@web3-storage/capabilities':
         specifier: ^11.1.0
@@ -759,10 +759,10 @@ importers:
   packages/vue-uploads-list:
     dependencies:
       '@w3ui/uploads-list-core':
-        specifier: workspace:>=5
+        specifier: workspace:^
         version: link:../uploads-list-core
       '@w3ui/vue-keyring':
-        specifier: workspace:>=6
+        specifier: workspace:^
         version: link:../vue-keyring
       '@web3-storage/capabilities':
         specifier: ^11.1.0
