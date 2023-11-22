@@ -1,6 +1,6 @@
 {
   "name": "@w3ui/solid-uploader",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "Solid adapter for w3ui uploader.",
   "main": "src/index.ts",
   "publishConfig": {
@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/web3-storage/w3ui/tree/main/packages/solid-uploader",
   "dependencies": {
-    "@w3ui/solid-keyring": "workspace:^",
-    "@w3ui/uploader-core": "workspace:^",
+    "@w3ui/solid-keyring": "workspace:>=6",
+    "@w3ui/uploader-core": "workspace:>=7",
     "@web3-storage/capabilities": "^11.1.0",
     "multiformats": "^11.0.1"
   },
