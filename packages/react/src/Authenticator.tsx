@@ -64,11 +64,8 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
   }
 ])
 
-export type AuthenticatorRootOptions<T extends As = typeof Fragment> =
-  Options<T>
-export type AuthenticatorRootProps<T extends As = typeof Fragment> = Props<
-AuthenticatorRootOptions<T>
->
+export type AuthenticatorRootOptions<T extends As = typeof Fragment> = Options<T>
+export type AuthenticatorRootProps<T extends As = typeof Fragment> = Props<AuthenticatorRootOptions<T>>
 
 /**
  * Top level component of the headless Authenticator.
@@ -90,7 +87,7 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
         e.preventDefault()
         setSubmitted(true)
         try {
-          if (!client) throw new Error('missing client')
+          if (client === undefined) throw new Error('missing client')
           await client.login(email as '{string}@{string}')
         } catch (error: any) {
           // eslint-disable-next-line no-console
@@ -106,7 +103,12 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
     const value = useMemo<AuthenticatorContextValue>(
       () => [
         { ...state, email, submitted, handleRegisterSubmit },
-        { setEmail, cancelLogin: () => console.warn('TODO: cancel login') }
+        {
+          setEmail,
+          cancelLogin: () => {
+            console.warn('TODO: cancel login')
+          }
+        }
       ],
       [state, actions, email, submitted, handleRegisterSubmit]
     )
@@ -132,9 +134,7 @@ export const AuthenticatorForm: Component<AuthenticatorFormProps> = createCompon
 })
 
 export type AuthenticatorEmailInputOptions<T extends As = 'input'> = Options<T>
-export type AuthenticatorEmailInputProps<T extends As = 'input'> = Props<
-  AuthenticatorEmailInputOptions<T>
->
+export type AuthenticatorEmailInputProps<T extends As = 'input'> = Props<AuthenticatorEmailInputOptions<T>>
 
 /**
  * Input component for the headless Uploader.
@@ -158,9 +158,7 @@ export const AuthenticatorEmailInput: Component<AuthenticatorEmailInputProps> = 
 )
 
 export type AuthenticatorCancelButtonOptions<T extends As = 'button'> = Options<T>
-export type AuthenticatorCancelButtonProps<T extends As = 'button'> = Props<
-  AuthenticatorCancelButtonOptions<T>
->
+export type AuthenticatorCancelButtonProps<T extends As = 'button'> = Props<AuthenticatorCancelButtonOptions<T>>
 
 /**
  * A button that will cancel login.

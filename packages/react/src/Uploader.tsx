@@ -22,7 +22,7 @@ export enum UploadStatus {
   Succeeded = 'succeeded',
 }
 
-export type UploaderContextState = {
+export interface UploaderContextState {
   /**
    * A string indicating the status of this component - can be 'uploading', 'done' or ''.
    */
@@ -54,7 +54,7 @@ export type UploaderContextState = {
   uploadProgress: UploadProgress
 }
 
-export type UploaderContextActions = {
+export interface UploaderContextActions {
   /**
    * Set a file to be uploaded to web3.storage. The file will be uploaded
    * when `handleUploadSubmit` is called.
@@ -118,7 +118,7 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
 
     const handleUploadSubmit = async (e: Event): Promise<void> => {
       e.preventDefault()
-      if (client && file != null) {
+      if ((client !== undefined) && (file !== undefined)) {
         try {
           setError(undefined)
           setStatus(UploadStatus.Uploading)

@@ -28,6 +28,7 @@ export interface ContextState {
   spaces: Space[]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ContextActions {}
 
 export interface CreateClientOptions extends ServiceConfig {
@@ -46,7 +47,7 @@ class IndexedDBEventDispatcherStore extends StoreIndexedDB {
     this.#events = events
   }
 
-  async save (data: AgentDataExport) {
+  async save (data: AgentDataExport): Promise<void> {
     await super.save(data)
     this.#events.dispatchEvent(new CustomEvent('store:save', { detail: data }))
   }

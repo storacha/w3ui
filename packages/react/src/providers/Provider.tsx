@@ -48,15 +48,17 @@ export function Provider ({
   const [spaces, setSpaces] = useState<Space[]>([])
 
   useEffect(() => {
-    if (!client || !events) return
+    if ((client === undefined) || (events === undefined)) return
 
-    const handleStoreSave = () => {
+    const handleStoreSave: () => void = () => {
       setAccounts(Object.values(client.accounts()))
       setSpaces(client.spaces())
     }
 
     events.addEventListener('store:save', handleStoreSave)
-    return () => events?.removeEventListener('store:save', handleStoreSave)
+    return () => {
+      events?.removeEventListener('store:save', handleStoreSave)
+    }
   }, [client, events])
 
   const getClient = async (): Promise<Client> => {
