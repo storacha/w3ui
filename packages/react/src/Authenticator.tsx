@@ -48,7 +48,7 @@ export type AuthenticatorContextValue = [
   actions: AuthenticatorContextActions
 ]
 
-export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
+export const AuthenticatorContextDefaultValue: AuthenticatorContextValue = [
   {
     accounts: [],
     spaces: [],
@@ -62,7 +62,9 @@ export const AuthenticatorContext = createContext<AuthenticatorContextValue>([
       throw new Error('missing cancel login function')
     }
   }
-])
+]
+
+export const AuthenticatorContext = createContext<AuthenticatorContextValue>(AuthenticatorContextDefaultValue)
 
 export type AuthenticatorRootOptions<T extends As = typeof Fragment> = Options<T>
 export type AuthenticatorRootProps<T extends As = typeof Fragment> = Props<AuthenticatorRootOptions<T>>

@@ -4,13 +4,16 @@ import { test, expect, vi } from 'vitest'
 import user from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
 import { Context, ContextDefaultValue, ContextValue } from '../src/providers/Provider'
-import { Authenticator, AuthenticatorContext } from '../src/Authenticator'
+import { Authenticator, AuthenticatorContext, AuthenticatorContextDefaultValue, AuthenticatorContextValue } from '../src/Authenticator'
 
 test('CancelButton', async () => {
   const cancelLogin = vi.fn()
-  const contextValue: ContextValue = [
-    ContextDefaultValue[0],
-    { ...ContextDefaultValue[1], cancelLogin }
+  const contextValue: AuthenticatorContextValue = [
+    AuthenticatorContextDefaultValue[0],
+    {
+      ...AuthenticatorContextDefaultValue[1],
+      cancelLogin
+    }
   ]
   render(
     <AuthenticatorContext.Provider value={contextValue}>
