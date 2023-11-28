@@ -189,7 +189,7 @@ export type UploaderInputProps<T extends As = 'input'> = Props<UploaderInputOpti
 export const UploaderInput: Component<UploaderInputProps> = createComponent((props) => {
   const [, { setFile }] = useContext(UploaderContext)
   const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => setFile(e.target.files?.[0]),
+    (e: ChangeEvent<HTMLInputElement>) => { setFile(e.target.files?.[0]) },
     [setFile]
   )
   return createElement('input', { ...props, type: 'file', onChange })
