@@ -7,7 +7,7 @@ import type {
   Account
 } from '@w3ui/core'
 
-import React, { createContext, useState, useContext, useEffect } from 'react'
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react'
 import { createClient } from '@w3ui/core'
 
 export { ContextState, ContextActions }
@@ -31,7 +31,7 @@ export const Context = createContext<ContextValue>(
 )
 
 export interface ProviderProps extends ServiceConfig {
-  children?: JSX.Element
+  children?: ReactNode
 }
 
 /**
@@ -41,7 +41,7 @@ export function Provider ({
   children,
   servicePrincipal,
   connection
-}: ProviderProps): JSX.Element {
+}: ProviderProps): ReactNode {
   const [client, setClient] = useState<Client>()
   const [events, setEvents] = useState<EventTarget>()
   const [accounts, setAccounts] = useState<Account[]>([])
