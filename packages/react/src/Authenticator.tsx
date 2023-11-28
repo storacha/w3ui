@@ -81,18 +81,24 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
     const { client } = state
     const [email, setEmail] = useState('')
     const [submitted, setSubmitted] = useState(false)
+    const [loginAbortController, setLoginAbortController] =
+      useState<AbortController>()
 
     const handleRegisterSubmit = useCallback(
       async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        const controller = new AbortController()
+        setLoginAbortController(controller)
         setSubmitted(true)
         try {
           if (client === undefined) throw new Error('missing client')
-          await client.login(email as '{string}@{string}')
+          await client.login(email as '{string}@{string}', { signal: controller?.signal })
         } catch (error: any) {
-          // eslint-disable-next-line no-console
-          console.error('failed to register:', error)
-          throw new Error('failed to register', { cause: error })
+          if (!controller.signal.aborted) {
+            // eslint-disable-next-line no-console
+            console.error('failed to register:', error)
+            throw new Error('failed to register', { cause: error })
+          }
         } finally {
           setSubmitted(false)
         }
@@ -106,7 +112,7 @@ export const AuthenticatorRoot: Component<AuthenticatorRootProps> =
         {
           setEmail,
           cancelLogin: () => {
-            console.warn('TODO: cancel login')
+            loginAbortController?.abort()
           }
         }
       ],
