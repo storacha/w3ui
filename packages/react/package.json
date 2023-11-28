@@ -39,7 +39,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@ucanto/interface": "^9.0.0",
-    "@ucanto/principal": "^9.0.0"
+    "@ucanto/principal": "^9.0.0",
+    "multiformats": "^11.0.1"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"

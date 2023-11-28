@@ -628,6 +628,9 @@ importers:
       '@ucanto/principal':
         specifier: ^9.0.0
         version: 9.0.0
+      multiformats:
+        specifier: ^11.0.1
+        version: 11.0.2
 
   packages/react-keyring:
     dependencies:
