@@ -24,7 +24,7 @@ export const ContextDefaultValue: ContextValue = [
     accounts: [],
     spaces: []
   },
-  {}
+  { logout: async () => {} }
 ]
 
 export const Context = createContext<ContextValue>(
