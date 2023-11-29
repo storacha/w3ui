@@ -24,7 +24,11 @@ export const ContextDefaultValue: ContextValue = [
     accounts: [],
     spaces: []
   },
-  { logout: async () => {} }
+  {
+    logout: async () => {
+      throw new Error('missing logout function')
+    }
+  }
 ]
 
 export const Context = createContext<ContextValue>(
@@ -73,7 +77,7 @@ export function Provider ({
   }
 
   const logout = async (): Promise<void> => {
-    if (store) {
+    if (store !== undefined) {
       await store.reset()
       // set state back to defaults
       setClient(undefined)
@@ -86,7 +90,7 @@ export function Provider ({
     }
   }
 
-  useEffect(() => { setupClient() }, []) // load client - once.
+  useEffect(() => { void setupClient() }, []) // load client - once.
 
   return (
     <Context.Provider value={[{ client, accounts, spaces }, { logout }]}>
