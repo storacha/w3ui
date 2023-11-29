@@ -4,7 +4,8 @@ import type {
   ContextActions,
   ServiceConfig,
   Space,
-  Account
+  Account,
+  Store
 } from '@w3ui/core'
 
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react'
@@ -46,6 +47,7 @@ export function Provider ({
   const [events, setEvents] = useState<EventTarget>()
   const [accounts, setAccounts] = useState<Account[]>([])
   const [spaces, setSpaces] = useState<Space[]>([])
+  const [store, setStore] = useState<Store>()
 
   useEffect(() => {
     if ((client === undefined) || (events === undefined)) return
@@ -61,22 +63,33 @@ export function Provider ({
     }
   }, [client, events])
 
-  const getClient = async (): Promise<Client> => {
-    if (client == null) {
-      const { client, events } = await createClient({ servicePrincipal, connection })
-      setClient(client)
-      setEvents(events)
-      setAccounts(Object.values(client.accounts()))
-      setSpaces(client.spaces())
-      return client
-    }
-    return client
+  const setupClient = async (): Promise<void> => {
+    const { client, events, store } = await createClient({ servicePrincipal, connection })
+    setClient(client)
+    setEvents(events)
+    setAccounts(Object.values(client.accounts()))
+    setSpaces(client.spaces())
+    setStore(store)
   }
 
-  useEffect(() => { void getClient() }, []) // load client - once.
+  const logout = async (): Promise<void> => {
+    if (store) {
+      await store.reset()
+      // set state back to defaults
+      setClient(undefined)
+      setEvents(undefined)
+      setAccounts([])
+      setSpaces([])
+      setStore(undefined)
+      // try to set state up again
+      await setupClient()
+    }
+  }
+
+  useEffect(() => { setupClient() }, []) // load client - once.
 
   return (
-    <Context.Provider value={[{ client, accounts, spaces }, {}]}>
+    <Context.Provider value={[{ client, accounts, spaces }, { logout }]}>
       {children}
     </Context.Provider>
   )
