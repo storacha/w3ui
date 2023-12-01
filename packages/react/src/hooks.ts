@@ -10,7 +10,14 @@ import { STORE_SAVE_EVENT, createClient } from '@w3ui/core'
 
 export type DatamodelProps = ServiceConfig
 
-export function useDatamodel ({ servicePrincipal, connection }: DatamodelProps) {
+export interface Datamodel {
+  client?: Client
+  accounts: Account[]
+  spaces: Space[]
+  logout: () => Promise<void>
+}
+
+export function useDatamodel ({ servicePrincipal, connection }: DatamodelProps): Datamodel {
   const [client, setClient] = useState<Client>()
   const [events, setEvents] = useState<EventTarget>()
   const [accounts, setAccounts] = useState<Account[]>([])
@@ -66,5 +73,5 @@ export function useDatamodel ({ servicePrincipal, connection }: DatamodelProps) 
     await setupClient()
   }
 
-  return { client, events, accounts, spaces, logout }
+  return { client, accounts, spaces, logout }
 }

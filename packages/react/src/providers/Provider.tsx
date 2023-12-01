@@ -1,7 +1,7 @@
 import type {
   ContextState,
   ContextActions,
-  ServiceConfig,
+  ServiceConfig
 } from '@w3ui/core'
 
 import React, { createContext, useContext, ReactNode } from 'react'
@@ -43,7 +43,6 @@ export function Provider ({
   servicePrincipal,
   connection
 }: ProviderProps): ReactNode {
-
   const { client, accounts, spaces, logout } = useDatamodel({ servicePrincipal, connection })
   return (
     <Context.Provider value={[{ client, accounts, spaces }, { logout }]}>
