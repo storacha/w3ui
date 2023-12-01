@@ -35,7 +35,7 @@ test('should create a new client instance if and only if servicePrincipal or con
   // this is a little superfluous - if it's false then the line before this will hang
   // I still think it's worth keeping to illustrate the point
   expect(result.current.client).not.toBe(firstClient)
-
+  const secondClient = result.current.client
 
   connection = connect({
     id: servicePrincipal,
@@ -48,4 +48,5 @@ test('should create a new client instance if and only if servicePrincipal or con
   rerender()
   await waitForValueToChange(() => result.current.client)
   expect(result.current.client).not.toBe(firstClient)
+  expect(result.current.client).not.toBe(secondClient)
 })
