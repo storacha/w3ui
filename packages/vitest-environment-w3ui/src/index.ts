@@ -4,6 +4,7 @@ import type { Environment } from 'vitest'
 
 const env: Environment = {
   name: 'w3ui',
+  transformMode: "ssr",
   async setup(global, options) {
     // use the standard jsdom environment as a base
     const jsdom = await builtinEnvironments.jsdom.setup(global, options)
