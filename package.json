@@ -11,6 +11,7 @@
   ],
   "license": "Apache-2.0 OR MIT",
   "scripts": {
+    "prepare": "pnpm run build && pnpm run compile",
     "build": "pnpm run --recursive --if-present build",
     "clean": "rm -rf node_modules pnpm-lock.yaml coverage packages/*/{build,node_modules}",
     "compile": "pnpm run --recursive --if-present compile",
