@@ -12,7 +12,7 @@ function AuthenticationForm() {
     <div>
       <Authenticator.Form>
         <div>
-          <label htmlFor='authenticator-email'>Email</label>
+          <label htmlFor='authenticator-email'>Email address:</label>
           <Authenticator.EmailInput id='authenticator-email' required />
         </div>
         <div>
