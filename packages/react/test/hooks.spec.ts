@@ -20,7 +20,7 @@ test('should create a new client instance if and only if servicePrincipal or con
   })
   const { result, rerender } = renderHook(() => useDatamodel({ servicePrincipal, connection }))
   // wait for client to be initialized
-  await waitFor(() => expect(result.current.client).toBeTruthy())
+  await waitFor(() => { expect(result.current.client).toBeTruthy() })
 
   const firstClient = result.current.client
   expect(firstClient).not.toBeFalsy()
@@ -31,7 +31,7 @@ test('should create a new client instance if and only if servicePrincipal or con
   servicePrincipal = DID.parse('did:web:web3.porridge')
   rerender()
   // wait for the client to change
-  await waitFor(() => expect(result.current.client).not.toBe(firstClient))
+  await waitFor(() => { expect(result.current.client).not.toBe(firstClient) })
   const secondClient = result.current.client
 
   connection = connect({
@@ -43,8 +43,6 @@ test('should create a new client instance if and only if servicePrincipal or con
     })
   })
   rerender()
-  await waitFor(() => {
-    expect(result.current.client).not.toBe(firstClient)
-    expect(result.current.client).not.toBe(secondClient)
-  })
+  await waitFor(() => { expect(result.current.client).not.toBe(firstClient) })
+  await waitFor(() => { expect(result.current.client).not.toBe(secondClient) })
 })

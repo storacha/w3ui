@@ -21,4 +21,6 @@ module.exports = {
     'jsdoc/require-param-type': 'off',
     'import/extensions': 'off'
   },
+  // TODO: we should remove "examples" from ignorePatterns after we revamp linting
+  ignorePatterns: ['dist/', 'vitest.config.ts']
 }

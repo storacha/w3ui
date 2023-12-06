@@ -23,5 +23,8 @@
     "build:examples": "pnpm run --filter './examples/**' --no-bail build || true",
     "serve:examples": "serve examples",
     "playwright:install": "pnpm --filter './examples/test/playwright' exec playwright install"
+  },
+  "dependencies": {
+    "hd-scripts": "^4.1.0"
   }
 }
