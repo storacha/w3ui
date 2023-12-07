@@ -93,6 +93,58 @@ importers:
         specifier: ^5.0.0
         version: 5.0.5
 
+  examples/react/sign-up-in:
+    dependencies:
+      '@heroicons/react':
+        specifier: ^2.0.17
+        version: 2.0.18(react@18.2.0)
+      '@w3ui/example-react-components':
+        specifier: workspace:^
+        version: link:../components
+      '@w3ui/react':
+        specifier: workspace:^
+        version: link:../../../packages/react
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.37
+        version: 18.2.42
+      '@types/react-dom':
+        specifier: ^18.2.15
+        version: 18.2.17
+      '@vitejs/plugin-react':
+        specifier: ^4.2.0
+        version: 4.2.1(vite@5.0.5)
+      autoprefixer:
+        specifier: ^10.4.13
+        version: 10.4.16(postcss@8.4.32)
+      eslint:
+        specifier: ^8.53.0
+        version: 8.55.0
+      eslint-plugin-react:
+        specifier: ^7.33.2
+        version: 7.33.2(eslint@8.55.0)
+      eslint-plugin-react-hooks:
+        specifier: ^4.6.0
+        version: 4.6.0(eslint@8.55.0)
+      eslint-plugin-react-refresh:
+        specifier: ^0.4.4
+        version: 0.4.5(eslint@8.55.0)
+      postcss:
+        specifier: ^8.4.21
+        version: 8.4.32
+      tailwindcss:
+        specifier: ^3.2.4
+        version: 3.3.6
+      vite:
+        specifier: ^5.0.0
+        version: 5.0.5
+
   examples/test/playwright:
     devDependencies:
       '@playwright/test':

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 for (const ui of [
-  // 'react'
+  'react'
 ]) {
   test(`${ui}: sign in`, async ({ page }) => {
     await page.goto(`/${ui}/sign-up-in/`)
