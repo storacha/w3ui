@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.17",
+    "@w3ui/example-react-components": "workspace:^",
     "@w3ui/react": "workspace:^",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
