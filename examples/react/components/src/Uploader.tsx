@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Uploader, useUploader, UploadStatus, CARMetadata, UploadProgress, AnyLink } from '@w3ui/react'
 import { UploadLoader } from './Loader'
 
-function humanFileSize (bytes: number) {
+function humanFileSize (bytes: number): string {
   const size = (bytes / (1024 * 1024)).toFixed(2)
   return `${size} MiB`
 }
@@ -13,7 +13,7 @@ interface UploadingProps {
   uploadProgress: UploadProgress
 }
 
-function Uploading ({ file, storedDAGShards, uploadProgress }: UploadingProps) {
+function Uploading ({ file, storedDAGShards, uploadProgress }: UploadingProps): ReactNode {
   return (
     <div className='flex flex-col items-center w-full'>
       <h1 className='font-bold text-sm uppercase text-zinc-950'>Uploading {file?.name}</h1>
@@ -27,7 +27,7 @@ function Uploading ({ file, storedDAGShards, uploadProgress }: UploadingProps) {
   )
 }
 
-function Errored ({ error }: { error?: Error }) {
+function Errored ({ error }: { error?: Error }): ReactNode {
   return (
     <div className='flex flex-col items-center'>
       <h1>
@@ -40,25 +40,28 @@ function Errored ({ error }: { error?: Error }) {
 
 interface DoneProps {
   file?: File
-  dataCID?: AnyLink,
+  dataCID?: AnyLink
   storedDAGShards: CARMetadata[]
 }
 
-const Done = ({ file, dataCID, storedDAGShards }: DoneProps) => (
-  <div>
-    <h1 className='near-white'>Done!</h1>
-    <p className='f6 code truncate'>{dataCID?.toString()}</p>
-    <p><a href={`https://w3s.link/ipfs/${dataCID}`} className='blue'>View {file?.name} on IPFS Gateway.</a></p>
-    <p className='near-white'>Chunks ({storedDAGShards.length}):</p>
-    {storedDAGShards.map(({ cid, size }) => (
-      <p key={cid.toString()} className='f7 truncate'>
-        {cid.toString()} ({size} bytes)
-      </p>
-    ))}
-  </div>
-)
+const Done = ({ file, dataCID, storedDAGShards }: DoneProps): ReactNode => {
+  const cidString: string = dataCID?.toString() ?? ''
+  return (
+    <div>
+      <h1 className='near-white'>Done!</h1>
+      <p className='f6 code truncate'>{cidString}</p>
+      <p><a href={`https://w3s.link/ipfs/${cidString}`} className='blue'>View {file?.name} on IPFS Gateway.</a></p>
+      <p className='near-white'>Chunks ({storedDAGShards.length}):</p>
+      {storedDAGShards.map(({ cid, size }) => (
+        <p key={cid.toString()} className='f7 truncate'>
+          {cid.toString()} ({size} bytes)
+        </p>
+      ))}
+    </div>
+  )
+}
 
-function UploaderConsole () {
+function UploaderConsole (): ReactNode {
   const [{ status, file, error, dataCID, storedDAGShards, uploadProgress }] =
     useUploader()
 
@@ -80,7 +83,7 @@ function UploaderConsole () {
   }
 }
 
-function UploaderContents () {
+function UploaderContents (): ReactNode {
   const [{ status, file }] = useUploader()
   const hasFile = file !== undefined
   if (status === UploadStatus.Idle) {
@@ -105,7 +108,7 @@ function UploaderContents () {
             </button>
           </div>
         </>
-      )
+        )
       : <></>
   } else {
     return (
@@ -116,12 +119,12 @@ function UploaderContents () {
   }
 }
 
-export function UploaderForm () {
+export function UploaderForm (): ReactNode {
   const [{ file }] = useUploader()
   const hasFile = file !== undefined
   return (
     <Uploader.Form>
-      <div className={`relative shadow h-52 p-8 rounded-md bg-white/5 hover:bg-white/20 border-2 border-dotted border-zinc-950 flex flex-col justify-center items-center text-center`}>
+      <div className={'relative shadow h-52 p-8 rounded-md bg-white/5 hover:bg-white/20 border-2 border-dotted border-zinc-950 flex flex-col justify-center items-center text-center'}>
         <label className={`${hasFile ? 'hidden' : 'block h-px w-px overflow-hidden absolute whitespace-nowrap'}`}>File:</label>
         <Uploader.Input className={`${hasFile ? 'hidden' : 'block absolute inset-0 cursor-pointer w-full opacity-0'}`} />
         <UploaderContents />

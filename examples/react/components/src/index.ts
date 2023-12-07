@@ -1,4 +1,4 @@
-export * from './Authenticator.js'
-export * from './Uploader.jsx'
-export * from './Loader.jsx'
-
+export * from './Authenticator'
+export * from './Loader'
+export * from './SpaceEnsurer'
+export * from './Uploader'

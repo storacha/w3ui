@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react'
 import { Authenticator, useAuthenticator } from '@w3ui/react'
 import { Loader } from './Loader'
 
-
 export function AuthenticationForm (): ReactNode {
   const [{ submitted }] = useAuthenticator()
   return (
@@ -22,7 +21,7 @@ export function AuthenticationForm (): ReactNode {
   )
 }
 
-export function AuthenticationSubmitted () {
+export function AuthenticationSubmitted (): ReactNode {
   const [{ email }] = useAuthenticator()
   return (
     <div className='authenticator'>
@@ -39,16 +38,16 @@ export function AuthenticationSubmitted () {
   )
 }
 
-export function AuthenticationEnsurer ({ children }: { children: ReactNode }) {
+export function AuthenticationEnsurer ({ children }: { children: ReactNode }): ReactNode {
   const [{ submitted, accounts, client }] = useAuthenticator()
-  const authenticated = !!accounts.length
+  const authenticated = accounts.length > 0
   if (authenticated) {
     return <>{children}</>
   }
   if (submitted) {
     return <AuthenticationSubmitted />
   }
-  if (client) {
+  if (client != null) {
     return <AuthenticationForm />
   }
   return <Loader />

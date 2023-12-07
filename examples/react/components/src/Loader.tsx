@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { ArrowPathIcon } from '@heroicons/react/20/solid'
 import { ProgressStatus, UploadProgress } from '@w3ui/react'
 
-function StatusLoader ({ progressStatus }: { progressStatus: ProgressStatus }) {
+function StatusLoader ({ progressStatus }: { progressStatus: ProgressStatus }): ReactNode {
   const { total, loaded, lengthComputable } = progressStatus
   if (lengthComputable) {
     const percentComplete = Math.floor((loaded / total) * 100)
@@ -22,7 +22,7 @@ interface LoaderProps {
   className?: string
 }
 
-export function UploadLoader ({ uploadProgress, className = '' }: LoaderProps) {
+export function UploadLoader ({ uploadProgress, className = '' }: LoaderProps): ReactNode {
   return (
     <div className={`${className} flex flex-row`}>
       {Object.values(uploadProgress).map(
@@ -32,6 +32,6 @@ export function UploadLoader ({ uploadProgress, className = '' }: LoaderProps) {
   )
 }
 
-export function Loader () {
+export function Loader (): ReactNode {
   return <ArrowPathIcon className="animate-spin h-12 w-12 mx-auto mt-12" />
 }

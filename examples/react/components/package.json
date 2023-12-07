@@ -36,7 +36,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "../../eslint.packages.js",
+      "../../../eslint.packages.js",
       "plugin:react-hooks/recommended"
     ]
   },
