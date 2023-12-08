@@ -4,17 +4,19 @@ import React from 'react'
 
 function App () {
   return (
-    <Provider>
-      <Authenticator>
-        <AuthenticationEnsurer>
-          <SpaceEnsurer>
-            <Uploader>
-              <UploaderForm />
-            </Uploader>
-          </SpaceEnsurer>
-        </AuthenticationEnsurer>
-      </Authenticator>
-    </Provider>
+    <div className='bg-grad flex flex-col items-center h-screen'>
+      <Provider>
+        <Authenticator>
+          <AuthenticationEnsurer>
+            <SpaceEnsurer>
+              <Uploader>
+                <UploaderForm />
+              </Uploader>
+            </SpaceEnsurer>
+          </AuthenticationEnsurer>
+        </Authenticator>
+      </Provider>
+    </div>
   )
 }
 
