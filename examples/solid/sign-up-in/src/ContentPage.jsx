@@ -1,10 +1,18 @@
-import { createSignal, Switch, Match } from 'solid-js'
+import { createSignal, Switch, Match, createEffect } from 'solid-js'
 import { useKeyring } from '@w3ui/solid-keyring'
 
 export default function ContentPage () {
+  // note: depends on KeyringProvider
   const [keyring, { authorize, cancelAuthorize, loadAgent, unloadAgent }] = useKeyring()
   const [email, setEmail] = createSignal('')
   const [submitted, setSubmitted] = createSignal(false)
+
+  createEffect(() => {
+    console.log({keyring})
+  })
+  createEffect(() => {
+    console.log({keyring,e:email(),s:submitted()})
+  })
 
   loadAgent() // try load agent - once.
 
