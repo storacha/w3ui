@@ -182,7 +182,7 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
             uploadProgress
           },
           {
-            setFile: (file?: File) => { setFilesAndReset((file != null) && [file]) },
+            setFile: (file?: File) => { setFilesAndReset((file === undefined) ? file : [file]) },
             setFiles: setFilesAndReset
           }
         ],
