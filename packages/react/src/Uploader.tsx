@@ -65,9 +65,9 @@ export interface UploaderContextActions {
    */
   setFile: (file?: File) => void
   /**
-    * Set files to be uploaded to web3.storage. The file will be uploaded
-    * when `handleUploadSubmit` is called.
-    */
+   * Set files to be uploaded to web3.storage. The file will be uploaded
+   * when `handleUploadSubmit` is called.
+   */
   setFiles: (file?: File[]) => void
 }
 
@@ -116,11 +116,11 @@ export type UploaderRootProps<T extends As = typeof Fragment> = Props<UploaderRo
  * web3.storage.
  */
 export const UploaderRoot: Component<UploaderRootProps> = createComponent(
-  ({onUploadComplete, wrapInDirectory = false, ...props }) => {
+  ({ onUploadComplete, wrapInDirectory = false, ...props }) => {
     const [{ client }] = useW3()
     const [files, setFiles] = useState<File[]>()
     const file = files?.[0]
-    const setFile = (file: File | undefined) => file && setFiles([file])
+    const setFile = (file: File | undefined): void => { (file != null) && setFiles([file]) }
     const [dataCID, setDataCID] = useState<AnyLink>()
     const [status, setStatus] = useState(UploadStatus.Idle)
     const [error, setError] = useState()
@@ -152,9 +152,9 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
           }
           const cid = files.length > 1
             ? await client.uploadDirectory(files, uploadOptions)
-            : wrapInDirectory
-              ? await client.uploadDirectory(files, uploadOptions)
-              : await client.uploadFile(file, uploadOptions)
+            : (wrapInDirectory
+                ? await client.uploadDirectory(files, uploadOptions)
+                : await client.uploadFile(file, uploadOptions))
 
           setDataCID(cid)
           setStatus(UploadStatus.Succeeded)
@@ -182,7 +182,7 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
             uploadProgress
           },
           {
-            setFile: (file?: File) => setFilesAndReset(file && [file]),
+            setFile: (file?: File) => { setFilesAndReset((file != null) && [file]) },
             setFiles: setFilesAndReset
           }
         ],
@@ -217,8 +217,8 @@ export const UploaderInput: Component<UploaderInputProps> = createComponent((pro
   const [, { setFiles }] = useContext(UploaderContext)
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files) {
-        setFiles(Array.from(e.target.files))
+      if (e.target.files != null) {
+        setFiles([...e.target.files])
       }
     },
     [setFiles]

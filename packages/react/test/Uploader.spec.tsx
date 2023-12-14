@@ -8,8 +8,8 @@ import { Context, ContextDefaultValue, ContextValue } from '../src/providers/Pro
 import { Uploader } from '../src/Uploader'
 
 afterEach(() => {
-  cleanup();
-});
+  cleanup()
+})
 
 test('single file upload', async () => {
   const cid = Link.parse('bafybeibrqc2se2p3k4kfdwg7deigdggamlumemkiggrnqw3edrjosqhvnm')
@@ -48,7 +48,7 @@ test('single file upload', async () => {
 
 test('multi file upload', async () => {
   const cid = Link.parse('bafybeibrqc2se2p3k4kfdwg7deigdggamlumemkiggrnqw3edrjosqhvnm')
-  const client = { 
+  const client = {
     uploadDirectory: vi.fn().mockImplementation(() => cid)
   }
 
@@ -88,7 +88,7 @@ test('multi file upload', async () => {
 
 test('wrapping a file in a directory', async () => {
   const cid = Link.parse('bafybeibrqc2se2p3k4kfdwg7deigdggamlumemkiggrnqw3edrjosqhvnm')
-  const client = { 
+  const client = {
     uploadDirectory: vi.fn().mockImplementation(() => cid)
   }
 
