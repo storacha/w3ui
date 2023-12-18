@@ -15,7 +15,7 @@ interface UploadingProps {
 }
 
 function Uploading ({ file, files, storedDAGShards, uploadProgress }: UploadingProps): ReactNode {
-  const fileName = (files && files.length > 1) ? 'your files' : file?.name
+  const fileName = ((files != null) && files.length > 1) ? 'your files' : file?.name
   return (
     <div className='flex flex-col items-center w-full'>
       <h1 className='font-bold text-sm uppercase text-zinc-950'>Uploading {fileName}</h1>
@@ -49,7 +49,7 @@ interface DoneProps {
 
 const Done = ({ file, files, dataCID, storedDAGShards }: DoneProps): ReactNode => {
   const cidString: string = dataCID?.toString() ?? ''
-  const fileName = (files && files.length > 1) ? 'your files' : file?.name
+  const fileName = ((files != null) && files.length > 1) ? 'your files' : file?.name
   return (
     <div>
       <h1 className='text-gray-800'>Done!</h1>
@@ -114,7 +114,7 @@ function UploaderContents (): ReactNode {
             </button>
           </div>
         </>
-      )
+        )
       : <></>
   } else {
     return (
