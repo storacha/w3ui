@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 for (const ui of [
-  //  'react',
+  'react',
 ]) {
   test(`${ui}: multi file upload`, async ({ page }) => {
     await page.goto(`/${ui}/multi-file-upload/`)
