@@ -95,8 +95,8 @@ function UploaderContents (): ReactNode {
       ? (
         <>
           <div className='flex flex-row space-x-2 flex-wrap max-w-xl'>
-            {files?.map(f => (
-              <div className='flex flex-col justify-around'>
+            {files?.map((f, i) => (
+              <div className='flex flex-col justify-around' key={i}>
                 <span className='text-sm'>{f.name}</span>
                 <span className='text-xs text-white/75 font-mono'>
                   {humanFileSize(f.size)}
@@ -114,7 +114,7 @@ function UploaderContents (): ReactNode {
             </button>
           </div>
         </>
-        )
+      )
       : <></>
   } else {
     return (
@@ -126,17 +126,18 @@ function UploaderContents (): ReactNode {
 }
 
 interface UploaderFormProps {
-  multiple?: boolean
+  multiple?: boolean,
+  allowDirectory?: boolean
 }
 
-export function UploaderForm ({ multiple }: UploaderFormProps): ReactNode {
+export function UploaderForm ({ multiple, allowDirectory }: UploaderFormProps): ReactNode {
   const [{ file }] = useUploader()
   const hasFile = file !== undefined
   return (
     <Uploader.Form className="m-12">
       <div className='relative shadow h-52 p-8 rounded-md bg-white/5 hover:bg-white/20 border-2 border-dotted border-zinc-950 flex flex-col justify-center items-center text-center'>
         <label className={`${hasFile ? 'hidden' : 'block h-px w-px overflow-hidden absolute whitespace-nowrap'}`}>File:</label>
-        <Uploader.Input multiple={multiple} className={`${hasFile ? 'hidden' : 'block absolute inset-0 cursor-pointer w-full opacity-0'}`} />
+        <Uploader.Input multiple={multiple} allowDirectory={allowDirectory} className={`${hasFile ? 'hidden' : 'block absolute inset-0 cursor-pointer w-full opacity-0'}`} />
         <UploaderContents />
         {hasFile ? '' : <span>Drag files or Click to Browse</span>}
       </div>
