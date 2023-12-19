@@ -166,8 +166,8 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
           const cid = files.length > 1
             ? await client.uploadDirectory(files, uploadOptions)
             : (wrapInDirectory
-              ? await client.uploadDirectory(files, uploadOptions)
-              : await client.uploadFile(file, uploadOptions))
+                ? await client.uploadDirectory(files, uploadOptions)
+                : await client.uploadFile(file, uploadOptions))
 
           setDataCID(cid)
           setStatus(UploadStatus.Succeeded)
@@ -241,7 +241,7 @@ export const UploaderInput: Component<UploaderInputProps> = createComponent(({ a
     [setFiles]
   )
   const inputProps: HTMLProps<Options> = { ...props, type: 'file', onChange }
-  if (allowDirectory) {
+  if (allowDirectory === true) {
     // this attribute behaves weirdly - having it either be the string true or not
     // set at all seems to be the only way to get it working the way you'd expect
     inputProps.webkitdirectory = 'true'
@@ -265,7 +265,6 @@ export const WrapInDirectoryCheckbox: Component<WrapInDirectoryCheckboxProps> = 
   )
   return createElement('input', { ...props, type: 'checkbox', value: wrapInDirectory, onChange })
 })
-
 
 export type UploaderFormOptions<T extends As = 'form'> = Options<T>
 export type UploaderFormProps<T extends As = 'form'> = Props<UploaderFormOptions<T>>

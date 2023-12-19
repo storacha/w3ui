@@ -114,7 +114,7 @@ function UploaderContents (): ReactNode {
             </button>
           </div>
         </>
-      )
+        )
       : <></>
   } else {
     return (
@@ -126,7 +126,7 @@ function UploaderContents (): ReactNode {
 }
 
 interface UploaderFormProps {
-  multiple?: boolean,
+  multiple?: boolean
   allowDirectory?: boolean
 }
 
