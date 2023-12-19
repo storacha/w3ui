@@ -7,7 +7,7 @@ for (const ui of [
     await page.goto(`/${ui}/multi-file-upload/`)
     await expect(page).toHaveTitle('W3UI Multi File Upload Example App')
 
-    const input = page.getByRole('textbox', { name: 'Email address:' })
+    const input = page.getByRole('textbox', { name: 'Email' })
     await input.fill('test@example.org')
     await input.press('Enter')
     await expect(page.getByText('Verify your email address!')).toBeVisible()
