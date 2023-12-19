@@ -103,7 +103,7 @@ test('wrapping a file in a directory', async () => {
   const handleComplete = vi.fn()
   render(
     <Context.Provider value={contextValue}>
-      <Uploader onUploadComplete={handleComplete} wrapInDirectory>
+      <Uploader onUploadComplete={handleComplete} defaultWrapInDirectory>
         <Uploader.Form>
           <Uploader.Input data-testid='file-upload' />
           <input type='submit' value='Upload' />

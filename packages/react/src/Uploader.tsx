@@ -116,7 +116,7 @@ export type OnUploadComplete = (props: OnUploadCompleteProps) => void
 
 export type UploaderRootOptions<T extends As = typeof Fragment> = Options<T> & {
   onUploadComplete?: OnUploadComplete
-  wrapInDirectory?: boolean
+  defaultWrapInDirectory?: boolean
 }
 export type UploaderRootProps<T extends As = typeof Fragment> = Props<UploaderRootOptions<T>>
 
@@ -128,12 +128,12 @@ export type UploaderRootProps<T extends As = typeof Fragment> = Props<UploaderRo
  * web3.storage.
  */
 export const UploaderRoot: Component<UploaderRootProps> = createComponent(
-  ({ onUploadComplete, ...props }) => {
+  ({ onUploadComplete, defaultWrapInDirectory = false, ...props }) => {
     const [{ client }] = useW3()
     const [files, setFiles] = useState<File[]>()
     const file = files?.[0]
     const setFile = (file: File | undefined): void => { (file != null) && setFiles([file]) }
-    const [wrapInDirectory, setWrapInDirectory] = useState(false)
+    const [wrapInDirectory, setWrapInDirectory] = useState(defaultWrapInDirectory)
     const [dataCID, setDataCID] = useState<AnyLink>()
     const [status, setStatus] = useState(UploadStatus.Idle)
     const [error, setError] = useState()
