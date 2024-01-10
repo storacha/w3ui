@@ -58,13 +58,13 @@ export interface UploaderContextState {
   uploadProgress: UploadProgress
   /**
    * Should single files be wrapped in a directory?
-   * 
+   *
    * If uploadAsCAR is true, this option is ignored.
    */
   wrapInDirectory: boolean
   /**
-   * Should the file be uploaded as a CAR? 
-   * 
+   * Should the file be uploaded as a CAR?
+   *
    * This option is ignored if more than one file is being uploaded.
    */
   uploadAsCAR: boolean
@@ -83,13 +83,13 @@ export interface UploaderContextActions {
   setFiles: (file?: File[]) => void
   /**
    * Set whether single files should be wrapped in a directory before upload.
-   * 
+   *
    * If uploadAsCAR is true, this option is ignored.
    */
   setWrapInDirectory: (wrap: boolean) => void
   /**
    * Set whether single files should be uploaded as a CAR.
-   * 
+   *
    * This option is ignored if more than one file is being uploaded.
    */
   setUploadAsCAR: (uploadAsCar: boolean) => void
@@ -188,10 +188,10 @@ export const UploaderRoot: Component<UploaderRootProps> = createComponent(
           const cid = files.length > 1
             ? await client.uploadDirectory(files, uploadOptions)
             : (uploadAsCAR
-              ? await client.uploadCAR(file, uploadOptions)
-              : (wrapInDirectory
-                ? await client.uploadDirectory(files, uploadOptions)
-                : await client.uploadFile(file, uploadOptions)))
+                ? await client.uploadCAR(file, uploadOptions)
+                : (wrapInDirectory
+                    ? await client.uploadDirectory(files, uploadOptions)
+                    : await client.uploadFile(file, uploadOptions)))
 
           setDataCID(cid)
           setStatus(UploadStatus.Succeeded)
@@ -272,7 +272,8 @@ export const UploaderInput: Component<UploaderInputProps> = createComponent(({ a
     // set at all seems to be the only way to get it working the way you'd expect
     inputProps.webkitdirectory = 'true'
   }
-  if (uploadAsCAR && !inputProps.accept) {
+  const acceptNotSet = (inputProps.accept === undefined)
+  if (uploadAsCAR && acceptNotSet) {
     inputProps.accept = '.car'
   }
   return createElement('input', inputProps)
