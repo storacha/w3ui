@@ -34,7 +34,7 @@
     "@ucanto/transport": "^9.1.1",
     "@web3-storage/access": "^18.4.0",
     "@web3-storage/did-mailto": "^2.1.0",
-    "@web3-storage/w3up-client": "13.1.0"
+    "@web3-storage/w3up-client": "^14.1.1"
   },
   "eslintConfig": {
     "extends": [
