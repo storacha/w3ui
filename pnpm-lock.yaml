@@ -279,8 +279,8 @@ importers:
         specifier: ^9.1.1
         version: 9.1.1
       '@web3-storage/access':
-        specifier: ^18.4.0
-        version: 18.4.0
+        specifier: ^20.0.1
+        version: 20.0.1
       '@web3-storage/did-mailto':
         specifier: ^2.1.0
         version: 2.1.0
@@ -1007,10 +1007,6 @@ packages:
   '@storacha/one-webcrypto@1.0.1':
     resolution: {integrity: sha512-bD+vWmcgsEBqU0Dz04BR43SA03bBoLTAY29vaKasY9Oe8cb6XIP0/vkm0OS2UwKC13c8uRgFW4rjJUgDCNLejQ==}
 
-  '@storacha/one-webcrypto@https://codeload.github.com/web3-storage/one-webcrypto/tar.gz/9e029e2fd477bd95bb80abd3553bbac704ccc7a6':
-    resolution: {tarball: https://codeload.github.com/web3-storage/one-webcrypto/tar.gz/9e029e2fd477bd95bb80abd3553bbac704ccc7a6}
-    version: 1.0.1
-
   '@swc/core-darwin-arm64@1.3.100':
     resolution: {integrity: sha512-XVWFsKe6ei+SsDbwmsuRkYck1SXRpO60Hioa4hoLwR8fxbA9eVp6enZtMxzVVMBi8ej5seZ4HZQeAWepbukiBw==}
     engines: {node: '>=10'}
@@ -1266,9 +1262,6 @@ packages:
   '@vitest/utils@1.0.1':
     resolution: {integrity: sha512-MGPCHkzXbbAyscrhwGzh8uP1HPrTYLWaj1WTDtWSGrpe2yJWLRN9mF9ooKawr6NMOg9vTBtg2JqWLfuLC7Dknw==}
 
-  '@web3-storage/access@18.4.0':
-    resolution: {integrity: sha512-EQQxSCip9FNgiNGwpKTnpff7/5A6MSn/Etf1Xpei3Au2oQkUe25DHwRJd/mbUzjnhcYh6UMGk2f0dIJ4Me00LA==}
-
   '@web3-storage/access@20.0.1':
     resolution: {integrity: sha512-JlCTp1BlFmxrxpkkLo73tytHIv7J+l8++dP5ghYk5oEo2Om3mUq+T3KkkkjZ8d3omoWam6tGiTQXbc/awHJjDw==}
 
@@ -1278,9 +1271,6 @@ packages:
 
   '@web3-storage/capabilities@16.0.0':
     resolution: {integrity: sha512-wCjLpYc6t8tFRZrF2k2vBteJDWzHkmQjoJG0Yy/fjA04IjNN48iVZaCMQIANHXZxDGlYRGxhwzDwl4dovAdSTQ==}
-
-  '@web3-storage/capabilities@17.1.0':
-    resolution: {integrity: sha512-p5Wn2O3TSEZ7JFSph2KY9OuFnofbkhKi7Tp+1zcPEYAUsEvDWGabd1NvSPDDMpFBE74UX4ZljE8aQzDAtI3qRw==}
 
   '@web3-storage/capabilities@17.2.0':
     resolution: {integrity: sha512-hnJGIQcCAMBbR8sfgkEwnjBVcpNpNRBnzSEB2E/wKkKIjHKimw3ClsVznu6jjFExCXFaKHd6r1eAU4NcTYsueg==}
@@ -4400,8 +4390,6 @@ snapshots:
 
   '@storacha/one-webcrypto@1.0.1': {}
 
-  '@storacha/one-webcrypto@https://codeload.github.com/web3-storage/one-webcrypto/tar.gz/9e029e2fd477bd95bb80abd3553bbac704ccc7a6': {}
-
   '@swc/core-darwin-arm64@1.3.100':
     optional: true
 
@@ -4713,27 +4701,6 @@ snapshots:
       loupe: 2.3.7
       pretty-format: 29.7.0
 
-  '@web3-storage/access@18.4.0':
-    dependencies:
-      '@ipld/car': 5.2.4
-      '@ipld/dag-ucan': 3.4.0
-      '@scure/bip39': 1.2.1
-      '@ucanto/client': 9.0.1
-      '@ucanto/core': 10.0.1
-      '@ucanto/interface': 10.0.1
-      '@ucanto/principal': 9.0.1
-      '@ucanto/transport': 9.1.1
-      '@ucanto/validator': 9.0.2
-      '@web3-storage/capabilities': 17.1.0
-      '@web3-storage/did-mailto': 2.1.0
-      bigint-mod-arith: 3.3.1
-      conf: 11.0.2
-      multiformats: 12.1.3
-      one-webcrypto: '@storacha/one-webcrypto@https://codeload.github.com/web3-storage/one-webcrypto/tar.gz/9e029e2fd477bd95bb80abd3553bbac704ccc7a6'
-      p-defer: 4.0.0
-      type-fest: 4.10.1
-      uint8arrays: 4.0.9
-
   '@web3-storage/access@20.0.1':
     dependencies:
       '@ipld/car': 5.2.4
@@ -4767,16 +4734,6 @@ snapshots:
       uint8arrays: 5.1.0
 
   '@web3-storage/capabilities@16.0.0':
-    dependencies:
-      '@ucanto/core': 10.0.1
-      '@ucanto/interface': 10.0.1
-      '@ucanto/principal': 9.0.1
-      '@ucanto/transport': 9.1.1
-      '@ucanto/validator': 9.0.2
-      '@web3-storage/data-segment': 3.2.0
-      uint8arrays: 5.1.0
-
-  '@web3-storage/capabilities@17.1.0':
     dependencies:
       '@ucanto/core': 10.0.1
       '@ucanto/interface': 10.0.1
