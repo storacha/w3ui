@@ -31,11 +31,12 @@ function Uploading ({ file, files, storedDAGShards, uploadProgress }: UploadingP
 
 function Errored ({ error }: { error?: Error }): ReactNode {
   useEffect(() => {
-    if (error) {
-      console.error("Uploader Error:", error)
+    if (error != null) {
+      // eslint-disable-next-line no-console
+      console.error('Uploader Error:', error)
     }
   }, [error])
-  
+
   return (
     <div className='flex flex-col items-center'>
       <h1>
