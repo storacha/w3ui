@@ -1,22 +1,7 @@
 {
   "separate-pull-requests": false,
   "packages": {
-    "packages/react-keyring": {},
-    "packages/react-uploader": {},
-    "packages/react-uploads-list": {},
-
-    "packages/solid-keyring": {},
-    "packages/solid-uploader": {},
-    "packages/solid-uploads-list": {},
-
-    "packages/vue-keyring": {},
-    "packages/vue-uploader": {},
-    "packages/vue-uploads-list": {},
-
-    "packages/keyring-core": {},
-    "packages/uploader-core": {},
-    "packages/uploads-list-core": {},
-
-    "examples/react/w3console": {}
+    "packages/core": {},
+    "packages/react": {}
   }
 }

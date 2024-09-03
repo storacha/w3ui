@@ -1,7 +1,7 @@
 module.exports = {
   extends: ['./node_modules/hd-scripts/eslint/ts.js'],
   parserOptions: {
-    project: './tsconfig.json',
+    project: ['./tsconfig.json', 'packages/*/tsconfig.json'],
     ecmaFeatures: {
       jsx: true,
     },
@@ -16,9 +16,11 @@ module.exports = {
     'unicorn/filename-case': 'off',
     'unicorn/no-useless-undefined': 'off',
     'unicorn/expiring-todo-comments': 'off',
+    'unicorn/no-nested-ternary': 'off',
     'jsdoc/require-param': 'off',
     'jsdoc/newline-after-description': 'off',
     'jsdoc/require-param-type': 'off',
     'import/extensions': 'off'
   },
+  ignorePatterns: ['dist/', 'vitest.config.ts']
 }
