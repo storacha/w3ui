@@ -1,4 +1,4 @@
-import type { AgentDataExport } from '@web3-storage/access/types'
+import type { AgentDataExport, Delegation } from '@web3-storage/access/types'
 import type { ServiceConfig } from './service.js'
 
 import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
@@ -73,5 +73,18 @@ export async function createClient (
   const store = new IndexedDBEventDispatcherStore(dbName, events)
   const serviceConf = createServiceConf(options)
   const client = await createW3UPClient({ store, serviceConf })
+  window.__w3client = client
   return { client, events, store }
 }
+
+const inspectDelegation = ({ issuer, audience, capabilities, facts, proofs }: Delegation): object => {
+  return {
+    issuer: issuer.did(),
+    audience: audience.did(),
+    capabilities,
+    facts,
+    proofs: proofs.map(proof => 'root' in proof ? inspectDelegation(proof) : proof.link.toString())
+  }
+}
+
+window.inspectDelegation = inspectDelegation
