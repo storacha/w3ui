@@ -1,6 +1,6 @@
 {
   "name": "@w3ui/core",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "w3ui core.",
   "type": "module",
   "main": "./dist/index.js",
@@ -8,6 +8,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "bunchee",
+    "dev": "bunchee --watch",
     "lint": "tsc --build && eslint '**/*.{js,jsx,ts,tsx}'",
     "test": "vitest run",
     "test:watch": "vitest watch"
@@ -34,7 +35,7 @@
     "@ucanto/transport": "^9.1.1",
     "@web3-storage/access": "^20.0.1",
     "@web3-storage/did-mailto": "^2.1.0",
-    "@web3-storage/w3up-client": "16.0.0"
+    "@web3-storage/w3up-client": "16.2.0"
   },
   "eslintConfig": {
     "extends": [
@@ -46,7 +47,7 @@
     "build"
   ],
   "devDependencies": {
-    "bunchee": "^3.9.3",
+    "bunchee": "^5.5.0",
     "fake-indexeddb": "^5.0.1",
     "happy-dom": "^12.10.3",
     "vitest": "^1.0.1"
